@@ -19,13 +19,6 @@ from sglang.test.test_utils import (
     popen_launch_pd_server,  # 以子进程方式启动Prefill/Decode解耦服务
 )
 
-from sglang.test.ascend.performance.test_ascend_performance_utils import (
-    TestAscendMultiNodePdSepTestCaseBase,
-    DEEPSEEK_V32_W8A8_MODEL_PATH,
-    NIC_NAME
-)
-
-
 # 测试用的模型路径（替换了原默认模型，指定昇腾VLLM的DeepSeek-V3.2量化模型）
 DEFAULT_MODEL_NAME_FOR_TEST = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V3.2-W8A8"
 
@@ -169,111 +162,154 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
         requests.post(self.prefill_url + "/flush_cache")
 
 
+class TestDisaggregationPrefillWithHiCache(DisaggregationHiCacheBase):
+    """
+    测试场景1：**仅Prefill节点启用HiCache**，Decode节点不启用缓存卸载
+    验证单节点HiCache的基础缓存命中功能，是最基础的HiCache解耦测试
+    """
 
-NIC_NAME="enp23s0f3"
-MODEL_CONFIG = {
-    "model_path": DEEPSEEK_V32_W8A8_MODEL_PATH,
-    "prefill_envs": {
-        "SGLANG_SET_CPU_AFFINITY": "1",
-        "PYTORCH_NPU_ALLOC_CONF": "expandable_segments:True",
-        "STREAMS_PER_DEVICE": "32",
-        "HCCL_BUFFSIZE": "1024",
-        "DEEPEP_NORMAL_LONG_SEQ_ROUND": "5",
-        "DEEPEP_NORMAL_LONG_SEQ_PER_ROUND_TOKENS": "512",
-        "SGLANG_NPU_USE_MLAPO": "1",
-        "DEEP_NORMAL_MODE_USE_INT8_QUANT": "1",
-        "SGLANG_NPU_USE_MULTI_STREAM": "1",
-        "HCCL_OP_EXPANSION_MODE": "AIV",
-        "HCCL_SOCKET_IFNAME": NIC_NAME,
-        "GLOO_SOCKET_IFNAME": NIC_NAME,
-    },
-    "decode_envs": {
-        "SGLANG_SET_CPU_AFFINITY": "1",
-        "PYTORCH_NPU_ALLOC_CONF": "expandable_segments:True",
-        "STREAMS_PER_DEVICE": "32",
-        "SGLANG_NPU_USE_MULTI_STREAM": "1",
-        "SGLANG_NPU_USE_MLAPO": "1",
-        "HCCL_OP_EXPANSION_MODE": "AIV",
-        "SGLANG_SCHEDULER_SKIP_ALL_GATHER": "1",
-        "TASK_QUEUE_ENABLE": "0",
-        "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-        "SGLANG_ENABLE_SPEC_V2": "1",
-        "HCCL_SOCKET_IFNAME": NIC_NAME,
-        "GLOO_SOCKET_IFNAME": NIC_NAME,
-        "HCCL_BUFFSIZE": "400",
-        "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "8",
-    },
-    "router_envs": {
-        "SGLANG_DP_ROUND_ROBIN": "1",
-    },
-    "prefill_args": [
-        "--nnodes", 2,
-        "--disaggregation-mode", "prefill",
-        "--tp", 32,
-        "--watchdog-timeout", 9000,
-        "--mem-fraction-static", 0.73,
-        "--disable-radix-cache",
-        "--chunked-prefill-size", -1,
-        "--max-prefill-tokens", 68000,
-        "--max-running-requests", 1,
-        "--moe-a2a-backend", "deepep",
-        "--deepep-mode", "normal",
-        "--quantization", "modelslim",
-        "--disable-cuda-graph",
-        "--enable-nsa-prefill-context-parallel",
-        "--moe-dense-tp-size", 1,
-        "--speculative-algorithm", "NEXTN",
-        "--speculative-num-steps", 1,
-        "--speculative-eagle-topk", 1,
-        "--speculative-num-draft-tokens", 2,
-    ],
-    "decode_args": [
-        "--nnodes", 2,
-        "--disaggregation-mode", "decode",
-        "--tp", 32,
-        "--dp", 8,
-        "--ep", 32,
-        "--moe-dense-tp-size", 1,
-        "--enable-dp-attention",
-        "--enable-dp-lm-head",
-        "--watchdog-timeout", 9000,
-        "--mem-fraction-static", 0.79,
-        "--disable-radix-cache",
-        "--chunked-prefill-size", -1,
-        "--max-prefill-tokens", 68000,
-        "--max-running-requests", 32,
-        "--cuda-graph-max-bs", 4,
-        "--moe-a2a-backend", "deepep",
-        "--deepep-mode", "low_latency",
-        "--quantization", "modelslim",
-        "--speculative-algorithm", "NEXTN",
-        "--speculative-num-steps", 3,
-        "--speculative-eagle-topk", 1,
-        "--speculative-num-draft-tokens", 4,
-        "--prefill-round-robin-balance",
-        "--load-balance-method", "round_robin",
-    ],
-    "router_args": [
-        "--mini-lb",
-    ],
-}
+    @classmethod
+    def start_decode(cls):
+        """
+        重写基类的start_decode：启动**不启用HiCache**的Decode服务
+        Decode节点负责token的逐一生成，这里指定使用GPU 1，与Prefill的GPU 0隔离
+        """
+        decode_args = [
+            "--trust-remote-code",  # 信任远程代码
+            "--disaggregation-mode", "decode",  # 标记为Decode解耦模式
+            "--tp-size", "1",  # 张量并行度1
+            "--page-size", "64",  # 与Prefill保持一致的页大小（解耦架构必须统一）
+            "--mem-fraction-static", "0.8",  # GPU内存占用比例80%
+            "--base-gpu-id", "1",  # 指定Decode服务使用GPU 1（避免与Prefill的GPU 0冲突）
+        ]
+        # 添加传输后端+RDMA设备参数
+        decode_args += cls.transfer_backend + cls.rdma_devices
+        # 环境变量：复用HiCache的临时存储目录（虽不启用，但保持配置统一）
+        env = {
+            **os.environ,
+            "SGLANG_HICACHE_FILE_BACKEND_STORAGE_DIR": cls.temp_dir,
+        }
+        # 启动Decode服务，返回进程句柄
+        cls.process_decode = popen_launch_pd_server(
+            cls.model,
+            cls.decode_url,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=decode_args,
+            env=env,
+        )
 
-class TestDeepSeekV32(TestAscendMultiNodePdSepTestCaseBase):
-    model_config = MODEL_CONFIG
-    dataset_name = "random"
-    request_rate = "inf"
-    max_concurrency = 32
-    num_prompts = 64
-    input_len = 64000
-    output_len = 3000
-    random_range_ratio = 1
-    tpot = 27.3
-    # T: 4.7@26ms        800I: None          Dev-800I: 471/ 32
-    output_token_throughput = 433
+    def test_prefill_cache_hit(self):
+        """
+        核心测试用例：验证Prefill节点的缓存命中功能
+        逻辑：相同prompt的两次请求，第二次在缓存刷盘后应命中大量缓存token
+        """
+        # 生成800个token的长prompt（足够触发HiCache的缓存机制）
+        repeated_prompt = self.gen_prompt(800)
 
-    def test_throughput(self):
-        self.run_throughput()
+        # 第一次请求：缓存未命中（冷启动），Prefill会生成KV缓存并卸载到文件
+        self.send_request(repeated_prompt, max_tokens=100)
+
+        # 触发缓存卸载并刷盘（将GPU内存的缓存写到HiCache文件存储）
+        self.trigger_offloading_and_flush()
+
+        # 第二次请求：相同prompt，应从HiCache文件加载缓存，触发**缓存命中**
+        response2 = self.send_request(repeated_prompt, max_tokens=100)
+
+        # 断言缓存命中的token数大于700（验证高缓存命中率）
+        self.assertGreater(response2["meta_info"]["cached_tokens"], 700)
 
 
+class TestDisaggregationDecodeWithHiCache(DisaggregationHiCacheBase):
+    """
+    测试场景2：**Prefill+Decode双节点均启用HiCache**
+    Decode节点额外启用KV缓存卸载，验证更复杂的多轮对话场景下的缓存优化效果
+    """
+
+    @classmethod
+    def start_decode(cls):
+        """
+        重写基类的start_decode：启动**启用HiCache**的Decode服务
+        新增Decode节点的缓存卸载参数，指定使用GPU 1，与Prefill隔离
+        """
+        decode_args = [
+            "--trust-remote-code",
+            "--disaggregation-mode", "decode",
+            "--tp-size", "1",
+            "--page-size", "64",  # 与Prefill页大小统一
+            "--mem-fraction-static", "0.8",
+            "--base-gpu-id", "1",  # Decode使用GPU 1
+            # Decode节点核心参数：启用KV缓存卸载
+            "--disaggregation-decode-enable-offload-kvcache",
+            # HiCache相关配置（与Prefill保持一致）
+            "--hicache-ratio", "1.2",
+            "--hicache-size", "0",
+            "--hicache-storage-backend", "file",
+            "--hicache-storage-prefetch-policy", "wait_complete",
+        ]
+        # 添加传输后端+RDMA设备参数
+        decode_args += cls.transfer_backend + cls.rdma_devices
+        # 环境变量：指定HiCache文件存储目录
+        env = {
+            **os.environ,
+            "SGLANG_HICACHE_FILE_BACKEND_STORAGE_DIR": cls.temp_dir,
+        }
+        # 启动启用HiCache的Decode服务
+        cls.process_decode = popen_launch_pd_server(
+            cls.model,
+            cls.decode_url,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=decode_args,
+            env=env,
+        )
+
+    def test_multi_turn_conversation_cache(self):
+        """
+        核心测试用例：验证**多轮对话**场景下的缓存命中优化
+        逻辑：多轮对话的上下文不断累积，后续轮次应命中更多缓存token，提升推理效率
+        """
+        print("=== Multi-turn Conversation Cache Test ===")
+
+        # 第一轮：生成300个token的初始prompt，作为对话的起始上下文
+        initial_prompt = self.gen_prompt(300)
+        # 发送第一轮请求，生成200个新token，采样温度0.1（轻微随机）
+        response1 = self.send_request(initial_prompt, max_tokens=200, temperature=0.1)
+        # 拼接初始prompt+生成的文本，作为下一轮的上下文（模拟多轮对话）
+        current_context = initial_prompt + response1["text"]
+
+        # 初始化上一轮的缓存命中数为0，用于对比后续轮次的提升
+        previous_cached_tokens = 0
+
+        # 执行2-4轮对话（共3轮），基于上一轮的上下文继续生成
+        for turn in range(2, 5):
+            print(f"\nTurn {turn}: Continuing from previous context")
+
+            # 发送请求，基于累积的上下文生成文本
+            response = self.send_request(
+                current_context, max_tokens=200, temperature=0.1
+            )
+            # 获取当前轮次的缓存命中token数（从响应的元信息中提取）
+            cached_tokens = response["meta_info"]["cached_tokens"]
+
+            # 打印当前轮次的缓存命中数和相比上一轮的提升量
+            print(f"Turn {turn} cached tokens: {cached_tokens}")
+            print(f"Improvement: {cached_tokens - previous_cached_tokens} tokens")
+
+            # 断言：当前轮次的缓存命中数必须大于上一轮（验证多轮缓存优化）
+            self.assertGreater(
+                cached_tokens,
+                previous_cached_tokens,
+                f"Turn {turn} should have more cached tokens than turn {turn-1}",
+            )
+
+            # 更新上下文（拼接上一轮的上下文+本次生成的文本）
+            current_context += response["text"]
+            # 更新上一轮的缓存命中数，用于下一轮对比
+            previous_cached_tokens = cached_tokens
+
+            # 每轮结束后刷盘Prefill缓存，模拟真实场景的缓存持久化
+            self.trigger_offloading_and_flush()
+
+
+# 程序入口：执行所有unittest测试用例
 if __name__ == "__main__":
     unittest.main()
