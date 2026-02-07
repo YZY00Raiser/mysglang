@@ -59,4 +59,5 @@ python -m sglang.launch_server \
 --disable-cuda-graph \
 --nnodes 1 \
 --node-rank 0 \
---disable-overlap-schedule
+--disable-overlap-schedule\
+--enable-hierarchical-cache
