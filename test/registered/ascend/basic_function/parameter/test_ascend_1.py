@@ -59,6 +59,8 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
             200,
             f"Request failed: {response.status_code} - {response.text}",
         )
+        print("----------------------------------respasjisda---------------------------------------------")
+        print(response.json())
         return response.json()
 
     def test_prefill_cache_hit(self):
@@ -66,6 +68,7 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
         核心测试用例：验证Prefill节点的缓存命中功能
         逻辑：相同prompt的两次请求，第二次在缓存刷盘后应命中大量缓存token
         """
+        print("-----------------------------------test_prefill_cache_hit-----------------------------------")
         repeated_prompt = self.gen_prompt(800)
         # 第一次请求：缓存未命中（冷启动），Prefill会生成KV缓存并卸载到文件
         self.send_request(repeated_prompt, max_tokens=100)
