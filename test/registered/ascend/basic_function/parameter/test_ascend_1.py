@@ -18,23 +18,11 @@ DEFAULT_MODEL_NAME_FOR_TEST = "/root/.cache/modelscope/hub/models/vllm-ascend/De
 
 class DisaggregationHiCacheBase(PDDisaggregationServerBase):
     """Base class for disaggregation with HiCache tests"""
-
-    @classmethod
     def setUpClass(cls):
-        """
-        测试类的初始化方法（unittest类方法，所有测试用例执行前仅运行一次）
-        启动Prefill/Decode服务、初始化分词器、创建临时目录、启动负载均衡、检查服务健康性
-        """
-        # 调用父类的初始化方法，加载基础配置（如prefill_url/decode_url/lb_url等）
-        super(DisaggregationHiCacheBase, cls).setUpClass()
-
         # 设置测试使用的模型路径
         cls.model = DEFAULT_MODEL_NAME_FOR_TEST
         # 初始化模型对应的分词器（用于生成测试prompt、解码token）
         cls.tokenizer = get_tokenizer(cls.model)
-        # 创建临时目录，用于HiCache的文件后端存储（缓存的KV数据会存在这里）
-        cls.temp_dir = tempfile.mkdtemp()
-
     def gen_prompt(self, token_num: int) -> str:
         """
         生成指定token数量的随机测试提示词（prompt）
@@ -72,32 +60,15 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
             f"Request failed: {response.status_code} - {response.text}",
         )
         return response.json()
-    def trigger_offloading_and_flush(self):
-        """
-        工具方法：触发KV缓存的**卸载（Offloading）** 并刷盘
-        核心目的：将GPU内存中的缓存刷到HiCache的文件存储，模拟缓存冷启动后的命中场景
-        """
-        # 发送一个短请求，触发Prefill节点的推理和KV缓存生成（进而触发缓存卸载）
-        self.send_request(self.gen_prompt(1), max_tokens=150)
-
-        # 等待2秒，确保缓存有足够时间完成内存到文件的卸载
-        time.sleep(2)
-        # 调用Prefill服务的刷缓存接口，强制将设备缓存刷到远程存储（HiCache）
-        requests.post(self.prefill_url + "/flush_cache")
 
     def test_prefill_cache_hit(self):
         """
         核心测试用例：验证Prefill节点的缓存命中功能
         逻辑：相同prompt的两次请求，第二次在缓存刷盘后应命中大量缓存token
         """
-        # 生成800个token的长prompt（足够触发HiCache的缓存机制）
         repeated_prompt = self.gen_prompt(800)
-
         # 第一次请求：缓存未命中（冷启动），Prefill会生成KV缓存并卸载到文件
         self.send_request(repeated_prompt, max_tokens=100)
-
-        # 触发缓存卸载并刷盘（将GPU内存的缓存写到HiCache文件存储）
-        self.trigger_offloading_and_flush()
 
         # 第二次请求：相同prompt，应从HiCache文件加载缓存，触发**缓存命中**
         response2 = self.send_request(repeated_prompt, max_tokens=100)
