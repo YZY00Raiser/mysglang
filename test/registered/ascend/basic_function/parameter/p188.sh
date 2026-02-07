@@ -47,7 +47,6 @@ python -m sglang.launch_server \
 --mem-fraction-static 0.8 \
 --max-total-tokens 68000 \
 --context-length 68000 \
---disable-radix-cache \
 --chunked-prefill-size 327680 \
 --max-prefill-tokens 68000 \
 --max-running-requests 16 \
