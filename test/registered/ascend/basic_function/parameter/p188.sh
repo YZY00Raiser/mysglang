@@ -59,5 +59,11 @@ python -m sglang.launch_server \
 --disable-cuda-graph \
 --nnodes 1 \
 --node-rank 0 \
---disable-overlap-schedule\
---enable-hierarchical-cache
+--disable-overlap-schedule \
+--enable-hierarchical-cache \
+--hicache-ratio 1.2 \
+--hicache-size 0 \
+--hicache-write-policy write_through \
+--hicache-storage-backend file \
+--hicache-storage-prefetch-policy wait_complete \
+--mem-fraction-static 0.8
