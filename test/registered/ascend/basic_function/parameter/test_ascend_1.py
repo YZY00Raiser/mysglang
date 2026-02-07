@@ -18,11 +18,13 @@ DEFAULT_MODEL_NAME_FOR_TEST = "/root/.cache/modelscope/hub/models/vllm-ascend/De
 
 class DisaggregationHiCacheBase(PDDisaggregationServerBase):
     """Base class for disaggregation with HiCache tests"""
+
     def setUpClass(cls):
         # 设置测试使用的模型路径
         cls.model = DEFAULT_MODEL_NAME_FOR_TEST
         # 初始化模型对应的分词器（用于生成测试prompt、解码token）
         cls.tokenizer = get_tokenizer(cls.model)
+
     def gen_prompt(self, token_num: int) -> str:
         """
         生成指定token数量的随机测试提示词（prompt）
@@ -78,3 +80,7 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
 
         # 断言缓存命中的token数大于700（验证高缓存命中率）
         self.assertGreater(response2["meta_info"]["cached_tokens"], 700)
+
+
+if __name__ == "__main__":
+    unittest.main()
