@@ -38,7 +38,8 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
         """
         # 调用父类的初始化方法，加载基础配置（如prefill_url/decode_url/lb_url等）
         super(DisaggregationHiCacheBase, cls).setUpClass()
-
+        cls.prefill_nodes = ["http://192.168.0.188:24667"]
+        cls.decode_nodes = ["http://192.168.0.244:24667"]
         # 设置测试使用的模型路径
         cls.model = DEFAULT_MODEL_NAME_FOR_TEST
         # 初始化模型对应的分词器（用于生成测试prompt、解码token）
