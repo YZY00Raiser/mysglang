@@ -41,7 +41,7 @@ class TestDownloadDir(CustomTestCase):
             other_args=other_args,
         )
         print("--------------------rm---------------------------")
-        # run_command(f"rm -rf {cls.download_dir}")
+        run_command(f"rm -rf {cls.download_dir}")
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
