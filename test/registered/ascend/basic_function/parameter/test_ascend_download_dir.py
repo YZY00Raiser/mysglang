@@ -41,7 +41,7 @@ class TestDownloadDir(CustomTestCase):
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
-
+        run_command(f"rm -rf {cls.download_dir}")
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
