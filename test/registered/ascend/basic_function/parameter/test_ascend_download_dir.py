@@ -21,7 +21,7 @@ class TestDownloadDir(CustomTestCase):
        [Test Category] Parameter
        [Test Target] --download-dir
        """
-    model = "/weight/Qwen/Qwen2-0.5B-Instruct"
+    model = "Qwen2-0.5B-Instruct"
     download_dir = "./weight"
 
     @classmethod
@@ -34,9 +34,8 @@ class TestDownloadDir(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
         ]
-
-
-        print()
+        run_command(f"rm -rf {cls.download_dir}")
+        print("--------------------rm---------------------------")
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
@@ -47,7 +46,7 @@ class TestDownloadDir(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        run_command(f"rm -rf {cls.download_dir}")
+        #run_command(f"rm -rf {cls.download_dir}")
 
     def test_download_dir(self):
         response = requests.post(
