@@ -18,7 +18,7 @@ DEFAULT_MODEL_NAME_FOR_TEST = "/root/.cache/modelscope/hub/models/vllm-ascend/De
 
 class DisaggregationHiCacheBase(PDDisaggregationServerBase):
     """Base class for disaggregation with HiCache tests"""
-
+    @classmethod
     def setUpClass(cls):
         # 设置测试使用的模型路径
         cls.model = DEFAULT_MODEL_NAME_FOR_TEST
