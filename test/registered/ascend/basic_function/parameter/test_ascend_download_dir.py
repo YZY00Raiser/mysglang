@@ -34,15 +34,14 @@ class TestDownloadDir(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
         ]
-        run_command(f"rm -rf {cls.download_dir}")
-        print("--------------------rm---------------------------")
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
-
+        print("--------------------rm---------------------------")
+        run_command(f"rm -rf {cls.download_dir}")
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
