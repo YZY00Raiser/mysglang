@@ -25,7 +25,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     base_url = DEFAULT_URL_FOR_TEST
     scores_with_param = []  # 存储带参数的10次分数
     scores_without_param = []  # 存储不带参数的10次分数
-    RUN_TIMES = 10  # 定义运行次数
+    RUN_TIMES = 20  # 定义运行次数
 
     def launch_server(self, enable_multimodal: bool):
         """Universal server launch method, add --enable-multimodal based on parameters"""
@@ -109,7 +109,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
                          f"Expected {self.RUN_TIMES} scores without parameter, got {len(self.scores_without_param)}")
 
     def test_03_calculate_and_assert_average(self):
-        """计算两组分数的平均值并断言带参数的平均值≥不带参数的平均值"""
+        """计算两组分数的平均值并断言带参数的平均值 不带参数的平均值"""
         # 计算平均值
         avg_with_param = sum(self.scores_with_param) / len(self.scores_with_param)
         avg_without_param = sum(self.scores_without_param) / len(self.scores_without_param)
