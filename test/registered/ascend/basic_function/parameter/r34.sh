@@ -7,7 +7,7 @@ export HCCL_SOCKET_IFNAME="enp23s0f3"
 export GLOO_SOCKET_IFNAME="enp23s0f3"
  python -m sglang_router.launch_router \
 --decode http://192.168.0.244:24667 \
---prefill http://192.168.0.188:24667 \
+--prefill http://192.168.0.34:24667 \
 --pd-disaggregation \
 --mini-lb \
 --policy cache_aware \
