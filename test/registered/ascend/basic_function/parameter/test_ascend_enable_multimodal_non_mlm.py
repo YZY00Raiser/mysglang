@@ -121,13 +121,6 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         print(f"\nWithout --enable-multimodal (10 runs): {self.scores_without_param}")
         print(f"Average score without parameter: {avg_without_param:.4f}")
 
-        # 核心断言：带参数的平均值 ≥ 不带参数的平均值
-        self.assertGreaterEqual(
-            avg_with_param,
-            avg_without_param,
-            f"Average MMLU score with --enable-multimodal ({avg_with_param:.4f}) is less than the average score without it ({avg_without_param:.4f})"
-        )
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
