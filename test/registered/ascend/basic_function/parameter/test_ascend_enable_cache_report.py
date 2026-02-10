@@ -25,7 +25,6 @@ class TestEnableCacheReport(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--enable-cache-report",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
