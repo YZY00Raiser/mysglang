@@ -30,7 +30,7 @@ export PROFILING_MODE=dynamic
 export HCCL_OP_EXPANSION_MODE=AIV
 
 # 1P1D网络通信配置（关键：MF存储地址指向D节点192.168.0.244，网卡与D节点保持一致）
-export ASCEND_MF_STORE_URL="tcp://192.168.0.188:24667"
+export ASCEND_MF_STORE_URL="tcp://192.168.0.34:24667"
 export HCCL_SOCKET_IFNAME="enp23s0f3"
 export GLOO_SOCKET_IFNAME="enp23s0f3"
 
