@@ -48,7 +48,7 @@ class DisaggregationHiCacheBase(CustomTestCase):
     ) -> Dict:
         """Send a generate request and return response"""
         response = requests.post(
-            f"{self.lb_url}/generate",
+            f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": prompt,
                 "sampling_params": {
