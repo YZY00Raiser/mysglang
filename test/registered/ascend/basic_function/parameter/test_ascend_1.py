@@ -16,7 +16,7 @@ from sglang.test.server_fixtures.disaggregation_fixture import (
 DEFAULT_MODEL_NAME_FOR_TEST = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V3.2-W8A8"
 
 
-class DisaggregationHiCacheBase(PDDisaggregationServerBase):
+class DisaggregationHiCacheBase(cls):
     """Base class for disaggregation with HiCache tests"""
     @classmethod
     def setUpClass(cls):
