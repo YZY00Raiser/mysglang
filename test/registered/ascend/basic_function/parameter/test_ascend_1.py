@@ -6,7 +6,11 @@ import unittest
 from typing import Dict
 
 import requests
-
+from sglang.test.test_utils import (
+    DEFAULT_URL_FOR_TEST,
+    CustomTestCase,
+    popen_launch_server,
+)
 from sglang.bench_serving import get_tokenizer
 from sglang.test.server_fixtures.disaggregation_fixture import (
     PDDisaggregationServerBase,
@@ -16,7 +20,7 @@ from sglang.test.server_fixtures.disaggregation_fixture import (
 DEFAULT_MODEL_NAME_FOR_TEST = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V3.2-W8A8"
 
 
-class DisaggregationHiCacheBase(cls):
+class DisaggregationHiCacheBase(CustomTestCase):
     """Base class for disaggregation with HiCache tests"""
     @classmethod
     def setUpClass(cls):
