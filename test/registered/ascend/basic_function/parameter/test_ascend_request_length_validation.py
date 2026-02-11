@@ -54,8 +54,8 @@ class TestRequestLengthValidation(CustomTestCase):
         print("-----------------------responsecontext-------------------------")
         print(response.to_json())
 
-        # completions_tokens = response.to_json()["usage"]["completion_tokens"]
-        # self.assertGreater(completions_tokens, 0)
+        completions_tokens = response.usage.completion_tokens
+        self.assertGreater(completions_tokens, 0)
 
     def test_input_length_longer_than_context_length(self):
         client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
