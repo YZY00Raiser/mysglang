@@ -51,9 +51,6 @@ class TestRequestLengthValidation(CustomTestCase):
             ],
             temperature=0,
         )
-        print("-----------------------responsecontext-------------------------")
-        print(response.to_json())
-
         completions_tokens = response.usage.completion_tokens
         self.assertGreater(completions_tokens, 0)
 
@@ -81,8 +78,8 @@ class TestRequestLengthValidation(CustomTestCase):
             temperature=0,
             max_tokens=800,
         )
-        print("-----------------------responsetoken-------------------------")
-        print(response.usage.completion_tokens)
+        completions_tokens = response.usage.completion_tokens
+        self.assertGreater(completions_tokens, 0)
 
     def test_longer_max_tokens_validation(self):
         client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
