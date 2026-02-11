@@ -13,6 +13,9 @@ from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
+RESPONSE_TEXT1 = None
+RESPONSE_TEXT2 = None
+
 
 class TestRandomSeedZero(CustomTestCase):
     """Testcase：Verify set --random-seed parameter, different random_seed will affect the model's output (response.text)
@@ -66,12 +69,17 @@ class TestRandomSeedZero(CustomTestCase):
             else:
                 response_text2 = response.json()["text"]
                 print("-------1111111111111111111-------------")
-                print(response_text1)
+                print(response_text2)
         self.assertEqual(response_text1, response_text2)
+
 
 
 class TestRandomSeedOne(TestRandomSeedZero):
     random_seed = 1
+
+
+# class TestRandomSeed(CustomTestCase):
+#     self.assertEqual(response_text1, response_text2)
 
 
 if __name__ == "__main__":
