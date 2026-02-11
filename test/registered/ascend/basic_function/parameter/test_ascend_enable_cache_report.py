@@ -25,6 +25,7 @@ class TestEnableCacheReport(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
+            "--enable-cache-report",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
@@ -62,8 +63,10 @@ class TestEnableCacheReport(CustomTestCase):
 
                 },
             )
+            print(response.json())
             self.assertEqual(response.status_code, 200)
             if i == 2:
+
                 self.assertIn('"cached_tokens":256', response.text)
 
 
