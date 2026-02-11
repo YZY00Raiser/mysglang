@@ -27,44 +27,29 @@ class TestRandomSeedZero(CustomTestCase):
     model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
     random_seed = 0
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     other_args = [
-    #         "--attention-backend",
-    #         "ascend",
-    #         "--disable-cuda-graph",
-    #         "--random-seed",
-    #         cls.random_seed,
-    #     ]
-    #     cls.process = popen_launch_server(
-    #         cls.model,
-    #         DEFAULT_URL_FOR_TEST,
-    #         timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-    #         other_args=other_args,
-    #     )
-    #
-    # @classmethod
-    # def tearDownClass(cls):
-    #     kill_process_tree(cls.process.pid)
-
-    def test_random_seed(self):
-        response_text1 = None
-        response_text2 = None
+    @classmethod
+    def setUpClass(cls):
         other_args = [
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
             "--random-seed",
-            self.random_seed,
+            cls.random_seed,
         ]
-        self.process = popen_launch_server(
-            self.model,
+        cls.process = popen_launch_server(
+            cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
-        kill_process_tree(self.process.pid)
 
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+
+    def test_random_seed(self):
+        response_text1 = None
+        response_text2 = None
         for i in range(2):
             response = requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",
