@@ -66,10 +66,14 @@ class TestRandomSeedZero(CustomTestCase):
                 response_text1 = response.json()["text"]
                 print("-------0000000000000000000-------------")
                 print(response_text1)
+                print("-------seedddd-------------")
+                print(self.random_seed)
             else:
                 response_text2 = response.json()["text"]
                 print("-------1111111111111111111-------------")
                 print(response_text2)
+                print("-------seedddd-------------")
+                print(self.random_seed)
         self.assertEqual(response_text1, response_text2)
 
 class TestRandomSeedOne(TestRandomSeedZero):
