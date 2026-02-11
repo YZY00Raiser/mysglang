@@ -73,9 +73,6 @@ class TestRandomSeedZero(CustomTestCase):
 class TestRandomSeedOne(TestRandomSeedZero):
     random_seed = 1
 
-class TestRandomSeedDiffer(TestRandomSeedZero):
-    random_seed = 1
-
 
 if __name__ == "__main__":
     unittest.main()
