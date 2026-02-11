@@ -24,15 +24,12 @@ class TestEnableCacheReport(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        other_args = (
-            [
-                "--enable-cache-report",
-                "--attention-backend",
-                "ascend",
-                "--disable-cuda-graph",
-            ]
-
-        )
+        other_args = [
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--enable-hierarchical-cache",
+        ]
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
@@ -47,9 +44,9 @@ class TestEnableCacheReport(CustomTestCase):
     def test_enable_cache_report(self):
         for i in range(2):
             response = requests.post(
-                f"{DEFAULT_URL_FOR_TEST}/generate",
+                f"{DEFAULT_URL_FOR_TEST}/v1/completions",
                 json={
-                    "text": "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
+                    "prompt": "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
@@ -65,8 +62,6 @@ class TestEnableCacheReport(CustomTestCase):
 
                 },
             )
-            print("---------------------response--------------------------------")
-            print(response.json())
             self.assertEqual(response.status_code, 200)
             if i == 2:
                 self.assertIn('"cached_tokens":256', response.text)
