@@ -18,8 +18,7 @@ RESPONSE_TEXT2 = None
 
 
 class TestRandomSeedZero(CustomTestCase):
-    """Testcase：Verify set --random-seed parameter, different random_seed will affect the model's output (response.text)
-    and when random_seed is the same, the response.text will same.
+    """Testcase：Verify set --random-seed parameter, with the same random_seed the model's output is consistent.
 
        [Test Category] Parameter
        [Test Target] --random-seed
