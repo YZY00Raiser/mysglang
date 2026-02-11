@@ -56,7 +56,7 @@ class TestRandomSeedZero(CustomTestCase):
                 json={
                     "text": "The capital of France is",
                     "sampling_params": {
-                        "temperature": 0.1,
+                        "temperature": 1,
                         "max_new_tokens": 32,
                     },
                 },
@@ -73,7 +73,7 @@ class TestRandomSeedZero(CustomTestCase):
         self.assertEqual(response_text1, response_text2)
 
 class TestRandomSeedOne(TestRandomSeedZero):
-    random_seed = 1
+    random_seed = 42
 
 
 # class TestRandomSeed(CustomTestCase):
