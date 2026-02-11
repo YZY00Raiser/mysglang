@@ -61,12 +61,19 @@ class TestRandomSeedZero(CustomTestCase):
             self.assertEqual(response.status_code, 200)
             if i == 0:
                 response_text1 = response.json()["text"]
+                print("-------0000000000000000000-------------")
+                print(response_text1)
             else:
                 response_text2 = response.json()["text"]
+                print("-------1111111111111111111-------------")
+                print(response_text1)
         self.assertEqual(response_text1, response_text2)
 
 
 class TestRandomSeedOne(TestRandomSeedZero):
+    random_seed = 1
+
+class TestRandomSeedDiffer(TestRandomSeedZero):
     random_seed = 1
 
 
