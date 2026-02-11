@@ -54,7 +54,7 @@ class TestRequestLengthValidation(CustomTestCase):
 
     def test_input_length_longer_than_context_length(self):
         client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
-        long_text = "hello " * 1001
+        long_text = "hello " * 1200
         with self.assertRaises(openai.BadRequestError) as cm:
             client.chat.completions.create(
                 model=self.model,
@@ -89,7 +89,7 @@ class TestRequestLengthValidation(CustomTestCase):
                     {"role": "user", "content": long_text},
                 ],
                 temperature=0,
-                max_tokens=500,
+                max_tokens=1001,
             )
         self.assertIn(
             "max_completion_tokens is too large",
