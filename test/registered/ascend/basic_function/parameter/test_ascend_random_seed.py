@@ -13,9 +13,6 @@ from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
-RESPONSE_TEXT1 = None
-RESPONSE_TEXT2 = None
-
 
 class TestRandomSeedZero(CustomTestCase):
     """Testcase：Verify set --random-seed parameter, with the same random_seed the model's output is consistent.
