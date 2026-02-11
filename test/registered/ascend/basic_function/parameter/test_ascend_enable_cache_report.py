@@ -63,11 +63,11 @@ class TestEnableCacheReport(CustomTestCase):
 
                 },
             )
-            print(response.json())
             self.assertEqual(response.status_code, 200)
-            if i == 2:
-
-                self.assertIn('"cached_tokens":256', response.text)
+            if i == 1:
+                cached_tokens = response.json()["usage"]['prompt_tokens_details']['cached_tokens']
+                print(cached_tokens)
+                self.assertEqual(256, cached_tokens)
 
 
 if __name__ == "__main__":
