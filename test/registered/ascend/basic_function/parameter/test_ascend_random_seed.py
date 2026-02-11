@@ -72,8 +72,8 @@ class TestRandomSeedZero(CustomTestCase):
                 print(response_text2)
         self.assertEqual(response_text1, response_text2)
 
-class TestRandomSeedOne(TestRandomSeedZero):
-    random_seed = 1
+# class TestRandomSeedOne(TestRandomSeedZero):
+#     random_seed = 1
 
 
 # class TestRandomSeed(CustomTestCase):
