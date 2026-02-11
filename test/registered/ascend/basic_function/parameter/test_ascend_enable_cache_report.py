@@ -49,7 +49,7 @@ class TestEnableCacheReport(CustomTestCase):
             response = requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",
                 json={
-                    "prompt": "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
+                    "text": "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
