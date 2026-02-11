@@ -48,7 +48,7 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
             "--tp-size",
             "1",
             "--page-size",
-            "64",
+            "128",
             "--enable-hierarchical-cache",
             "--hicache-ratio",
             "1.2",
@@ -135,8 +135,6 @@ class TestDisaggregationPrefillWithHiCache(DisaggregationHiCacheBase):
             "64",
             "--mem-fraction-static",
             "0.8",
-            "--base-gpu-id",
-            "1",
         ]
         decode_args += cls.transfer_backend + cls.rdma_devices
         env = {

@@ -10,18 +10,9 @@ from sglang.test.test_utils import (
     CustomTestCase,
     popen_launch_server,
 )
-from sglang.test.ci.ci_register import register_npu_ci
-
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 
 class TestFimCompletion(CustomTestCase):
-    """Testcase：Verify set --completion-template = deepseek_coder, the inference request is successfully processed.
-
-       [Test Category] Parameter
-       [Test Target] --completion-template
-       """
-
     other_args = ["--completion-template", "deepseek_coder", "--attention-backend", "ascend", "--disable-cuda-graph", "--mem-fraction-static", 0.8]
     @classmethod
     def setUpClass(cls):
@@ -79,7 +70,7 @@ class TestFimCompletion(CustomTestCase):
 
 class TestFimCompletionJson(TestFimCompletion):
     other_args = ["--completion-template", "./deepseek_coder.json", "--attention-backend", "ascend", "--disable-cuda-graph", "--mem-fraction-static", 0.8]
-
+    
 
 if __name__ == "__main__":
     unittest.main()
