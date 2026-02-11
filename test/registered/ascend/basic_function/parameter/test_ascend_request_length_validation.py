@@ -80,7 +80,7 @@ class TestRequestLengthValidation(CustomTestCase):
         )
         print("-----------------------responsetoken-------------------------")
         print(response.completions.list())
-        completions_tokens = response.to_json()["usage"]["completion_tokens"]
+        completions_tokens = response.completions.list()["usage"]["completion_tokens"]
         self.assertGreater(completions_tokens, 0)
 
 
