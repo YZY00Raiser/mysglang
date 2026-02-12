@@ -1,7 +1,6 @@
 import unittest
 
 import openai
-# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_1_3B_BASE
 from sglang.srt.utils import kill_process_tree
 from sglang.srt.utils.hf_transformers_utils import get_tokenizer
 from sglang.test.test_utils import (
@@ -21,7 +20,6 @@ class TestFimCompletion(CustomTestCase):
        [Test Category] Parameter
        [Test Target] --completion-template
        """
-    # model = DEEPSEEK_CODER_1_3B_BASE
     model = "/root/.cache/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
     other_args = [
         "--completion-template",
@@ -32,6 +30,7 @@ class TestFimCompletion(CustomTestCase):
         "--mem-fraction-static",
         0.8,
     ]
+
     @classmethod
     def setUpClass(cls):
         cls.base_url = DEFAULT_URL_FOR_TEST
