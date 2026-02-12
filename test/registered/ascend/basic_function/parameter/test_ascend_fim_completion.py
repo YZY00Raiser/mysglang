@@ -23,6 +23,15 @@ class TestFimCompletion(CustomTestCase):
        """
     # model = DEEPSEEK_CODER_1_3B_BASE
     model = "/root/.cache/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
+    other_args = [
+        "--completion-template",
+        "deepseek_coder",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--mem-fraction-static",
+        0.8,
+    ]
     @classmethod
     def setUpClass(cls):
         cls.base_url = DEFAULT_URL_FOR_TEST
@@ -32,15 +41,7 @@ class TestFimCompletion(CustomTestCase):
             cls.base_url,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             api_key=cls.api_key,
-            other_args=[
-                "--completion-template",
-                "deepseek_coder",
-                "--attention-backend",
-                "ascend",
-                "--disable-cuda-graph",
-                "--mem-fraction-static",
-                0.8,
-            ]
+            other_args=cls.other_args,
         )
         cls.base_url += "/v1"
         cls.tokenizer = get_tokenizer(cls.model)
