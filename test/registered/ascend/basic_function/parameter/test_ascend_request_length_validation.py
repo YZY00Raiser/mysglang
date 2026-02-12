@@ -39,8 +39,15 @@ class TestRequestLengthValidation(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
+    def create_openai_client(self):
+        """创建 OpenAI 客户端的公共方法"""
+        return openai.Client(
+            api_key=self.api_key,
+            base_url=f"{DEFAULT_URL_FOR_TEST}/v1"
+        )
+
     def test_input_length_no_longer_than_context_length_success(self):
-        client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
+        client = self.create_openai_client()
         long_text = "hello " * 500
         response = client.chat.completions.create(
             model=self.model,
@@ -53,7 +60,7 @@ class TestRequestLengthValidation(CustomTestCase):
         self.assertGreater(completions_tokens, 0)
 
     def test_input_length_longer_than_context_length(self):
-        client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
+        client = self.create_openai_client()
         long_text = "hello " * 1200
         with self.assertRaises(openai.BadRequestError) as cm:
             client.chat.completions.create(
@@ -66,7 +73,7 @@ class TestRequestLengthValidation(CustomTestCase):
         self.assertIn("is longer than the model's context length", str(cm.exception))
 
     def test_not_longer_max_tokens_validation_success(self):
-        client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
+        client = self.create_openai_client()
         long_text = "hello "
         response = client.chat.completions.create(
             model=self.model,
@@ -80,7 +87,7 @@ class TestRequestLengthValidation(CustomTestCase):
         self.assertGreater(completions_tokens, 0)
 
     def test_longer_max_tokens_validation(self):
-        client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
+        client = self.create_openai_client()
         long_text = "hello "
         with self.assertRaises(openai.BadRequestError) as cm:
             client.chat.completions.create(
