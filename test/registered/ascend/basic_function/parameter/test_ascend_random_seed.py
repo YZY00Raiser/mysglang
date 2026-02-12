@@ -53,7 +53,7 @@ class TestRandomSeedZero(CustomTestCase):
                 json={
                     "text": "The capital of France is",
                     "sampling_params": {
-                        "temperature": 0,  # 温度设为0确保确定性输出
+                        "temperature": 0,
                         "max_new_tokens": 32,
                     },
                 },
