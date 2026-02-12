@@ -42,7 +42,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
 
     def test_context_length_success(self):
         print("==============startoooo====================================")
-        input_ids = [1] * 999
+        input_ids = [1] * 1000
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
