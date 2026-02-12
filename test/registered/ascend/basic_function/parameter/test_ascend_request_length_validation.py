@@ -1,7 +1,7 @@
 import unittest
 import openai
 import requests
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
 from sglang.srt.utils import kill_process_tree
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -21,7 +21,7 @@ class TestRequestLengthValidation(CustomTestCase):
        [Test Category] Parameter
        [Test Target] --max-total-tokens, --context-length
        """
-    model = DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH
+    model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
 
     @classmethod
     def setUpClass(cls):
