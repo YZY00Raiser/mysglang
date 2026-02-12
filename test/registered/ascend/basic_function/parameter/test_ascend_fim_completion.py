@@ -1,16 +1,16 @@
 import unittest
 
 import openai
-from sglang.test.ascend.test_ascend_utils import LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_1_3B_BASE
 from sglang.srt.utils import kill_process_tree
 from sglang.srt.utils.hf_transformers_utils import get_tokenizer
-from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
+from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
@@ -21,7 +21,7 @@ class TestFimCompletion(CustomTestCase):
        [Test Category] Parameter
        [Test Target] --enable-cache-report
        """
-    model = "/root/.cache/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
+    model = DEEPSEEK_CODER_1_3B_BASE
 
     @classmethod
     def setUpClass(cls):
