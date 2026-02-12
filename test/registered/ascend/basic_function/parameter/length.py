@@ -57,22 +57,19 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
         print("=============finshhhhhhhhhhhhhhh====================================")
         self.assertEqual(response.status_code, 200)
 
-    # def test_longer_context_length_success(self):
-    #     print("==============startoooo====================================")
-    #     input_ids = [1] * 891
-    #     response = requests.post(
-    #         f"{DEFAULT_URL_FOR_TEST}/generate",
-    #         json={
-    #             "input_ids": input_ids,
-    #             "sampling_params": {
-    #                 "temperature": 0,
-    #             },
-    #         },
-    #     )
-    #     print("==============respob=====================================")
-    #     print(response.json())
-    #     print("=============finshhhhhhhhhhhhhhh====================================")
-    #     self.assertEqual(response.status_code, 400)
+    def test_longer_context_length_success(self):
+        print("==============startoooo====================================")
+        input_ids = [1] * 891
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids,
+                "sampling_params": {
+                    "temperature": 0,
+                },
+            },
+        )
+        self.assertEqual(response.status_code, 400)
 
     # def test_max_token_success(self):
     #     input_ids = [1] * 889
