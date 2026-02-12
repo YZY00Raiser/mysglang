@@ -21,8 +21,8 @@ class TestFimCompletion(CustomTestCase):
        [Test Category] Parameter
        [Test Target] --enable-cache-report
        """
-    model = DEEPSEEK_CODER_1_3B_BASE
-
+    # model = DEEPSEEK_CODER_1_3B_BASE
+    model = "/root/.cache/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
     @classmethod
     def setUpClass(cls):
         cls.base_url = DEFAULT_URL_FOR_TEST
