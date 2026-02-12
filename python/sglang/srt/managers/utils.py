@@ -109,6 +109,7 @@ def validate_input_length(
         Error message if validation fails, None if successful
     """
     if len(req.origin_input_ids) >= max_req_input_len:
+        print("---------------------------------------------------------Input length exceeds max input length------------------------------------")
         if allow_auto_truncate:
             logger.warning(
                 "Request length is longer than the KV cache pool size or "
