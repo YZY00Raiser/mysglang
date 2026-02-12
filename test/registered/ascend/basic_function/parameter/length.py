@@ -26,7 +26,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--max-total-tokens", "1000",
+            "--max-total-tokens", "999",
             "--context-length", "890",
         ]
         cls.process = popen_launch_server(
@@ -69,6 +69,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
                 },
             },
         )
+
         self.assertEqual(response.status_code, 400)
 
     # def test_max_token_success(self):
