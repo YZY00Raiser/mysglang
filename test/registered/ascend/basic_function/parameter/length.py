@@ -48,6 +48,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
                 "input_ids": input_ids,
                 "sampling_params": {
                     "temperature": 0,
+                    "max_tokens": 0,
                 },
             },
         )
