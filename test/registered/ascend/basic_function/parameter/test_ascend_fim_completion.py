@@ -1,9 +1,10 @@
 import unittest
 
 import openai
-
+from sglang.test.ascend.test_ascend_utils import LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
 from sglang.srt.utils import kill_process_tree
 from sglang.srt.utils.hf_transformers_utils import get_tokenizer
+from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -11,12 +12,19 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
+register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+
 
 class TestFimCompletion(CustomTestCase):
-    other_args = ["--completion-template", "deepseek_coder", "--attention-backend", "ascend", "--disable-cuda-graph", "--mem-fraction-static", 0.8]
+    """Testcase：Verify set --enable-cache-report, the model's FIM (Fill-in-the-Middle) completion function work correctly.
+
+       [Test Category] Parameter
+       [Test Target] --enable-cache-report
+       """
+    model = "/root/.cache/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
+
     @classmethod
     def setUpClass(cls):
-        cls.model = "/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.api_key = "sk-123456"
         cls.process = popen_launch_server(
@@ -24,7 +32,15 @@ class TestFimCompletion(CustomTestCase):
             cls.base_url,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             api_key=cls.api_key,
-            other_args=cls.other_args,
+            other_args=[
+                "--completion-template",
+                "deepseek_coder",
+                "--attention-backend",
+                "ascend",
+                "--disable-cuda-graph",
+                "--mem-fraction-static",
+                0.8,
+            ]
         )
         cls.base_url += "/v1"
         cls.tokenizer = get_tokenizer(cls.model)
@@ -50,15 +66,12 @@ class TestFimCompletion(CustomTestCase):
             stream=False,
             n=number_of_completion,
         )
-
-        print(response)
-        print(len(response.choices))
         assert len(response.choices) == number_of_completion
         assert response.id
         assert response.created
         assert response.object == "text_completion"
         assert (
-            response.usage.prompt_tokens == num_prompt_tokens
+                response.usage.prompt_tokens == num_prompt_tokens
         ), f"{response.usage.prompt_tokens} vs {num_prompt_tokens}"
         assert response.usage.completion_tokens > 0
         assert response.usage.total_tokens > 0
@@ -69,8 +82,16 @@ class TestFimCompletion(CustomTestCase):
 
 
 class TestFimCompletionJson(TestFimCompletion):
-    other_args = ["--completion-template", "./deepseek_coder.json", "--attention-backend", "ascend", "--disable-cuda-graph", "--mem-fraction-static", 0.8]
-    
+    other_args = [
+        "--completion-template",
+        "/__w/sglang/sglang/test/registered/ascend/basic_function/deepseek_coder.json",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--mem-fraction-static",
+        0.8,
+    ]
+
 
 if __name__ == "__main__":
     unittest.main()
