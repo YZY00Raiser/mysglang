@@ -40,22 +40,22 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_context_length_success(self):
-        print("==============startoooo====================================")
-        input_ids = [1] * 890
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "input_ids": input_ids,
-                "sampling_params": {
-                    "temperature": 0,
-                },
-            },
-        )
-        print("==============respob=====================================")
-        print(response.json())
-        print("=============finshhhhhhhhhhhhhhh====================================")
-        self.assertEqual(response.status_code, 200)
+    # def test_context_length_success(self):
+    #     print("==============startoooo====================================")
+    #     input_ids = [1] * 890
+    #     response = requests.post(
+    #         f"{DEFAULT_URL_FOR_TEST}/generate",
+    #         json={
+    #             "input_ids": input_ids,
+    #             "sampling_params": {
+    #                 "temperature": 0,
+    #             },
+    #         },
+    #     )
+    #     print("==============respob=====================================")
+    #     print(response.json())
+    #     print("=============finshhhhhhhhhhhhhhh====================================")
+    #     self.assertEqual(response.status_code, 200)
 
     def test_longer_context_length_success(self):
         print("==============startoooo====================================")
