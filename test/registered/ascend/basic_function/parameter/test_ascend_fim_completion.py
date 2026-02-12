@@ -82,16 +82,16 @@ class TestFimCompletion(CustomTestCase):
             self.run_fim_completion(number_of_completion)
 
 
-# class TestFimCompletionJson(TestFimCompletion):
-#     other_args = [
-#         "--completion-template",
-#         "data/y30082119/mysglang/test/registered/ascend/basic_function/parameter/deepseek_coder.json",
-#         "--attention-backend",
-#         "ascend",
-#         "--disable-cuda-graph",
-#         "--mem-fraction-static",
-#         0.8,
-#     ]
+class TestFimCompletionJson(TestFimCompletion):
+    other_args = [
+        "--completion-template",
+        "./deepseek_coder.json",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--mem-fraction-static",
+        0.8,
+    ]
 
 
 if __name__ == "__main__":
