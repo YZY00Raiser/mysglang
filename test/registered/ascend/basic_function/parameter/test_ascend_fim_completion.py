@@ -16,10 +16,10 @@ register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 
 class TestFimCompletion(CustomTestCase):
-    """Testcase：Verify set --enable-cache-report, the model's FIM (Fill-in-the-Middle) completion function work correctly.
+    """Testcase：Verify set --completion-template, the model's FIM (Fill-in-the-Middle) completion function work correctly.
 
        [Test Category] Parameter
-       [Test Target] --enable-cache-report
+       [Test Target] --completion-template
        """
     # model = DEEPSEEK_CODER_1_3B_BASE
     model = "/root/.cache/modelscope/hub/models/deepseek-ai/deepseek-coder-1.3b-base"
