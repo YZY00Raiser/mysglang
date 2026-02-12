@@ -85,7 +85,7 @@ class TestFimCompletion(CustomTestCase):
 class TestFimCompletionJson(TestFimCompletion):
     other_args = [
         "--completion-template",
-        "deepseek_coder.json",
+        "mysglang/test/registered/ascend/basic_function/parameter/deepseek_coder.json",
         "--attention-backend",
         "ascend",
         "--disable-cuda-graph",
