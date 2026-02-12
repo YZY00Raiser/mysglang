@@ -26,8 +26,8 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--max-total-tokens", "1000",
-            "--context-length", "1000"
+            "--max-total-tokens", "100",
+            "--context-length", "100"
         ]
         cls.process = popen_launch_server(
             cls.model,
@@ -42,7 +42,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
 
     def test_context_length_success(self):
         print("==============startoooo====================================")
-        input_ids = [1] * 999
+        input_ids = [1] * 99
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
