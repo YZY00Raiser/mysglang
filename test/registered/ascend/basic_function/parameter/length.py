@@ -26,7 +26,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--max-total-tokens", "110",
+            "--max-total-tokens", "120",
             "--context-length", "100"
         ]
         cls.process = popen_launch_server(
@@ -49,6 +49,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
                 "input_ids": input_ids,
                 "sampling_params": {
                     "temperature": 0,
+                    "max_tokens": 10,
                 },
             },
         )
