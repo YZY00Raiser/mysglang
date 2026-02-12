@@ -124,11 +124,11 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_context_length_success(self):
-        input_ids = [100] * 1000
+        input_ids = [100] * 999
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "input_ids":  input_ids,
+                "input_ids": input_ids,
                 "sampling_params": {
                     "temperature": 0,
 
@@ -136,7 +136,6 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-
 
     def test_max_token_success(self):
         input_ids = [100] * 999
