@@ -138,7 +138,7 @@ class TestRequestLengthValidationGenerate(CustomTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_max_token_success(self):
-        input_ids = [100] * 999
+        input_ids = [1] * 999
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
