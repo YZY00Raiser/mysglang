@@ -9,7 +9,9 @@ forward-hooks: |
     {
       "name": "qwen_first_layer_attn_monitor",
       "target_modules": ["model.layers.0.self_attn"],
-      "hook_factory": "monitor:create_attention_monitor_factory",
-      "config":
+      "hook_factory": -2,
+      "config": {
+        "layer_index": 0
+      }
     }
   ]
