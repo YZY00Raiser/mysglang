@@ -1,6 +1,17 @@
 model-path: /root/.cache/modelscope/hub/models/Qwen/Qwen3-32B
 attention-backend: ascend
 trust-remote-code: true
-disable-cuda-graph: trued
+disable-cuda-graph: true
 mem-fraction-static: 0.9
 tp-size: 4
+forward-hooks: |
+  [
+    {
+      "name": "qwen_first_layer_attn_monitor",
+      "target_modules": ["model.layer.0.self_attn"],
+      "hook_factory": "monitor:create_attention_monitor_factory",
+      "config": {
+        "layer_index": 0
+      }
+    }
+  ]
