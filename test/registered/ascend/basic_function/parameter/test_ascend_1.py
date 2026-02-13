@@ -22,7 +22,7 @@ class TestEnableCacheReport(CustomTestCase):
        """
 
     def test_enable_cache_report(self):
-        URL_FOR_TEST = "http://127.0.0.1:666"
+        URL_FOR_TEST = "http://127.0.0.1:6666"
         for i in range(2):
             response = requests.post(
                 f"{URL_FOR_TEST}/v1/completions",
@@ -39,7 +39,7 @@ class TestEnableCacheReport(CustomTestCase):
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, ",
-                    "max_tokens": 260,
+                    "max_tokens": 1,
 
                 },
             )
