@@ -1,4 +1,7 @@
 # hook
+import logging
+
+
 def create_attention_monitor_factory(config):
     """
     钩子工厂函数
@@ -27,9 +30,12 @@ def create_attention_monitor_factory(config):
             "outputs": output.sum(-1)[:5],
         }
         # 实时打印监控信息
+
         print(f"[AttentionMonitor] Layer {layer_index} - "
               f"Input: {monitor_record['inputs']},"
               f"Output: {output.sum(-1)[:5]},")
+        logging.basicConfig(filename="hook.log", level=logging.DEBUG)
+        logging.debug("hook effect:" %monitor_record)
         # 必须返回输出，否则会中断前向传播
         return output
 
