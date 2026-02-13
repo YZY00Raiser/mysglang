@@ -7,9 +7,9 @@ tp-size: 4
 forward-hooks: |
   [
     {
-      "name": 3.14,
+      "name": "qwen_first_layer_attn_monitor",
       "target_modules": ["model.layers.0.self_attn"],
-      "hook_factory": "monitor:create_attention_monitor_factory",
+      "hook_factory":,
       "config": {
         "layer_index": 0
       }
