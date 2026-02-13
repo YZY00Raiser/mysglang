@@ -28,8 +28,8 @@ def create_attention_monitor_factory(config):
         }
         # 实时打印监控信息
         print(f"[AttentionMonitor] Layer {layer_index} - "
-              f"Inputs: {monitor_record['inputs']},"
-              f"Outputs: {output.sum(-1)[:5]},")
+              f"Input: {monitor_record['inputs']},"
+              f"Output: {output.sum(-1)[:5]},")
         # 必须返回输出，否则会中断前向传播
         return output
 
