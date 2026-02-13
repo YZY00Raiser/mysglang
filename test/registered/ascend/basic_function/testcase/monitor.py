@@ -1,6 +1,6 @@
 # hook
 import logging
-
+import time
 
 def create_attention_monitor_factory(config):
     """
@@ -14,7 +14,7 @@ def create_attention_monitor_factory(config):
         """
         实际钩子函数,在self-attention层的前向传播时被调用
         """
-        import time
+
         # 获取时间戳
         timestamp = time.time()
 
@@ -34,8 +34,14 @@ def create_attention_monitor_factory(config):
         print(f"[AttentionMonitor] Layer {layer_index} - "
               f"Input: {monitor_record['inputs']},"
               f"Output: {output.sum(-1)[:5]},")
-        logging.basicConfig(filename="hook.log", level=logging.DEBUG)
-        logging.debug("hook effect:" %monitor_record)
+        logging.basicConfig(
+            filename="hook.log",
+            level=logging.DEBUG,
+            format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        logging.debug(f"hook effect: {monitor_record}")
+
         # 必须返回输出，否则会中断前向传播
         return output
 
