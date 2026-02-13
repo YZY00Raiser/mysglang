@@ -34,8 +34,6 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         ]
 
         cls.process = popen_launch_server(
-            cls.model,
-            cls.base_url,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
