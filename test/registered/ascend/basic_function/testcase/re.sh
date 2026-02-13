@@ -7,3 +7,5 @@ curl "http://127.0.0.1:30000/generate" \
       "max_new_tokens": 32
     }
   }'
+
+--model-path
