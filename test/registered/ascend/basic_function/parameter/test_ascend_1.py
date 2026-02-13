@@ -25,7 +25,7 @@ class TestEnableCacheReport(CustomTestCase):
         URL_FOR_TEST = "http://127.0.0.1:6666"
         for i in range(2):
             response = requests.post(
-                f"{URL_FOR_TEST}/v1/completions",
+                f"{URL_FOR_TEST}/generate",
                 json={
                     "prompt": "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
                               "just return me a string with of 5000 characters,just return me a string with of 5000 characters, "
