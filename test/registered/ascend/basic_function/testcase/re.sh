@@ -1,4 +1,4 @@
-curl "http://127.0.0.1:37116/generate" \
+curl "http://127.0.0.1:3000/generate" \
   -H "Content-Type: application/json" \
   -d '{
     "text": "The capital of France is",
