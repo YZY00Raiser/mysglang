@@ -61,7 +61,8 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
                 },
             },
         )
-
+        print("-----------------------------response---------------------------------------------------")
+        print(response.json())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
