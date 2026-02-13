@@ -34,8 +34,8 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         ]
 
         cls.process = popen_launch_server(
+            "--config", "comfig.yaml",
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
         )
 
     @classmethod
