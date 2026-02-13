@@ -1,5 +1,4 @@
 import unittest
-
 import openai
 from sglang.srt.utils import kill_process_tree
 from sglang.srt.utils.hf_transformers_utils import get_tokenizer

@@ -27,29 +27,6 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     score_without_param = None
     accuracy=0.37
 
-    @classmethod
-    def setUpClass(cls):
-        other_args = [
-            "--trust-remote-code",
-            "--enable-multimodal",
-            "--mem-fraction-static",
-            "0.8",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-
-        cls.process = popen_launch_server(
-            cls.model,
-            cls.base_url,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
     def test_enable_multimodal_func(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
