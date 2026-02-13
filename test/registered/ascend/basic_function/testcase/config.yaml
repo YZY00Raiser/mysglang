@@ -3,4 +3,4 @@ attention-backend: ascend
 trust-remote-code: true
 disable-cuda-graph: true
 mem-fraction-static: 0.8
---tp-size: 4
+tp-size: 4
