@@ -10,16 +10,10 @@ python3 -m sglang.launch_server \
 --trust-remote-code \
 --tp-size 16 \
 --attention-backend ascend \
---disable-radix-cache \
 --device npu \
 --chunked-prefill-size -1 \
 --watchdog-timeout 9000 \
---disable-radix-cache \
 --max-prefill-tokens 68000 \
 --enable-hierarchical-cache \
---hicache-ratio 1.2 \
---hicache-size 0 \
---hicache-write-policy write_through \
---hicache-storage-backend file \
---hicache-storage-prefetch-policy wait_complete
+
 

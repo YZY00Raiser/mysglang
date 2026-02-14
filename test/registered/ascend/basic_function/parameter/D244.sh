@@ -8,7 +8,6 @@ python3 -m sglang.launch_server \
 --trust-remote-code \
 --tp-size 16 \
 --attention-backend ascend \
---disable-radix-cache \
 --device npu \
 --chunked-prefill-size -1 \
 --enable-hierarchical-cache
