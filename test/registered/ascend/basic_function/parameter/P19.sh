@@ -21,5 +21,5 @@ python3 -m sglang.launch_server \
 --hicache-size 0 \
 --hicache-write-policy write_through \
 --hicache-storage-backend file \
---hicache-storage-prefetch-policy wait_complete \
+--hicache-storage-prefetch-policy wait_complete
 
