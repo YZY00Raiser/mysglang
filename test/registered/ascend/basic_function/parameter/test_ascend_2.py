@@ -26,8 +26,8 @@ class TestEnableCacheReport(CustomTestCase):
     [Test Category] model
     [Test Target] enable-hierarchical-cache
     """
-    DEFAULT_URL_FOR_TEST = "http://172.22.3.19:6688"
-    PREFILL_URL_FOR_TEST = "http://172.22.3.19:8000"
+    DEFAULT_URL_FOR_TEST = "http://172.22.3.34:6688"
+    PREFILL_URL_FOR_TEST = "http://172.22.3.34:8000"
 
     def trigger_offloading_and_flush(self):
         """
