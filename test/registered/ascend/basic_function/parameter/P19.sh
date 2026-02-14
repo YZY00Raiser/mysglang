@@ -11,13 +11,15 @@ python3 -m sglang.launch_server \
 --tp-size 16 \
 --attention-backend ascend \
 --disable-radix-cache \
---disable-cuda-graph \
 --device npu \
---quantization modelslim \
 --chunked-prefill-size -1 \
 --watchdog-timeout 9000 \
 --disable-radix-cache \
 --max-prefill-tokens 68000 \
---moe-a2a-backend deepep \
---deepep-mode auto \
---quantization modelslim
+--enable-hierarchical-cache \
+--hicache-ratio 1.2 \
+--hicache-size 0 \
+--hicache-write-policy write_through \
+--hicache-storage-backend file \
+--hicache-storage-prefetch-policy wait_complete \
+
