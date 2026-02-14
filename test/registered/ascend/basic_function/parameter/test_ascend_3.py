@@ -4,11 +4,11 @@ from sglang.test.few_shot_gsm8k import run_eval
 
 def gsm8k():
     args = SimpleNamespace(
-        num_shots=8,
+        num_shots=5,
         data_path="./test.jsonl",
         num_questions=200,
         max_new_tokens=512,
-        parallel=32,
+        parallel=128,
         host=f"http://172.22.3.19",
         port=6688,
     )
