@@ -10,7 +10,7 @@ def gsm8k():
         max_new_tokens=512,
         parallel=32,
         host=f"http://172.22.3.19",
-        port=8000,
+        port=6688,
     )
     accuracy_list = []
     total_runs = 5
