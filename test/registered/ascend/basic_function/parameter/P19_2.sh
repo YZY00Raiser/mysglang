@@ -1,7 +1,7 @@
 export ASCEND_MF_STORE_URL="tcp://172.22.3.19:24667"
 python3 -m sglang.launch_server \
 --model-path /root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V3.2-W8A8 \
---mem-fraction-static 0.9 \
+--mem-fraction-static 0.8 \
 --host 172.22.3.19 \
 --port 8000 \
 --disaggregation-mode prefill \
@@ -18,5 +18,3 @@ python3 -m sglang.launch_server \
 --page-size 128 \
 --disable-cuda-graph \
 --disable-radix-cache
-
-
