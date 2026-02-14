@@ -9,7 +9,5 @@ python3 -m sglang.launch_server \
 --tp-size 16 \
 --attention-backend ascend \
 --device npu \
---chunked-prefill-size -1 \
---disaggregation-decode-enable-offload-kvcache \
---hicache-storage-backend file
+--chunked-prefill-size -1
 
