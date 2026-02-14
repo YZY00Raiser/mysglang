@@ -15,6 +15,7 @@ python3 -m sglang.launch_server \
 --watchdog-timeout 9000 \
 --max-prefill-tokens 68000 \
 --quantization modelslim \
+--disable-cuda-graph \
 --disable-radix-cache
 
 
