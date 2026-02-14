@@ -1,0 +1,5 @@
+--hicache-ratio 1.2 \
+--hicache-size 0 \
+--hicache-write-policy write_through \
+--hicache-storage-backend file \
+--hicache-storage-prefetch-policy wait_complete
