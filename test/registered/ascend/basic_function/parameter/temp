@@ -3,3 +3,5 @@
 --hicache-write-policy write_through \
 --hicache-storage-backend file \
 --hicache-storage-prefetch-policy wait_complete
+/flush_cache
+/offload

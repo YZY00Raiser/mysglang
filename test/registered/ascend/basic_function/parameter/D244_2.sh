@@ -9,7 +9,7 @@ python3 -m sglang.launch_server \
 --tp-size 16 \
 --attention-backend ascend \
 --device npu \
---chunked-prefill-size -1
+--chunked-prefill-size -1 \
 --quantization modelslim \
 --page-size 128 \
 --disable-cuda-graph
