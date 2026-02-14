@@ -10,4 +10,4 @@ python3 -m sglang.launch_server \
 --attention-backend ascend \
 --device npu \
 --chunked-prefill-size -1 \
---enable-hierarchical-cache
+
