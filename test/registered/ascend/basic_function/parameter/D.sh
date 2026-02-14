@@ -6,7 +6,9 @@ python3 -m sglang.launch_server \
 --host 172.22.3.244 --port 8000 \
 --disaggregation-mode decode \
 --disaggregation-transfer-backend ascend \
---trust-remote-code --tp-size 2 --attention-backend ascend \
+--trust-remote-code \
+--tp-size 2 \
+--attention-backend ascend \
 --disable-radix-cache \
 --device npu \
 --quantization modelslim \
