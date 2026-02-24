@@ -39,14 +39,9 @@ class TestDownloadDir(CustomTestCase):
         other_args = [
             "--download-dir",
             cls.download_dir,
-            "--trust-remote-code",
-            "--mem-fraction-static",
-            "0.9",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--tp-size",
-            "4",
         ]
         cls.process = popen_launch_server(
             cls.model,
