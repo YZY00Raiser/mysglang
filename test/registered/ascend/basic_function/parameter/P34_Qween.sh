@@ -7,14 +7,10 @@ python3 -m sglang.launch_server \
 --disaggregation-mode prefill \
 --disaggregation-bootstrap-port 8996 \
 --disaggregation-transfer-backend ascend \
+--disable-cuda-graph \
 --trust-remote-code \
 --tp-size 16 \
 --attention-backend ascend \
 --device npu \
---chunked-prefill-size -1 \
---watchdog-timeout 9000 \
---max-prefill-tokens 68000 \
---page-size 128 \
---enable-hierarchical-cache \
---hicache-storage-backend file
+
 
