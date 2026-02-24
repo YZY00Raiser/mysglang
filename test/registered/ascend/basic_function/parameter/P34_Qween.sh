@@ -14,7 +14,6 @@ python3 -m sglang.launch_server \
 --chunked-prefill-size -1 \
 --watchdog-timeout 9000 \
 --max-prefill-tokens 68000 \
---quantization modelslim \
 --page-size 128 \
 --enable-hierarchical-cache \
 --hicache-storage-backend file
