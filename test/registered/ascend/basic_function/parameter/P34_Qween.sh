@@ -9,7 +9,7 @@ python3 -m sglang.launch_server \
 --disaggregation-transfer-backend ascend \
 --disable-cuda-graph \
 --trust-remote-code \
---tp-size 16 \
+--tp-size 4 \
 --attention-backend ascend \
 --device npu
 

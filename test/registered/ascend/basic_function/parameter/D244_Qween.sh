@@ -6,7 +6,7 @@ python3 -m sglang.launch_server \
 --disaggregation-mode decode \
 --disaggregation-transfer-backend ascend \
 --trust-remote-code \
---tp-size 16 \
+--tp-size 4 \
 --attention-backend ascend \
 --device npu
 
