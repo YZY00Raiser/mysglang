@@ -18,7 +18,7 @@ class TestDownloadDir(CustomTestCase):
     """Testcase：Verify set --download-dir parameter, the parameter take effect and the inference request is successfully processed.
 
     [Test Category] Parameter
-    [Test Target] --download-dir
+    [Test Target] --config
     """
 
     model = None
@@ -29,7 +29,6 @@ class TestDownloadDir(CustomTestCase):
             "--config", "config.yaml"
         ]
         cls.process = popen_launch_server(
-            cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
