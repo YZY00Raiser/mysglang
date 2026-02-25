@@ -815,7 +815,7 @@ def _wait_for_server_health(
 
 
 def popen_launch_server(
-
+    # model: str,
     base_url: str,
     timeout: float,
     api_key: Optional[str] = None,
