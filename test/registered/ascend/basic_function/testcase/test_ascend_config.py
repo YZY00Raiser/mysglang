@@ -19,7 +19,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         [Test Category] Parameter
         [Test Target] --enable-multimodal
         """
-    model = QWEN3_32B_WEIGHTS_PATH
+    model = None
     base_url = DEFAULT_URL_FOR_TEST
     score_with_param = None
     score_without_param = None
@@ -29,9 +29,13 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     def setUpClass(cls):
         other_args = [
             "--config", "comfig.yaml"
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
         ]
 
         cls.process = popen_launch_server(
+            cls.model,
             cls.base_url,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
