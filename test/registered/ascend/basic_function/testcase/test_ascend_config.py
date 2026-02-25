@@ -29,9 +29,6 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     def setUpClass(cls):
         other_args = [
             "--config", "comfig.yaml"
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
         ]
 
         cls.process = popen_launch_server(
