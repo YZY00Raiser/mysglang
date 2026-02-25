@@ -1,14 +1,14 @@
-import unittest
 import requests
+import unittest
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
+from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
-from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
@@ -16,14 +16,10 @@ register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 class TestEnableMultimodalNonMlm(CustomTestCase):
     """Testcase: Verify that when the --enable-multimodal parameter is set, mmlu accuracy greater than or equal 0.37
 
-        [Test Category] Parameter
-        [Test Target] --enable-multimodal
-        """
+    [Test Category] Parameter
+    [Test Target] --config
+    """
     model = None
-    base_url = DEFAULT_URL_FOR_TEST
-    score_with_param = None
-    score_without_param = None
-    accuracy=0.37
 
     @classmethod
     def setUpClass(cls):
@@ -33,7 +29,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
 
         cls.process = popen_launch_server(
             cls.model,
-            cls.base_url,
+            DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
@@ -56,7 +52,6 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
 
 
 if __name__ == "__main__":
