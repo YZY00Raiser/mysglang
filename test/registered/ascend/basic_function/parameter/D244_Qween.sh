@@ -8,5 +8,5 @@ python3 -m sglang.launch_server \
 --trust-remote-code \
 --tp-size 16 \
 --attention-backend ascend \
---device npu \
+--device npu
 
