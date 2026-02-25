@@ -1,3 +1,4 @@
+import json
 import unittest
 import requests
 from sglang.srt.utils import kill_process_tree
@@ -10,30 +11,36 @@ from sglang.test.test_utils import (
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
 
 class TestEnableMultimodalNonMlm(CustomTestCase):
-    """Testcase: Verify that when the --enable-multimodal parameter is set, mmlu accuracy greater than or equal 0.37
+    """Testcase: Verify that when the --forward-hooks parameter is set, mmlu accuracy greater than or equal 0.37
 
-        [Test Category] Parameter
-        [Test Target] --enable-multimodal
-        """
-    model = None
-    base_url = DEFAULT_URL_FOR_TEST
-    score_with_param = None
-    score_without_param = None
-    accuracy=0.37
+    [Test Category] Parameter
+    [Test Target] --forward-hooks
+    """
+    model = QWEN3_32B_WEIGHTS_PATH
 
     @classmethod
     def setUpClass(cls):
-        other_args = [
-            "--config", "config.yaml"
+        hooks_spec = [
+            {
+                "name": "qwen_first_layer_attn_monitor",
+                "target_modules": ["model.layers.0.self_attn"],
+                "hook_factory": "monitor:create_attention_monitor_factory",
+                "config": {
+                    "layer_index": 0
+                }
+            }
         ]
-
+        other_args = [
+            "--forward-hooks",
+            json.dumps(hooks_spec),
+        ]
         cls.process = popen_launch_server(
             cls.model,
-            cls.base_url,
+            DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
@@ -56,7 +63,6 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
 
 
 if __name__ == "__main__":
