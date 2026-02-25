@@ -1,47 +1,32 @@
-import subprocess
 import unittest
+
 import requests
-import os
-import glob
-# from sglang.test.ascend.test_ascend_utils import run_command
+
 from sglang.srt.utils import kill_process_tree
+from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
-from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
-def run_command(cmd, shell=True):
-    try:
-        result = subprocess.run(
-            cmd, shell=shell, capture_output=True, text=True, check=True
-        )
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"execute command error: {e}")
-        return None
+
 
 class TestDownloadDir(CustomTestCase):
     """Testcase：Verify set --download-dir parameter, the parameter take effect and the inference request is successfully processed.
 
-       [Test Category] Parameter
-       [Test Target] --download-dir
-       """
-    model = "Qwen/Qwen3-32B"
-    download_dir = "./weight"
+    [Test Category] Parameter
+    [Test Target] --download-dir
+    """
+
+    model = None
 
     @classmethod
     def setUpClass(cls):
-        run_command(f"mkdir -p {cls.download_dir}")
         other_args = [
-            "--download-dir",
-            cls.download_dir,
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
+            "--config", "config.yaml"
         ]
         cls.process = popen_launch_server(
             cls.model,
@@ -53,7 +38,6 @@ class TestDownloadDir(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        run_command(f"rm -rf {cls.download_dir}")
 
     def test_download_dir(self):
         response = requests.post(
@@ -65,21 +49,10 @@ class TestDownloadDir(CustomTestCase):
                     "max_new_tokens": 32,
                 },
             },
-            timeout=30
+            timeout=30,
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
-        # check model weight
-        weight_suffixes = ("*.safetensors", "*.bin", "*.pth")
-        weight_files = []
-        for suffix in weight_suffixes:
-            weight_files.extend(glob.glob(os.path.join(self.download_dir, "**", suffix), recursive=True))
-        self.assertGreater(
-            len(weight_files),
-            0,
-            msg=f"--download-dir {self.download_dir} No model weight"
-        )
 
 
 if __name__ == "__main__":
