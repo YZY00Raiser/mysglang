@@ -1,8 +1,8 @@
 python -m sglang.launch_server \
   --model-path /root/.cache/modelscope/hub/models/Qwen/Qwen3-32B \
   --attention-backend ascend \
-  --trust-remote-code True \
-  --disable-cuda-graph True \
+  --trust-remote-code \
+  --disable-cuda-graph \
   --mem-fraction-static 0.9 \
   --tp-size 4 \
   --forward-hooks '[
