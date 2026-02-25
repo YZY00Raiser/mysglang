@@ -35,6 +35,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "--attention-backend",
                 "ascend",
                 "--disable-cuda-graph",
+                "--trust-remote-code"
                 "--mem-fraction-static",
                 "0.8",
                 "--tp-size",
