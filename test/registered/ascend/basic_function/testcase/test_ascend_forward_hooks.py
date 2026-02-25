@@ -35,6 +35,14 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
             }
         ]
         other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
             "--forward-hooks",
             json.dumps(hooks_spec),
         ]
