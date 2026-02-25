@@ -21,7 +21,7 @@ class TestDownloadDir(CustomTestCase):
     [Test Target] --config
     """
 
-    model = "/a/Qwen/Qwen3-32B"
+    model = "/data/Qwen/Qwen3-32B"
 
     @classmethod
     def setUpClass(cls):
