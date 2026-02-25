@@ -28,7 +28,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--config", "comfig.yaml"
+            "--config", "config.yaml"
         ]
 
         cls.process = popen_launch_server(
