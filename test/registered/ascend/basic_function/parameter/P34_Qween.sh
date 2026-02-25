@@ -11,6 +11,8 @@ python3 -m sglang.launch_server \
 --trust-remote-code \
 --tp-size 4 \
 --attention-backend ascend \
+--enable-hierarchical-cache \
+--hicache-storage-backend file \
 --device npu
 
 
