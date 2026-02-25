@@ -8,8 +8,13 @@ def create_attention_monitor_factory(config):
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
-    hook_name = config.get("hook_name", "unknown")
     log_file="hook.log"
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
     def attention_monitor_hook(module, inputs, output):
         """
         实际钩子函数,在self-attention层的前向传播时被调用
@@ -34,12 +39,7 @@ def create_attention_monitor_factory(config):
         print(f"[AttentionMonitor] Layer {layer_index} - "
               f"Input: {monitor_record['inputs']},"
               f"Output: {output.sum(-1)[:5]},")
-        logging.basicConfig(
-            filename=log_file,
-            level=logging.INFO,
-            format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
-            datefmt="%Y-%m-%d %H:%M:%S"
-        )
+
         logging.info(f"hook effect: {monitor_record}")
 
         # 必须返回输出，否则会中断前向传播
