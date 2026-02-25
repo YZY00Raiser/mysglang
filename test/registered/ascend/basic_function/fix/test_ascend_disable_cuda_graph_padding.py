@@ -29,7 +29,6 @@ class TestDisableCudaGraphPadding(CustomTestCase):
         other_args = [
             "--attention-backend",
             "ascend",
-            "--disable-cuda-graph",
             "--disable-cuda-graph-padding",
         ]
 
