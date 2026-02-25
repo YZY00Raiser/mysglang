@@ -9,7 +9,7 @@ def create_attention_monitor_factory(config):
     """
     layer_index = config.get("layer_index", 0)
     hook_name = config.get("hook_name", "unknown")
-
+    log_file="hook.log"
     def attention_monitor_hook(module, inputs, output):
         """
         实际钩子函数,在self-attention层的前向传播时被调用
@@ -54,7 +54,7 @@ def create_attention_monitor_factory(config):
               f"Input: {monitor_record['inputs']},"
               f"Output: {output.sum(-1)[:5]},")
         logging.basicConfig(
-            filename="hook.log",
+            filename=log_file,
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
             datefmt="%Y-%m-%d %H:%M:%S"
