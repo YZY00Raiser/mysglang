@@ -3,7 +3,7 @@ python -m sglang.launch_server \
   --attention-backend ascend \
   --trust-remote-code \
   --disable-cuda-graph \
-  --mem-fraction-static 0.9 \
+  --mem-fraction-static 0.75 \
   --tp-size 4 \
   --forward-hooks '[
     {
