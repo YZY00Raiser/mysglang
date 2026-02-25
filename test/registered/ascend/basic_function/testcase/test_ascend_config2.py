@@ -21,7 +21,7 @@ class TestDownloadDir(CustomTestCase):
     [Test Target] --config
     """
 
-    model = None
+    model = "/a/Qwen/Qwen3-32B"
 
     @classmethod
     def setUpClass(cls):
@@ -29,6 +29,7 @@ class TestDownloadDir(CustomTestCase):
             "--config", "config.yaml"
         ]
         cls.process = popen_launch_server(
+            cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
