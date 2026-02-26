@@ -33,9 +33,9 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
             "--disable-cuda-graph",
             "--trust-remote-code",
             "--moe-runner-backend",
+            cls.moe_runner_backend,
             "--base-gpu-id",
             "7",
-            cls.moe_runner_backend,
         ]
         return other_args
 
