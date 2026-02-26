@@ -70,7 +70,7 @@ class TestSetForwardHooks(CustomTestCase):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "hook_factory": 3.14,
             "config": {
                 "layer_index": 0
             }
