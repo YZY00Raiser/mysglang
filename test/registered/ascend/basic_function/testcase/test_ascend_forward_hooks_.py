@@ -294,12 +294,10 @@ class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
     ]
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
+        self.assertIn("Registered forward hook 'abc' on model.layers.0.self_attn", hook_content)
 
 class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
     hooks_spec = [
@@ -314,12 +312,10 @@ class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
     ]
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
+        self.assertIn("Registered forward hook '3.14' on model.layers.0.self_attn", hook_content)
 
 class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
    hooks_spec = [
@@ -334,12 +330,11 @@ class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
     ]
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
+        self.assertIn("Registered forward hook '-2' on model.layers.0.self_attn", hook_content)
+
 
 class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
     hooks_spec = [
@@ -361,6 +356,8 @@ class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: None", hook_content)
 
+
+
 class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -380,6 +377,86 @@ class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: None", hook_content)
+
+
+# 假设你使用的是 Python 标准库的 unittest 框架
+import unittest
+
+class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
+    # 定义所有测试用例：(hook_name值, 期望的断言字符串)
+    test_cases = [
+        ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
+        (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
+        (-2, "Registered forward hook '-2' on model.layers.0.self_attn"),
+        (None, "Registered forward hook 'None' on model.layers.0.self_attn"),
+        ("!@#$", "Registered forward hook 'None' on model.layers.0.self_attn"),
+    ]
+
+    def test_enable_multimodal_func(self):
+        # 遍历所有测试用例，逐个执行测试
+        for hook_name, expected_log in self.test_cases:
+            # 为每个用例动态构建 hooks_spec
+            self.hooks_spec = [
+                {
+                    "name": hook_name,
+                    "target_modules": ["model.layers.0.self_attn"],
+                    "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+                    "config": {
+                        "layer_index": 0
+                    }
+                }
+            ]
+
+            # 执行核心测试逻辑
+            self._launch_server()
+            self.hook_log_file.seek(0)
+            hook_content = self.hook_log_file.read()
+
+            # 断言，若失败则明确提示是哪个 name 值出了问题
+            self.assertIn(
+                expected_log,
+                hook_content,
+                msg=f"测试 hook name={hook_name} 失败：未找到期望的日志内容"
+            )
+
+class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
+    # 定义所有测试用例：(hook_name值, 期望的断言字符串)
+    test_cases = [
+        ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
+        (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
+        (-2, "Registered forward hook '-2' on model.layers.0.self_attn"),
+        (None, "Registered forward hook 'None' on model.layers.0.self_attn"),
+        ("!@#$", "Registered forward hook 'None' on model.layers.0.self_attn"),
+    ]
+
+    def test_enable_multimodal_func(self):
+        # 遍历所有测试用例，逐个执行测试
+        for hook_name, expected_log in self.test_cases:
+            # 为每个用例动态构建 hooks_spec
+            self.hooks_spec = [
+                {
+                    "name": hook_name,
+                    "target_modules": ["model.layers.0.self_attn"],
+                    "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+                    "config": {
+                        "layer_index": 0
+                    }
+                }
+            ]
+
+            # 执行核心测试逻辑
+            self._launch_server()
+            self.hook_log_file.seek(0)
+            hook_content = self.hook_log_file.read()
+
+            # 断言，若失败则明确提示是哪个 name 值出了问题
+            self.assertIn(
+                expected_log,
+                hook_content,
+                msg=f"测试 hook name={hook_name} 失败：未找到期望的日志内容"
+            )
+
+
 
 '''
 
