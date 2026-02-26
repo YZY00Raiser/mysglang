@@ -81,9 +81,10 @@ class TestFimCompletion(CustomTestCase):
 
 
 class TestFimCompletionJson(TestFimCompletion):
+    deepseek_coder_json = "/__w/sglang/sglang/test/registered/ascend/basic_function/deepseek_coder.json"
     other_args = [
         "--completion-template",
-        "./deepseek_coder.json",
+        deepseek_coder_json,
         "--attention-backend",
         "ascend",
         "--disable-cuda-graph",
