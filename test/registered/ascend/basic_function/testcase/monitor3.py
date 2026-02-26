@@ -16,7 +16,7 @@ def create_attention_monitor_factory(config):
         datefmt="%Y-%m-%d %H:%M:%S",
         handlers=[
             logging.FileHandler(log_file,mode="a"),
-            logging.StreamHandler(sys.stdout)
+            logging.StreamHandler()
         ]
     )
     def attention_monitor_hook(module, inputs, output):
