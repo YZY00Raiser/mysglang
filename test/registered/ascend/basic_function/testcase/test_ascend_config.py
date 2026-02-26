@@ -10,7 +10,7 @@ from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
-    popen_launch_server, auto_config_device, _try_enable_offline_mode_if_cache_complete, _launch_server_process,
+    auto_config_device, _try_enable_offline_mode_if_cache_complete, _launch_server_process,
     _wait_for_server_health,
 )
 
