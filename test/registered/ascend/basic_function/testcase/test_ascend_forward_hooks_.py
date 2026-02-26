@@ -1,4 +1,3 @@
-import io
 import json
 import os
 import unittest
@@ -26,9 +25,7 @@ def create_attention_monitor_factory(config):
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
-    log_file = "/data/y30082119/hook.log"
     logging.basicConfig(
-        filename=log_file,
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
         datefmt="%Y-%m-%d %H:%M:%S"
@@ -53,11 +50,6 @@ def create_attention_monitor_factory(config):
             "inputs": hidden_states.sum(-1)[:5] if hidden_states is not None else None,
             "outputs": output.sum(-1)[:5],
         }
-        # 实时打印监控信息
-
-        print(f"[AttentionMonitor] Layer {layer_index} - "
-              f"Input: {monitor_record['inputs']},"
-              f"Output: {output.sum(-1)[:5]},")
 
         logging.info(f"hook effect: {monitor_record}")
 
@@ -78,17 +70,18 @@ class TestSetForwardHooks(CustomTestCase):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "monitor23:create_attention_monitor_factory",
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
                 "layer_index": 0
             }
         }
     ]
+    forward_hooks = json.dumps(hooks_spec)
 
     @classmethod
-    def setUpClass(cls):
-        cls.stderr = io.StringIO()
-        other_args = [
+    def _build_other_args(cls):
+        """公共方法：构建通用的命令行参数"""
+        return [
             "--trust-remote-code",
             "--mem-fraction-static",
             "0.8",
@@ -98,26 +91,38 @@ class TestSetForwardHooks(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            json.dumps(cls.hooks_spec),
+            cls.forward_hooks,
             "--base-gpu-id", "4",
         ]
+
+    @classmethod
+    def _launch_server(cls):
+        other_args = cls._build_other_args()
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
-            return_stdout_stderr=(cls.health_log_file, cls.hook_log_file),
+            return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
+
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        cls.health_log_file.close()
+        cls.out_log_file.close()
         cls.hook_log_file.close()
         # os.remove(cls.out_log_file_name)
         # os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
+        self._launch_server()
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -137,17 +142,52 @@ class TestSetForwardHooks(CustomTestCase):
         self.assertIn("hook effect", hook_content)
 
 
-# class TestSetForwardHooksValidation(TestSetForwardHooks):
-#     hooks_spec = [
-#         {
-#             "name": "qwen_first_layer_attn_monitor",
-#             "target_modules": ["model.layers.0.self_attn"],
-#             "hook_factory": "monitor2:create_attention_monitor_factory",
-#             "config": {
-#                 "layer_index": 0
-#             }
-#         }
-#     ]
+class TestSetForwardHooksValidation1(TestSetForwardHooks):
+    forward_hooks = "abc"
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: abc", hook_content)
+
+
+'''
+class TestSetForwardHooksValidation2(TestSetForwardHooks):
+    forward_hooks = 3.14
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("'float' object is not iterable", hook_content)
+
+class TestSetForwardHooksValidation3(TestSetForwardHooks):
+    forward_hooks = -2
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("'int' object is not iterable", str(ctx.exception))
+
+class TestSetForwardHooksValidation5(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: abc", hook_content)
+
+'''
 
 
 if __name__ == "__main__":
