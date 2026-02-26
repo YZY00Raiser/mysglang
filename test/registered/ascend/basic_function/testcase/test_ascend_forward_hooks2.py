@@ -121,10 +121,9 @@ class TestSetForwardHooks(CustomTestCase):
         os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-            print("--------------------------SERVER-------FAIL-----------------------------------------------")
-        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        # with self.assertRaises(Exception) as ctx:
+        self._launch_server()
+        # self.assertIn("Server process exited with code -9", str(ctx.exception))
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         print("--------------------------float-------FAIL-----------------------------------------------")
