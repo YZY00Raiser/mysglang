@@ -91,7 +91,7 @@ class TestSetForwardHooks(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            cls.forward_hooks,
+            cls.hooks_spec,
             "--base-gpu-id", "4",
         ]
         cls.process = popen_launch_server(
