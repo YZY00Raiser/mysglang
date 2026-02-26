@@ -8,7 +8,7 @@ def create_attention_monitor_factory(config):
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
-    log_file="/data/y30082119/hook.log"
+    log_file="hook.log"
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
