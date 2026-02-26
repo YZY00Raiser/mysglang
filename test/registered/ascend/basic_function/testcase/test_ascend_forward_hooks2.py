@@ -115,9 +115,7 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        with cls.assertRaises(Exception) as ctx:
-            kill_process_tree(cls.process.pid)
-        cls.assertIn("Server process exited with code -9", str(ctx.exception))
+        kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
         # os.remove(cls.out_log_file_name)
