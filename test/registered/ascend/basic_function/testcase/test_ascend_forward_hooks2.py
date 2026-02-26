@@ -74,7 +74,8 @@ class TestSetForwardHooks(CustomTestCase):
             }
         }
     ]
-    forward_hooks=json.dumps(hooks_spec)
+    # forward_hooks=json.dumps(hooks_spec)
+    forward_hooks = "abc"
     @classmethod
     def setUpClass(cls):
         cls.out_log_file_name = "./tmp_out_log.txt"
@@ -91,7 +92,7 @@ class TestSetForwardHooks(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            cls.hooks_spec,
+            cls.forward_hooks,
             "--base-gpu-id", "4",
         ]
         cls.process = popen_launch_server(
@@ -107,8 +108,8 @@ class TestSetForwardHooks(CustomTestCase):
         kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
-        # os.remove(cls.out_log_file_name)
-        # os.remove(cls.hook_log_file_name)
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         response = requests.post(
@@ -127,19 +128,11 @@ class TestSetForwardHooks(CustomTestCase):
 
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("hook effect", hook_content)
+        self.assertIn("Invalid", hook_content)
+        # self.assertIn("hook effect", hook_content)
 
 # class TestSetForwardHooksValidation(TestSetForwardHooks):
-#     hooks_spec = [
-#         {
-#             "name": "qwen_first_layer_attn_monitor",
-#             "target_modules": ["model.layers.0.self_attn"],
-#             "hook_factory": "monitor2:create_attention_monitor_factory",
-#             "config": {
-#                 "layer_index": 0
-#             }
-#         }
-#     ]
+#     forward_hooks = "abc"
 
 
 if __name__ == "__main__":
