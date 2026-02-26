@@ -111,10 +111,10 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        # cls.out_log_file.close()
-        # cls.err_log_file.close()
-        # os.remove(cls.out_log_file_name)
-        # os.remove(cls.err_log_file_name)
+        cls.out_log_file.close()
+        cls.hook_log_file.close()
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         response = requests.post(
