@@ -113,8 +113,8 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
-        os.remove(cls.out_log_file_name)
-        os.remove(cls.hook_log_file_name)
+        # os.remove(cls.out_log_file_name)
+        # os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         response = requests.post(
@@ -130,10 +130,10 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
         self.hook_log_file.seek(0)
-        content = self.hook_log_file.read()
-        self.assertTrue(len(content) > 0)
-        self.assertIn("hook effect", content)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("hook effect", hook_content)
 
 
 if __name__ == "__main__":
