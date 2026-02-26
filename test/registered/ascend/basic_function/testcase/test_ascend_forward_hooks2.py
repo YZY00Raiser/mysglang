@@ -44,7 +44,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            json.dumps(cls.hooks_spec),
+            cls.hooks_spec,
             "--base-gpu-id", "4",
         ]
         cls.process = popen_launch_server(
