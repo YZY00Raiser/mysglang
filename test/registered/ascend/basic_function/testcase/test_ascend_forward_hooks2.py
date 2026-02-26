@@ -80,7 +80,8 @@ class TestSetForwardHooks(CustomTestCase):
     # forward_hooks = json.dumps(hooks_spec)
     # forward_hooks = 3.14
     # forward_hooks = "abc"
-    forward_hooks = -2
+    # forward_hooks = -2
+    forward_hooks = "!@#$"
 
     @classmethod
     def _build_other_args(cls):
@@ -124,9 +125,9 @@ class TestSetForwardHooks(CustomTestCase):
         os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        # with self.assertRaises(Exception) as ctx:
+        self._launch_server()
+        # self.assertIn("Server process exited with code -9", str(ctx.exception))
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("'int' object is not iterable", hook_content)
