@@ -18,6 +18,7 @@ register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 import logging
 import time
 
+
 def create_attention_monitor_factory(config):
     """
     钩子工厂函数
@@ -29,6 +30,7 @@ def create_attention_monitor_factory(config):
         format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
         datefmt="%Y-%m-%d %H:%M:%S"
     )
+
     def attention_monitor_hook(module, inputs, output):
         """
         实际钩子函数,在self-attention层的前向传播时被调用
@@ -49,13 +51,13 @@ def create_attention_monitor_factory(config):
             "outputs": output.sum(-1)[:5],
         }
 
-
         logging.info(f"hook effect: {monitor_record}")
 
         # 必须返回输出，否则会中断前向传播
         return output
 
     return attention_monitor_hook
+
 
 class TestSetForwardHooks(CustomTestCase):
     """Testcase: Verify set --forward-hooks parameter, can identify the set hook function and the inference request is successfully processed.
@@ -74,7 +76,7 @@ class TestSetForwardHooks(CustomTestCase):
             }
         }
     ]
-    forward_hooks=json.dumps(hooks_spec)
+    forward_hooks = json.dumps(hooks_spec)
 
     @classmethod
     def _build_other_args(cls):
@@ -103,6 +105,7 @@ class TestSetForwardHooks(CustomTestCase):
             other_args=other_args,
             return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
+
     @classmethod
     def setUpClass(cls):
         cls.out_log_file_name = "./tmp_out_log.txt"
@@ -138,8 +141,10 @@ class TestSetForwardHooks(CustomTestCase):
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
 
-class TestSetForwardHooksValidation(TestSetForwardHooks):
+
+class TestSetForwardHooksValidation1(TestSetForwardHooks):
     forward_hooks = "abc"
+
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
@@ -149,6 +154,13 @@ class TestSetForwardHooksValidation(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: abc", hook_content)
 
+class TestSetForwardHooksValidation2(TestSetForwardHooks):
+    forward_hooks = 3.14
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
 
 
 if __name__ == "__main__":
