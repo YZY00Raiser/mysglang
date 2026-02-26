@@ -118,8 +118,8 @@ class TestSetForwardHooks(CustomTestCase):
         kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
-        # os.remove(cls.out_log_file_name)
-        # os.remove(cls.hook_log_file_name)
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
