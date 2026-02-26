@@ -63,7 +63,7 @@ def create_attention_monitor_factory(config):
 
     return attention_monitor_hook
 
-class TestEnableMultimodalNonMlm(CustomTestCase):
+class TestSetForwardHooks(CustomTestCase):
     """Testcase: Verify set --forward-hooks parameter, can identify the set hook function and the inference request is successfully processed.
 
     [Test Category] Parameter
@@ -74,7 +74,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "monitor2:create_attention_monitor_factory",
+            "hook_factory": "monitor23:create_attention_monitor_factory",
             "config": {
                 "layer_index": 0
             }
@@ -134,6 +134,18 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
+
+# class TestSetForwardHooksValidation(TestSetForwardHooks):
+#     hooks_spec = [
+#         {
+#             "name": "qwen_first_layer_attn_monitor",
+#             "target_modules": ["model.layers.0.self_attn"],
+#             "hook_factory": "monitor2:create_attention_monitor_factory",
+#             "config": {
+#                 "layer_index": 0
+#             }
+#         }
+#     ]
 
 
 if __name__ == "__main__":
