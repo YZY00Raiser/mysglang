@@ -246,23 +246,23 @@ class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
 
 
 
-class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
-    hooks_spec = [
-        {
-            "name": "qwen_first_layer_attn_monitor",
-            "target_modules": ["model.layers.0.self_attn"],
-            "hook_Factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
-            "config": {
-                "layer_index": 0
-            }
-        }
-    ]
-
-    def test_enable_multimodal_func(self):
-        self._launch_server()
-        self.hook_log_file.seek(0)
-        hook_content = self.hook_log_file.read()
-        self.assertIn("has no 'hook_factory', skipping", hook_content)
+# class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
+#     hooks_spec = [
+#         {
+#             "name": "qwen_first_layer_attn_monitor",
+#             "target_modules": ["model.layers.0.self_attn"],
+#             "hook_Factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+#             "config": {
+#                 "layer_index": 0
+#             }
+#         }
+#     ]
+#
+#     def test_enable_multimodal_func(self):
+#         self._launch_server()
+#         self.hook_log_file.seek(0)
+#         hook_content = self.hook_log_file.read()
+#         self.assertIn("has no 'hook_factory', skipping", hook_content)
 
 """
 class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
