@@ -3,7 +3,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import OLMOE_1B_7B_0924_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -22,8 +22,21 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     [Test Target] --moe-runner-backend
     """
 
-    model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
+    model = OLMOE_1B_7B_0924_WEIGHTS_PATH
     moe_runner_backend = "triton"
+
+    @classmethod
+    def get_server_args(cls):
+        """Return the arguments for the server launch. Override in subclasses."""
+        other_args = [
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--trust-remote-code",
+            "--moe-runner-backend",
+            cls.moe_runner_backend,
+        ]
+        return other_args
 
     @classmethod
     def setUpClass(cls):
@@ -31,13 +44,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=[
-                "--attention-backend",
-                "ascend",
-                "--disable-cuda-graph",
-                "--moe-runner-backend",
-                cls.moe_runner_backend,
-            ],
+            other_args=cls.get_server_args(),
         )
 
     @classmethod
