@@ -69,7 +69,7 @@ class TestSetForwardHooks(CustomTestCase):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
-            "TARGET_modules": ["model.layers.0.self_attn"],
+            "target_modules": ["model.layers.0.self_attn"],
             "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
                 "layer_index": 0
