@@ -115,8 +115,8 @@ class TestSetForwardHooks(CustomTestCase):
         kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
-        # os.remove(cls.out_log_file_name)
-        # os.remove(cls.hook_log_file_name)
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         self._launch_server()
@@ -143,25 +143,11 @@ class TestSetForwardHooksValidation(TestSetForwardHooks):
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Invalid JSON list: abc", str(ctx.exception))
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
 
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("hook effect", hook_content)
+        self.assertIn("Invalid JSON list: abc", hook_content)
 
 
 
