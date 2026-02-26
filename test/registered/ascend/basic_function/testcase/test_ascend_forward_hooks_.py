@@ -115,11 +115,10 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
-        # os.remove(cls.out_log_file_name)
-        # os.remove(cls.hook_log_file_name)
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         self._launch_server()
@@ -140,6 +139,7 @@ class TestSetForwardHooks(CustomTestCase):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
+        kill_process_tree(self.process.pid)
 
 
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
@@ -149,10 +149,12 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 2", str(ctx.exception))
-
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: abc", hook_content)
+        with self.assertRaises(Exception) as ctx:
+            kill_process_tree(self.process.pid)
+        self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
 
 
 '''
