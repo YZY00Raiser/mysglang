@@ -24,9 +24,7 @@ def create_attention_monitor_factory(config):
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
-    log_file="/data/y30082119/hook.log"
     logging.basicConfig(
-        filename=log_file,
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
         datefmt="%Y-%m-%d %H:%M:%S"
@@ -50,11 +48,7 @@ def create_attention_monitor_factory(config):
             "inputs": hidden_states.sum(-1)[:5] if hidden_states is not None else None,
             "outputs": output.sum(-1)[:5],
         }
-        # 实时打印监控信息
 
-        print(f"[AttentionMonitor] Layer {layer_index} - "
-              f"Input: {monitor_record['inputs']},"
-              f"Output: {output.sum(-1)[:5]},")
 
         logging.info(f"hook effect: {monitor_record}")
 
@@ -74,7 +68,7 @@ class TestSetForwardHooks(CustomTestCase):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "monitor23:create_attention_monitor_factory",
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
                 "layer_index": 0
             }

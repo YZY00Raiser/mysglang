@@ -1,3 +1,6 @@
+import io
+import json
+import os
 import unittest
 import requests
 from sglang.srt.utils import kill_process_tree
@@ -10,36 +13,109 @@ from sglang.test.test_utils import (
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
+
+# hook
+import logging
+import time
 
 
-class TestEnableMultimodalNonMlm(CustomTestCase):
-    """Testcase: Verify that when the --enable-multimodal parameter is set, mmlu accuracy greater than or equal 0.37
+def create_attention_monitor_factory(config):
+    """
+    钩子工厂函数
+    config: from --forward hooks
+    """
+    layer_index = config.get("layer_index", 0)
+    log_file = "/data/y30082119/hook.log"
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
 
-        [Test Category] Parameter
-        [Test Target] --enable-multimodal
+    def attention_monitor_hook(module, inputs, output):
         """
+        实际钩子函数,在self-attention层的前向传播时被调用
+        """
+
+        # 获取时间戳
+        timestamp = time.time()
+
+        # 提取输入信息
+        hidden_states = inputs[1] if inputs else None
+
+        # 记录关键信息
+        monitor_record = {
+            "timestamp": timestamp,
+            "layer_index": layer_index,
+            "module_type": type(module).__name__,
+            "inputs": hidden_states.sum(-1)[:5] if hidden_states is not None else None,
+            "outputs": output.sum(-1)[:5],
+        }
+        # 实时打印监控信息
+
+        print(f"[AttentionMonitor] Layer {layer_index} - "
+              f"Input: {monitor_record['inputs']},"
+              f"Output: {output.sum(-1)[:5]},")
+
+        logging.info(f"hook effect: {monitor_record}")
+
+        # 必须返回输出，否则会中断前向传播
+        return output
+
+    return attention_monitor_hook
+
+
+class TestSetForwardHooks(CustomTestCase):
+    """Testcase: Verify set --forward-hooks parameter, can identify the set hook function and the inference request is successfully processed.
+
+    [Test Category] Parameter
+    [Test Target] --forward-hooks
+    """
     model = QWEN3_32B_WEIGHTS_PATH
-    base_url = DEFAULT_URL_FOR_TEST
-    score_with_param = None
-    score_without_param = None
-    accuracy=0.37
+    hooks_spec = [
+        {
+            "name": "qwen_first_layer_attn_monitor",
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "monitor23:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
 
     @classmethod
     def setUpClass(cls):
+        cls.stderr = io.StringIO()
         other_args = [
-            "--config", "comfig.yaml"
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
+            "--forward-hooks",
+            json.dumps(cls.hooks_spec),
+            "--base-gpu-id", "4",
         ]
-
         cls.process = popen_launch_server(
-            cls.base_url,
+            cls.model,
+            DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
+            return_stdout_stderr=(cls.health_log_file, cls.hook_log_file),
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+        cls.health_log_file.close()
+        cls.hook_log_file.close()
+        # os.remove(cls.out_log_file_name)
+        # os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         response = requests.post(
@@ -56,6 +132,22 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("hook effect", hook_content)
+
+
+# class TestSetForwardHooksValidation(TestSetForwardHooks):
+#     hooks_spec = [
+#         {
+#             "name": "qwen_first_layer_attn_monitor",
+#             "target_modules": ["model.layers.0.self_attn"],
+#             "hook_factory": "monitor2:create_attention_monitor_factory",
+#             "config": {
+#                 "layer_index": 0
+#             }
+#         }
+#     ]
 
 
 if __name__ == "__main__":
