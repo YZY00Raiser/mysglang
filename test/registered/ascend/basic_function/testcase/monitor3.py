@@ -36,7 +36,7 @@ def create_attention_monitor_factory(config):
             "layer_index": layer_index,
             "module_type": type(module).__name__,
             "inputs": hidden_states.sum(-1)[:5] if hidden_states is not None else None,
-            "outputs": output.sum(-1)[:5],
+            "outputs": output.sum(-1)[:5].tolist(),
         }
         # 实时打印监控信息
 
