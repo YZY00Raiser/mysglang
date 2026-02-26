@@ -85,7 +85,7 @@ def popen_launch_server(
         "-m",
         # command,
         # "--model-path",
-        model,
+        # model,
         *[str(x) for x in other_args],
     ]
 
