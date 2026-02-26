@@ -73,18 +73,18 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         )
 
 
-# class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
-#     moe_runner_backend = "auto"
-#
-#     @classmethod
-#     def get_server_args(cls):
-#         other_args = [
-#             "--attention-backend",
-#             "ascend",
-#             "--disable-cuda-graph",
-#         ]
-#
-#         return other_args
+class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
+    moe_runner_backend = "auto"
+
+    @classmethod
+    def get_server_args(cls):
+        other_args = [
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+        ]
+
+        return other_args
 
 
 if __name__ == "__main__":
