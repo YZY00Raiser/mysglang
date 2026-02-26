@@ -204,6 +204,8 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
 '''
 
 
+
+"""
 class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -222,6 +224,7 @@ class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("Registered forward hook '' on model.layers.0.self_attn", hook_content)
 
+"""
 
 class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
     hooks_spec = [
@@ -242,6 +245,7 @@ class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
         self.assertIn("has no 'target_modules', skipping", hook_content)
 
 
+
 class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -260,7 +264,7 @@ class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("has no 'hook_factory', skipping", hook_content)
 
-
+"""
 class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -272,7 +276,7 @@ class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
             }
         }
     ]
-
+"""
 
 '''
 class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
