@@ -142,6 +142,7 @@ class TestSetForwardHooks(CustomTestCase):
         self.assertIn("hook effect", hook_content)
         # kill_process_tree(self.process.pid)
 
+
 '''
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
     forward_hooks = "abc"
@@ -202,9 +203,8 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 '''
 
-'''
-class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
 
+class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
     hooks_spec = [
         {
             "NAME": "qwen_first_layer_attn_monitor",
@@ -217,15 +217,13 @@ class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
     ]
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
+        self.assertIn("Registered forward hook '' on model.layers.0.self_attn", hook_content)
+
 
 class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
-
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -238,12 +236,11 @@ class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
     ]
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
+        self.assertIn("has no 'target_modules', skipping", hook_content)
+
 
 class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
     hooks_spec = [
@@ -258,15 +255,13 @@ class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
     ]
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
-'''
-class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
+        self.assertIn("has no 'hook_factory', skipping", hook_content)
 
+
+class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -346,8 +341,6 @@ class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 '''
-
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
