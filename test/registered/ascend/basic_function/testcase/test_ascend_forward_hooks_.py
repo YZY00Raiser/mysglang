@@ -155,8 +155,6 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: abc", hook_content)
 
 
-
-
 class TestSetForwardHooksValidation2(TestSetForwardHooks):
     forward_hooks = 3.14
 
@@ -169,7 +167,6 @@ class TestSetForwardHooksValidation2(TestSetForwardHooks):
         self.assertIn("'float' object is not iterable", hook_content)
 
 
-
 class TestSetForwardHooksValidation3(TestSetForwardHooks):
     forward_hooks = -2
 
@@ -180,6 +177,21 @@ class TestSetForwardHooksValidation3(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("'int' object is not iterable", hook_content)
+
+
+class TestSetForwardHooksValidation4(TestSetForwardHooks):
+    forward_hooks = "!@#$"
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        print("-----------------------------launch_server------------------------------------------")
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: !@#$", hook_content)
+
+
 '''
 class TestSetForwardHooksValidation5(TestSetForwardHooks):
     forward_hooks = None
@@ -194,7 +206,6 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: abc", hook_content)
 
 '''
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
