@@ -3,7 +3,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import OLMOE_1B_7B_0924_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -22,7 +22,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     [Test Target] --moe-runner-backend
     """
 
-    model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
+    model = OLMOE_1B_7B_0924_WEIGHTS_PATH
     moe_runner_backend = "triton"
 
     @classmethod
