@@ -130,8 +130,9 @@ class TestSetForwardHooks(CustomTestCase):
         hook_content = self.hook_log_file.read()
         print("--------------------------float-------FAIL-----------------------------------------------")
         self.assertIn("Invalid JSON list: abc", hook_content)
-        kill_process_tree(self.process.pid)
-
+        with self.assertRaises(Exception) as ctx:
+            kill_process_tree(self.process.pid)
+        self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
 
 # class TestSetForwardHooksValidation1(TestSetForwardHooks):
 #     forward_hooks = "abc"
