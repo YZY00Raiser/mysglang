@@ -80,7 +80,6 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def _build_other_args(cls):
-        """公共方法：构建通用的命令行参数"""
         return [
             "--trust-remote-code",
             "--mem-fraction-static",
@@ -122,13 +121,12 @@ class TestSetForwardHooks(CustomTestCase):
         # os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
-        def test_enable_multimodal_func(self):
-            with self.assertRaises(Exception) as ctx:
-                self._launch_server()
-            self.assertIn("Server process exited with code -9", str(ctx.exception))
-            self.hook_log_file.seek(0)
-            hook_content = self.hook_log_file.read()
-            self.assertIn("'float' object is not iterable", hook_content)
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("'float' object is not iterable", hook_content)
 
 
 # class TestSetForwardHooksValidation1(TestSetForwardHooks):
