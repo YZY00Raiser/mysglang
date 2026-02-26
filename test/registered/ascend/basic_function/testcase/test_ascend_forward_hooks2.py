@@ -68,7 +68,7 @@ class TestSetForwardHooks(CustomTestCase):
     model = QWEN3_32B_WEIGHTS_PATH
     hooks_spec = [
         {
-            "name": "qwen_first_layer_attn_monitor",
+            "name": "abc",
             "target_modules": ["model.layers.0.self_attn"],
             "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
@@ -131,7 +131,7 @@ class TestSetForwardHooks(CustomTestCase):
         print("-----------------------------launch_server------------------------------------------")
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("has no 'target_modules', skipping", hook_content)
+        self.assertIn("Registered forward hook 'abc' on model.layers.0.self_attn", hook_content)
         # with self.assertRaises(Exception) as ctx:
         kill_process_tree(self.process.pid)
         # self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
