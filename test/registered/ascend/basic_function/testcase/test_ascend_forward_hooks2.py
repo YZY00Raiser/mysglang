@@ -74,7 +74,7 @@ class TestSetForwardHooks(CustomTestCase):
             }
         }
     ]
-
+    forward_hooks=json.dumps(hooks_spec),
     @classmethod
     def setUpClass(cls):
         cls.out_log_file_name = "./tmp_out_log.txt"
@@ -91,7 +91,7 @@ class TestSetForwardHooks(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            json.dumps(cls.hooks_spec),
+            cls.forward_hooks,
             "--base-gpu-id", "4",
         ]
         cls.process = popen_launch_server(
