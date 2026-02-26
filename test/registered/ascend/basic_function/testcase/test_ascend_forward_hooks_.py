@@ -204,6 +204,7 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
 '''
 
 
+"""
 
 
 class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
@@ -226,7 +227,6 @@ class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
 
 
 
-"""
 class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -284,7 +284,7 @@ class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
 
     hooks_spec = [
         {
-            "name": None,
+            "name": "abc",
             "target_modules": ["model.layers.0.self_attn"],
             "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
@@ -302,7 +302,16 @@ class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
-    forward_hooks = None
+    hooks_spec = [
+        {
+            "name": 3.14,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
 
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
@@ -313,7 +322,16 @@ class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
-    forward_hooks = None
+   hooks_spec = [
+        {
+            "name": -2,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
 
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
@@ -324,7 +342,16 @@ class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
-    forward_hooks = None
+    hooks_spec = [
+        {
+            "name": None,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
 
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
@@ -335,7 +362,16 @@ class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
-    forward_hooks = None
+    hooks_spec = [
+        {
+            "name": !@#$,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
 
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
