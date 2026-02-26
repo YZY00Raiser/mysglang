@@ -78,8 +78,8 @@ class TestSetForwardHooks(CustomTestCase):
     ]
 
     # forward_hooks = json.dumps(hooks_spec)
-    # forward_hooks = 3.14
-    forward_hooks = "abc"
+    forward_hooks = 3.14
+    # forward_hooks = "abc"
 
     @classmethod
     def _build_other_args(cls):
