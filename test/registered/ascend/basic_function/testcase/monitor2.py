@@ -1,6 +1,6 @@
+# hook
 import logging
 import time
-
 
 def create_attention_monitor_factory(config):
     """
@@ -8,23 +8,12 @@ def create_attention_monitor_factory(config):
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
-    log_file = "hook.log"
-
-    # ========== 仅修改这部分日志配置 ==========
-    # 1. 检查日志是否已配置，避免重复调用basicConfig失效
-    logger = logging.getLogger()
-    if not logger.handlers:
-        # 2. 新增encoding=utf-8解决中文乱码
-        logging.basicConfig(
-            filename=log_file,
-            level=logging.INFO,
-            format="%(asctime)s - %(levelname)s - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-            encoding="utf-8"  # 新增：解决中文乱码
-        )
-
-    # =========================================
-
+    log_file="/data/y30082119/hook.log"
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
     def attention_monitor_hook(module, inputs, output):
         """
         实际钩子函数,在self-attention层的前向传播时被调用
