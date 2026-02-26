@@ -26,19 +26,25 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     moe_runner_backend = "triton"
 
     @classmethod
+    def get_server_args(cls):
+        """Return the arguments for the server launch. Override in subclasses."""
+        other_args = [
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--trust-remote-code",
+            "--moe-runner-backend",
+            cls.moe_runner_backend,
+        ]
+        return other_args
+
+    @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=[
-                "--attention-backend",
-                "ascend",
-                "--disable-cuda-graph",
-                "--trust-remote-code",
-                "--moe-runner-backend",
-                cls.moe_runner_backend,
-            ],
+            other_args=cls.get_server_args(),
         )
 
     @classmethod
@@ -75,16 +81,6 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
 
 class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
     moe_runner_backend = "auto"
-
-    @classmethod
-    def get_server_args(cls):
-        other_args = [
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-
-        return other_args
 
 
 if __name__ == "__main__":
