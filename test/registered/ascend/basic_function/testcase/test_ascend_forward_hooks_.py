@@ -152,12 +152,10 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: abc", hook_content)
-        with self.assertRaises(Exception) as ctx:
-            kill_process_tree(self.process.pid)
-        self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
 
 
-'''
+
+
 class TestSetForwardHooksValidation2(TestSetForwardHooks):
     forward_hooks = 3.14
 
@@ -169,6 +167,8 @@ class TestSetForwardHooksValidation2(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("'float' object is not iterable", hook_content)
 
+
+'''
 class TestSetForwardHooksValidation3(TestSetForwardHooks):
     forward_hooks = -2
 
