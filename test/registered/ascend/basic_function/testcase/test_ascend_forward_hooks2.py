@@ -68,7 +68,7 @@ class TestSetForwardHooks(CustomTestCase):
     model = QWEN3_32B_WEIGHTS_PATH
     hooks_spec = [
         {
-            "name": "qwen_first_layer_attn_monitor",
+            "NAME": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
             "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
@@ -125,13 +125,11 @@ class TestSetForwardHooks(CustomTestCase):
         os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self._launch_server()
         print("-----------------------------launch_server------------------------------------------")
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: None", hook_content)
+        self.assertIn("Registered forward hook '' on model.layers.0.self_attn", hook_content)
         with self.assertRaises(Exception) as ctx:
             kill_process_tree(self.process.pid)
         self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
