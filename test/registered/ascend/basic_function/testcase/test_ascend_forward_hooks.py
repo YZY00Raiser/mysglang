@@ -15,7 +15,7 @@ register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
 
 class TestEnableMultimodalNonMlm(CustomTestCase):
-    """Testcase: Verify that when the --forward-hooks parameter is set, mmlu accuracy greater than or equal 0.37
+    """Testcase: Verify set --forward-hooks parameter, can identify the set hook function and the inference request is successfully processed.
 
     [Test Category] Parameter
     [Test Target] --forward-hooks
