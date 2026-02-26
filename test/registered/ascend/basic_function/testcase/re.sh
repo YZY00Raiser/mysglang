@@ -9,3 +9,4 @@ curl "http://127.0.0.1:30000/generate" \
   }'
 
 --model-path
+python -m sglang.launch_server --config config.yaml
