@@ -61,7 +61,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         self.assertIn(
             "Paris", response.text, "The inference result does not include Paris."
         )
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/get_server_info")
+        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/server_info")
         self.assertEqual(
             response.status_code, 200, "The request status code is not 200."
         )
