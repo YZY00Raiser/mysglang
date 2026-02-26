@@ -128,8 +128,7 @@ class TestSetForwardHooks(CustomTestCase):
 
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid", hook_content)
-        # self.assertIn("hook effect", hook_content)
+        self.assertIn("hook effect", hook_content)
 
 # class TestSetForwardHooksValidation(TestSetForwardHooks):
 #     forward_hooks = "abc"
