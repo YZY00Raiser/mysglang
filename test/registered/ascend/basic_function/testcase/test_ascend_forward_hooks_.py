@@ -169,15 +169,18 @@ class TestSetForwardHooksValidation2(TestSetForwardHooks):
         self.assertIn("'float' object is not iterable", hook_content)
 
 
-'''
+
 class TestSetForwardHooksValidation3(TestSetForwardHooks):
     forward_hooks = -2
 
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("'int' object is not iterable", str(ctx.exception))
-
+        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("'int' object is not iterable", hook_content)
+'''
 class TestSetForwardHooksValidation5(TestSetForwardHooks):
     forward_hooks = None
 
