@@ -21,19 +21,19 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     [Test Target] --forward-hooks
     """
     model = QWEN3_32B_WEIGHTS_PATH
-
+    hooks_spec = [
+        {
+            "name": "qwen_first_layer_attn_monitor",
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "monitor:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
     @classmethod
     def setUpClass(cls):
-        hooks_spec = [
-            {
-                "name": "qwen_first_layer_attn_monitor",
-                "target_modules": ["model.layers.0.self_attn"],
-                "hook_factory": "monitor:create_attention_monitor_factory",
-                "config": {
-                    "layer_index": 0
-                }
-            }
-        ]
+
         other_args = [
             "--trust-remote-code",
             "--mem-fraction-static",
@@ -44,7 +44,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            json.dumps(hooks_spec),
+            json.dumps(cls.hooks_spec),
         ]
         cls.process = popen_launch_server(
             cls.model,
