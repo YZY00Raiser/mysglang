@@ -186,13 +186,10 @@ class TestSetForwardHooksValidation4(TestSetForwardHooks):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 2", str(ctx.exception))
-        print("-----------------------------launch_server------------------------------------------")
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: !@#$", hook_content)
 
-
-'''
 class TestSetForwardHooksValidation5(TestSetForwardHooks):
     forward_hooks = None
 
@@ -200,12 +197,68 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 2", str(ctx.exception))
-
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Invalid JSON list: abc", hook_content)
+        self.assertIn("Invalid JSON list: None", hook_content)
+'''
+class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+
+class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+
+class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+
+class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+
+class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
 
 '''
+
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
