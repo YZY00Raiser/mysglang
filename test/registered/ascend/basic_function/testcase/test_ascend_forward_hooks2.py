@@ -68,7 +68,7 @@ class TestSetForwardHooks(CustomTestCase):
     model = QWEN3_32B_WEIGHTS_PATH
     hooks_spec = [
         {
-            "name": "abc",
+            "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
             "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
