@@ -83,7 +83,7 @@ def popen_launch_server(
     command = [
         "python3",
         "-m",
-        # command,
+        command,
         # "--model-path",
         # model,
         *[str(x) for x in other_args],
