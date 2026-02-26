@@ -74,7 +74,7 @@ class TestSetForwardHooks(CustomTestCase):
             }
         }
     ]
-    forward_hooks=json.dumps(hooks_spec),
+    forward_hooks=json.dumps(hooks_spec)
     @classmethod
     def setUpClass(cls):
         cls.out_log_file_name = "./tmp_out_log.txt"
