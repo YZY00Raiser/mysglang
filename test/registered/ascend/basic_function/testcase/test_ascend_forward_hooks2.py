@@ -25,7 +25,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "monitor:create_attention_monitor_factory",
+            "hook_factory": "monitor2:create_attention_monitor_factory",
             "config": {
                 "layer_index": 0
             }
