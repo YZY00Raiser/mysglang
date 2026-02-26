@@ -95,7 +95,7 @@ class TestSetForwardHooks(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            cls.forward_hooks,
+            json.dumps(cls.hooks_spec),
             "--base-gpu-id", "4",
         ]
 
