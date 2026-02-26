@@ -75,13 +75,11 @@ class TestSetForwardHooks(CustomTestCase):
         }
     ]
     forward_hooks=json.dumps(hooks_spec)
+
     @classmethod
-    def setUpClass(cls):
-        cls.out_log_file_name = "./tmp_out_log.txt"
-        cls.hook_log_file_name = "./tmp_hook_log.txt"
-        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
-        other_args = [
+    def _build_other_args(cls):
+        """公共方法：构建通用的命令行参数"""
+        return [
             "--trust-remote-code",
             "--mem-fraction-static",
             "0.8",
@@ -95,6 +93,9 @@ class TestSetForwardHooks(CustomTestCase):
             "--base-gpu-id", "4",
         ]
 
+    @classmethod
+    def _launch_server(cls):
+        other_args = cls._build_other_args()
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
@@ -102,6 +103,12 @@ class TestSetForwardHooks(CustomTestCase):
             other_args=other_args,
             return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
@@ -112,6 +119,7 @@ class TestSetForwardHooks(CustomTestCase):
         os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
+        self._launch_server()
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -130,37 +138,31 @@ class TestSetForwardHooks(CustomTestCase):
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
 
-# class TestSetForwardHooksValidation(TestSetForwardHooks):
-#     forward_hooks = "abc"
-#
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.out_log_file_name = "./tmp_out_log.txt"
-#         cls.hook_log_file_name = "./tmp_hook_log.txt"
-#         cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-#         cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
-#         other_args = [
-#             "--trust-remote-code",
-#             "--mem-fraction-static",
-#             "0.8",
-#             "--attention-backend",
-#             "ascend",
-#             "--disable-cuda-graph",
-#             "--tp-size",
-#             "4",
-#             "--forward-hooks",
-#             cls.forward_hooks,
-#             "--base-gpu-id", "4",
-#         ]
-#         with cls.assertRaises(Exception) as cm:
-#             cls.process = popen_launch_server(
-#                 cls.model,
-#                 DEFAULT_URL_FOR_TEST,
-#                 timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-#                 other_args=other_args,
-#                 return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
-#             )
-#         cls.assertIn("Invalid JSON list: abc", str(cm.exception))
+class TestSetForwardHooksValidation(TestSetForwardHooks):
+    forward_hooks = "abc"
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Invalid JSON list: abc", str(ctx.exception))
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("hook effect", hook_content)
+
 
 
 if __name__ == "__main__":

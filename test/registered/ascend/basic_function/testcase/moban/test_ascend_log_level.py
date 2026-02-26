@@ -88,5 +88,7 @@ class TestLogLevel(CustomTestCase):
         self.assertIn("POST /generate HTTP/1.1", log_content)
 
 
+
+
 if __name__ == "__main__":
     unittest.main()

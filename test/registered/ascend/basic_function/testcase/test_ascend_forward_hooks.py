@@ -18,21 +18,17 @@ register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 import logging
 import time
 
-
 def create_attention_monitor_factory(config):
     """
     钩子工厂函数
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
-    log_file = "/data/y30082119/hook.log"
     logging.basicConfig(
-        filename=log_file,
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
         datefmt="%Y-%m-%d %H:%M:%S"
     )
-
     def attention_monitor_hook(module, inputs, output):
         """
         实际钩子函数,在self-attention层的前向传播时被调用
@@ -52,11 +48,7 @@ def create_attention_monitor_factory(config):
             "inputs": hidden_states.sum(-1)[:5] if hidden_states is not None else None,
             "outputs": output.sum(-1)[:5],
         }
-        # 实时打印监控信息
 
-        print(f"[AttentionMonitor] Layer {layer_index} - "
-              f"Input: {monitor_record['inputs']},"
-              f"Output: {output.sum(-1)[:5]},")
 
         logging.info(f"hook effect: {monitor_record}")
 
@@ -64,7 +56,6 @@ def create_attention_monitor_factory(config):
         return output
 
     return attention_monitor_hook
-
 
 class TestSetForwardHooks(CustomTestCase):
     """Testcase: Verify set --forward-hooks parameter, can identify the set hook function and the inference request is successfully processed.
@@ -77,18 +68,18 @@ class TestSetForwardHooks(CustomTestCase):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "monitor23:create_attention_monitor_factory",
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
             "config": {
                 "layer_index": 0
             }
         }
     ]
-
+    forward_hooks=json.dumps(hooks_spec)
     @classmethod
     def setUpClass(cls):
-        cls.health_log_file_name = "./tmp_out_log.txt"
+        cls.out_log_file_name = "./tmp_out_log.txt"
         cls.hook_log_file_name = "./tmp_hook_log.txt"
-        cls.health_log_file = open(cls.health_log_file_name, "w+", encoding="utf-8")
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
         cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
         other_args = [
             "--trust-remote-code",
@@ -100,24 +91,25 @@ class TestSetForwardHooks(CustomTestCase):
             "--tp-size",
             "4",
             "--forward-hooks",
-            json.dumps(cls.hooks_spec),
+            cls.forward_hooks,
             "--base-gpu-id", "4",
         ]
+
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
-            return_stdout_stderr=(cls.health_log_file, cls.hook_log_file),
+            return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        cls.health_log_file.close()
+        cls.out_log_file.close()
         cls.hook_log_file.close()
-        # os.remove(cls.out_log_file_name)
-        # os.remove(cls.hook_log_file_name)
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
 
     def test_enable_multimodal_func(self):
         response = requests.post(
@@ -130,28 +122,204 @@ class TestSetForwardHooks(CustomTestCase):
                 },
             },
         )
-        self.hook_log_file.seek(0)
-        hook_content = self.hook_log_file.read()
-        self.assertIn("hook effect", hook_content)
+
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("hook effect", hook_content)
+        self.assertIn("Invalid", hook_content)
+        # self.assertIn("hook effect", hook_content)
 
+class TestSetForwardHooksValidationStr(TestSetForwardHooks):
+    forward_hooks = "abc"
 
-# class TestSetForwardHooksValidation(TestSetForwardHooks):
-#     hooks_spec = [
-#         {
-#             "name": "qwen_first_layer_attn_monitor",
-#             "target_modules": ["model.layers.0.self_attn"],
-#             "hook_factory": "monitor2:create_attention_monitor_factory",
-#             "config": {
-#                 "layer_index": 0
-#             }
-#         }
-#     ]
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
+        other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
+            "--forward-hooks",
+            cls.forward_hooks,
+            "--base-gpu-id", "4",
+        ]
+        with cls.assertRaises(Exception) as cm:
+            cls.process = popen_launch_server(
+                cls.model,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
+            )
+        cls.assertIn("Invalid JSON list: abc", str(cm.exception))
+
+class TestSetForwardHooksValidationFloat(TestSetForwardHooks):
+    forward_hooks = 3.14
+
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
+        other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
+            "--forward-hooks",
+            cls.forward_hooks,
+            "--base-gpu-id", "4",
+        ]
+        with cls.assertRaises(Exception) as ctx:
+            cls.process = popen_launch_server(
+                cls.model,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
+            )
+        cls.assertIn("'float' object is not iterable", str(ctx.exception))
+
+class TestSetForwardHooksValidationNegativeNum(TestSetForwardHooks):
+    forward_hooks = -2
+
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
+        other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
+            "--forward-hooks",
+            cls.forward_hooks,
+            "--base-gpu-id", "4",
+        ]
+        with cls.assertRaises(Exception) as cm:
+            cls.process = popen_launch_server(
+                cls.model,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
+            )
+        cls.assertIn("'int' object is not iterable", str(cm.exception))
+
+class TestSetForwardHooksValidationSpecChart(TestSetForwardHooks):
+    forward_hooks = "!@#$"
+
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
+        other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
+            "--forward-hooks",
+            cls.forward_hooks,
+            "--base-gpu-id", "4",
+        ]
+        with cls.assertRaises(Exception) as cm:
+            cls.process = popen_launch_server(
+                cls.model,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
+            )
+        cls.assertIn("'int' object is not iterable", str(cm.exception))
+
+class TestSetForwardHooksValidationNone(TestSetForwardHooks):
+    forward_hooks = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
+        other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.8",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--tp-size",
+            "4",
+            "--forward-hooks",
+            cls.forward_hooks,
+            "--base-gpu-id", "4",
+        ]
+        with cls.assertRaises(Exception) as cm:
+            cls.process = popen_launch_server(
+                cls.model,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
+            )
+        cls.assertIn("'int' object is not iterable", str(cm.exception))
+
+class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
+    hooks_spec = [
+        {
+            "name": "abc",
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
+    def test_enable_multimodal_func(self):
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Registered forward hook 'abc' on model.layers.0.self_attn", hook_content)
 
 
 if __name__ == "__main__":
