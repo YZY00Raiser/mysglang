@@ -78,8 +78,9 @@ class TestSetForwardHooks(CustomTestCase):
     ]
 
     # forward_hooks = json.dumps(hooks_spec)
-    forward_hooks = 3.14
+    # forward_hooks = 3.14
     # forward_hooks = "abc"
+    forward_hooks = -2
 
     @classmethod
     def _build_other_args(cls):
@@ -128,7 +129,7 @@ class TestSetForwardHooks(CustomTestCase):
         self.assertIn("Server process exited with code -9", str(ctx.exception))
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("'float' object is not iterable", hook_content)
+        self.assertIn("'int' object is not iterable", hook_content)
         with self.assertRaises(Exception) as ctx:
             kill_process_tree(self.process.pid)
         self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
