@@ -81,8 +81,8 @@ class TestSetForwardHooks(CustomTestCase):
     # forward_hooks = 3.14
     # forward_hooks = "abc"
     # forward_hooks = -2
-    forward_hooks = "!@#$"
-
+    # forward_hooks = "!@#$"
+    forward_hooks = None
     @classmethod
     def _build_other_args(cls):
         return [
@@ -132,9 +132,9 @@ class TestSetForwardHooks(CustomTestCase):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: !@#$", hook_content)
-        # with self.assertRaises(Exception) as ctx:
-        kill_process_tree(self.process.pid)
-        # self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
+        with self.assertRaises(Exception) as ctx:
+            kill_process_tree(self.process.pid)
+        self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
         print("-----------------------------kill_process_tree------------------------------------------")
 
 
