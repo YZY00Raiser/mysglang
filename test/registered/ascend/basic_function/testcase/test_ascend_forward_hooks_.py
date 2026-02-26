@@ -115,6 +115,7 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
         cls.out_log_file.close()
         cls.hook_log_file.close()
         os.remove(cls.out_log_file_name)
@@ -139,7 +140,7 @@ class TestSetForwardHooks(CustomTestCase):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
-        kill_process_tree(self.process.pid)
+        # kill_process_tree(self.process.pid)
 
 
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
