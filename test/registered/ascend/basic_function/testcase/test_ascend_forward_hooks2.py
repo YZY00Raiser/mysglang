@@ -127,7 +127,7 @@ class TestSetForwardHooks(CustomTestCase):
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code -2", str(ctx.exception))
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
         print("-----------------------------launch_server------------------------------------------")
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
