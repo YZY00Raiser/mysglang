@@ -178,9 +178,8 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--config", "config.yaml"
-            "--base-gpu-id",
-            "4",
+            "--config", "config.yaml",
+            "--base-gpu-id", "4",
         ]
 
         cls.process = popen_launch_server(
