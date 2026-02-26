@@ -26,26 +26,21 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     moe_runner_backend = "triton"
 
     @classmethod
-    def get_server_args(cls):
-        other_args = [
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-            "--trust-remote-code",
-            "--moe-runner-backend",
-            cls.moe_runner_backend,
-            "--base-gpu-id",
-            "7",
-        ]
-        return other_args
-
-    @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=cls.get_server_args(),
+            other_args=[
+                "--attention-backend",
+                "ascend",
+                "--disable-cuda-graph",
+                "--trust-remote-code",
+                "--moe-runner-backend",
+                cls.moe_runner_backend,
+                "--base-gpu-id",
+                "7",
+            ]
         )
 
     @classmethod
