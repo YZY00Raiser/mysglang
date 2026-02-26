@@ -160,7 +160,7 @@ class TestSetForwardHooksValidation2(TestSetForwardHooks):
     def test_enable_multimodal_func(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.assertIn("'float' object is not iterable", str(ctx.exception))
 
 
 if __name__ == "__main__":
