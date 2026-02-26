@@ -883,8 +883,8 @@ def popen_launch_server(
         "python3",
         "-m",
         command,
-        # "--model-path",
-        # model,
+        "--model-path",
+        model,
         *[str(x) for x in other_args],
     ]
 
