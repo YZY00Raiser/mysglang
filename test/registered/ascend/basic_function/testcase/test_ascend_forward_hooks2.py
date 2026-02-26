@@ -84,9 +84,9 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         cls.out_log_file_name = "./tmp_out_log.txt"
-        cls.err_log_file_name = "./tmp_err_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
         cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-        cls.err_log_file = open(cls.err_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
         other_args = [
             "--trust-remote-code",
             "--mem-fraction-static",
@@ -105,7 +105,7 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
-            return_stdout_stderr=(cls.out_log_file, cls.err_log_file),
+            return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
 
     @classmethod
@@ -130,8 +130,8 @@ class TestEnableMultimodalNonMlm(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        self.out_log_file.seek(0)
-        content = self.out_log_file.read()
+        self.hook_log_file.seek(0)
+        content = self.hook_log_file.read()
         self.assertTrue(len(content) > 0)
         self.assertIn("hook effect", content)
 
