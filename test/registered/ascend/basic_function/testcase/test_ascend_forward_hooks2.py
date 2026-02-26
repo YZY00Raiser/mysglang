@@ -128,12 +128,15 @@ class TestSetForwardHooks(CustomTestCase):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
         # self.assertIn("Server process exited with code -9", str(ctx.exception))
+        print("-----------------------------launch_server------------------------------------------")
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: !@#$", hook_content)
         # with self.assertRaises(Exception) as ctx:
         kill_process_tree(self.process.pid)
         # self.assertIn("'TestSetForwardHooks' object has no attribute 'process'", str(ctx.exception))
+        print("-----------------------------kill_process_tree------------------------------------------")
+
 
 # class TestSetForwardHooksValidation1(TestSetForwardHooks):
 #     forward_hooks = "abc"
