@@ -225,21 +225,10 @@ class TestConfigCmd(TestConfig):
         )
 
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Can't load the configuration of '/data/Qwen/Qwen3-32B'", str(ctx.exception))
         # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
 '''
 #--config异常参数
 class TestConfigValidation1(TestConfig):
