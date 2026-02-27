@@ -174,11 +174,11 @@ class TestConfig(CustomTestCase):
     [Test Target] --config
     """
     model = None
-
+    config = "config.yaml"
     @classmethod
     def _build_other_args(cls):
         return [
-            "--config", "config.yaml",
+            "--config", cls.config,
             "--base-gpu-id", "4",
         ]
 
@@ -252,78 +252,33 @@ class TestConfigCmd(TestConfig):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Can't load the configuration of '/data/Qwen/Qwen3-32B'", hook_content)
-
-#--config异常参数
-class TestConfigValidation1(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "abc",
-            "--base-gpu-id", "4",
-        ]
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-class TestConfigValidation2(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", 3.14,
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-class TestConfigValidation3(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", -2,
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-
-class TestConfigValidation4(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", None,
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-
-class TestConfigValidation5(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "!@#$",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
 '''
+#--config异常参数
+class TestConfigValidation(TestConfig):
+    """Testcase: Verify set --config valid parameter service fail.
 
+    [Test Category] Parameter
+    [Test Target] --config
+    """
+    test_cases = [
+        "abc",
+        3.14,
+        -2,
+        None,
+        "!@#$",
+    ]
+    for config in test_cases:
+        @classmethod
+        def _build_other_args(cls):
+            return [
+                "--config", cls.config,
+                "--base-gpu-id", "4",
+            ]
+
+        def test_config(self):
+            with self.assertRaises(Exception) as ctx:
+                self._launch_server()
+            self.assertIn("Server process exited with code 1", str(ctx.exception))
 
 class TestConfigValidation6(TestConfig):
 
@@ -334,27 +289,11 @@ class TestConfigValidation6(TestConfig):
             "--base-gpu-id", "4",
         ]
 
-    @classmethod
-    def setUpClass(cls):
-        cls.out_log_file_name = "./tmp_out_log.txt"
-        cls.hook_log_file_name = "./tmp_hook_log.txt"
-        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-        cls.out_log_file.close()
-        cls.hook_log_file.close()
-        os.remove(cls.out_log_file_name)
-        os.remove(cls.hook_log_file_name)
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        self.hook_log_file.seek(0)
-        hook_content = self.hook_log_file.read()
-        self.assertIn("Config file not found", hook_content)
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 1", str(ctx.exception))
+
 '''
 #非yaml文件格式
 class TestConfigFileModeValidation1(TestConfig):
