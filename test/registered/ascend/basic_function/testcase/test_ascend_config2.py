@@ -222,6 +222,7 @@ class TestConfigCmd(TestConfig):
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
+            return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
 
     @classmethod
