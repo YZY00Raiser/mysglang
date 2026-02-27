@@ -19,20 +19,16 @@ import time
 
 
 def create_attention_monitor_factory(config):
-    """
-    hook factory
-    """
+    #hook factory
     layer_index = config.get("layer_index", 0)
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",  # 添加时间戳和日志级别
+        format="%(asctime)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
 
     def attention_monitor_hook(module, inputs, output):
-        """
-        The actual hook function is called during the forward propagation of the self-attention layer.
-        """
+        #The actual hook function is called during the forward propagation of the self-attention layer.
         timestamp = time.time()
 
         hidden_states = inputs[1] if inputs else None
@@ -53,7 +49,8 @@ def create_attention_monitor_factory(config):
 
 
 class TestSetForwardHooks(CustomTestCase):
-    """Testcase: Verify set --forward-hooks parameter, can identify the set hook function and the inference request is successfully processed.
+    """Testcase: Verify set --forward-hooks parameter, can identify the set hook function
+    and the inference request is successfully processed.
 
     [Test Category] Parameter
     [Test Target] --forward-hooks
@@ -137,7 +134,11 @@ class TestSetForwardHooks(CustomTestCase):
 # test set --forward-hooks exception parameter
 '''
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
+    """Testcase: Verify set --forward-hooks exception parameter, service start fail.
 
+    [Test Category] Parameter
+    [Test Target] --forward-hooks
+    """
     forward_hooks = "abc"
 
     def test_forward_hooks(self):
@@ -147,7 +148,6 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: abc", hook_content)
-
 
 
 class TestSetForwardHooksValidation2(TestSetForwardHooks):
@@ -200,6 +200,7 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
 # test set --forward-hooks error parameter field name
 """
 class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
+
     hooks_spec = [
         {
             "NAME": "qwen_first_layer_attn_monitor",
@@ -216,7 +217,6 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Registered forward hook '' on model.layers.0.self_attn", hook_content)
-
 
 
 class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
@@ -272,9 +272,6 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
 """
 
 '''
-
-
-
 # test --forward-hooks parameter fields name, target_modules, hook_factory, config set exception parameters
 class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     test_cases = [
