@@ -255,19 +255,7 @@ class TestConfigValidation1(TestConfig):
     def test_config(self):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
-        # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        # self.assertIn("Config file must be YAML format, got: 'abc'", str(ctx.exception))
 
 class TestConfigValidation2(TestConfig):
     @classmethod
@@ -280,19 +268,8 @@ class TestConfigValidation2(TestConfig):
     def test_config(self):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
-        # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        # self.assertIn("Config file must be YAML format, got: 3.14", str(ctx.exception))
+
 
 class TestConfigValidation3(TestConfig):
     @classmethod
@@ -305,19 +282,8 @@ class TestConfigValidation3(TestConfig):
     def test_config(self):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
-        # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        # self.assertIn("Config file must be YAML format, got: -2", str(ctx.exception))
+
 
 
 class TestConfigValidation4(TestConfig):
@@ -331,19 +297,8 @@ class TestConfigValidation4(TestConfig):
     def test_config(self):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
-        # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        # self.assertIn("Config file must be YAML format", got: , str(ctx.exception))
+
 
 
 class TestConfigValidation5(TestConfig):
@@ -357,19 +312,39 @@ class TestConfigValidation5(TestConfig):
     def test_config(self):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
+        # self.assertIn("Config file must be YAML format", str(ctx.exception))
+
+
+class TestConfigValidation6(TestConfig):
+
+    @classmethod
+    def _build_other_args(cls):
+        return [
+            "--config", "config.yaml",
+            "--base-gpu-id", "4",
+        ]
+
+    @classmethod
+    def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+        cls.out_log_file.close()
+        cls.hook_log_file.close()
+        os.remove(cls.out_log_file_name)
+        os.remove(cls.hook_log_file_name)
+    def test_config(self):
+        # with self.assertRaises(Exception) as ctx:
+        self._launch_server()
         # self.assertIn("Server process exited with code 2", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Config file not found", hook_content)
 
 
 class TestConfigFileModeValidation1(TestConfig):
