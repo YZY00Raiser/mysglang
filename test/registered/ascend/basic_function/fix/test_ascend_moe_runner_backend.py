@@ -72,6 +72,8 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         )
         print("-----------------------response.json()--------------------------------")
         print(response.json())
+        print("-----------------------response.json()--------------------------------")
+        print(response.json()["moe_runner_backend"])
         # self.assertEqual(
         #     response.json()["moe_runner_backend"],
         #     self.moe_runner_backend,
