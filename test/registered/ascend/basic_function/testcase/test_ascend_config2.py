@@ -330,7 +330,7 @@ class TestConfigParamValidation(TestConfig):
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
+        self.assertIn("Server process exited with code 2. Check server logs for errors.", str(ctx.exception))
 
 
 if __name__ == "__main__":
