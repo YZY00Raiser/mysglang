@@ -140,7 +140,7 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
 
     forward_hooks = "abc"
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 2", str(ctx.exception))
@@ -153,7 +153,7 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
 class TestSetForwardHooksValidation2(TestSetForwardHooks):
     forward_hooks = 3.14
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code -9", str(ctx.exception))
@@ -165,7 +165,7 @@ class TestSetForwardHooksValidation2(TestSetForwardHooks):
 class TestSetForwardHooksValidation3(TestSetForwardHooks):
     forward_hooks = -2
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code -9", str(ctx.exception))
@@ -177,7 +177,7 @@ class TestSetForwardHooksValidation3(TestSetForwardHooks):
 class TestSetForwardHooksValidation4(TestSetForwardHooks):
     forward_hooks = "!@#$"
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 2", str(ctx.exception))
@@ -188,7 +188,7 @@ class TestSetForwardHooksValidation4(TestSetForwardHooks):
 class TestSetForwardHooksValidation5(TestSetForwardHooks):
     forward_hooks = None
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 2", str(ctx.exception))
@@ -211,7 +211,7 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
         }
     ]
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
@@ -231,7 +231,7 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
         }
     ]
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
@@ -251,7 +251,7 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
         }
     ]
 
-    def test_enable_multimodal_func(self):
+    def test_forward_hooks(self):
         self._launch_server()
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
