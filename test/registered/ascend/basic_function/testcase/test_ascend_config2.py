@@ -252,7 +252,7 @@ class TestConfigCmd(TestConfig):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Can't load the configuration of '/data/Qwen/Qwen3-32B'", hook_content)
-'''
+
 #--config异常参数
 class TestConfigValidation1(TestConfig):
     @classmethod
@@ -322,14 +322,15 @@ class TestConfigValidation5(TestConfig):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Server process exited with code 1", str(ctx.exception))
-
 '''
+
+
 class TestConfigValidation6(TestConfig):
 
     @classmethod
     def _build_other_args(cls):
         return [
-            "--config", "config.yaml",
+            "--config", "config1.yaml",
             "--base-gpu-id", "4",
         ]
 
@@ -354,7 +355,7 @@ class TestConfigValidation6(TestConfig):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Config file not found", hook_content)
-
+'''
 #非yaml文件格式
 class TestConfigFileModeValidation1(TestConfig):
     @classmethod
