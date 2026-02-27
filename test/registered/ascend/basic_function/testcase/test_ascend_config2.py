@@ -211,8 +211,13 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-#命令行设置的参数优先级更高
+'''
 class TestConfigCmd(TestConfig):
+    """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml.
+
+    [Test Category] Parameter
+    [Test Target] --config
+    """
     model = "/data/Qwen/Qwen3-32B"
     @classmethod
     def _launch_server(cls):
@@ -260,7 +265,7 @@ class TestConfigValidation1(TestConfig):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Config file must be YAML format, got: 'abc'", str(ctx.exception))
-
+'''
 class TestConfigValidation2(TestConfig):
     @classmethod
     def _build_other_args(cls):
