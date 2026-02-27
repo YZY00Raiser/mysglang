@@ -139,3 +139,108 @@ class TestConfigCmd(TestConfig):
         # self.assertIn("cmd_param_override_config", response.text)
 
     # 移除多余的test_enable_multimodal_func方法（避免干扰）
+
+
+# --forward-hooks参数字段 name target_modules hook_factory config 异常参数
+'''
+class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
+
+    hooks_spec = [
+        {
+            "name": "abc",
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
+
+    def test_enable_multimodal_func(self):
+        self._launch_server()
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Registered forward hook 'abc' on model.layers.0.self_attn", hook_content)
+
+class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
+    hooks_spec = [
+        {
+            "name": 3.14,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
+
+    def test_enable_multimodal_func(self):
+        self._launch_server()
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Registered forward hook '3.14' on model.layers.0.self_attn", hook_content)
+
+class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
+   hooks_spec = [
+        {
+            "name": -2,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
+
+    def test_enable_multimodal_func(self):
+        self._launch_server()
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Registered forward hook '-2' on model.layers.0.self_attn", hook_content)
+
+'''
+
+
+'''
+class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
+    hooks_spec = [
+        {
+            "name": None,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+
+
+
+class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
+    hooks_spec = [
+        {
+            "name": !@#$,
+            "target_modules": ["model.layers.0.self_attn"],
+            "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+            "config": {
+                "layer_index": 0
+            }
+        }
+    ]
+
+    def test_enable_multimodal_func(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+'''
