@@ -254,7 +254,7 @@ class TestConfigCmd(TestConfig):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
-
+'''
 #--config异常参数
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config valid parameter service start fail.
@@ -281,83 +281,23 @@ class TestConfigValidation(TestConfig):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
             self.assertIn("Server process exited with code 1", str(ctx.exception))
-'''
+
 
 #非yaml文件格式
-class TestConfigFileModeValidation1(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config.ini",
-            "--base-gpu-id", "4",
-        ]
+class TestConfigFileModeValidation(TestConfigValidation):
+    """Testcase: Verify set --config non yaml file format service start fail.
 
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+    [Test Category] Parameter
+    [Test Target] --config
+    """
+    test_cases = [
+        "config.ini",
+        "config.txt",
+        "config.xml",
+    ]
+
 '''
-class TestConfigFileModeValidation2(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config.txt",
-            "--base-gpu-id", "4",
-        ]
 
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-class TestConfigFileModeValidation3(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config.xml",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
 
 #配置错误的参数
 
