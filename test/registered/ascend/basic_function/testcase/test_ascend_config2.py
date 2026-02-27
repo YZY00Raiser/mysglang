@@ -254,7 +254,7 @@ class TestConfigCmd(TestConfig):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
-'''
+
 #--config异常参数
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config valid parameter service start fail.
@@ -280,11 +280,11 @@ class TestConfigValidation(TestConfig):
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
-            self.assertIn("Server process exited with code 1", str(ctx.exception))
-
+            self.assertIn("Server process exited with code 1, Check server logs for errors ", str(ctx.exception))
+'''
 
 #非yaml文件格式
-class TestConfigFileModeValidation(TestConfigValidation):
+class TestConfigFileModeValidation(TestConfig):
     """Testcase: Verify set --config non yaml file format service start fail.
 
     [Test Category] Parameter
@@ -295,6 +295,17 @@ class TestConfigFileModeValidation(TestConfigValidation):
         "config.txt",
         "config.xml",
     ]
+    for config in test_cases:
+        @classmethod
+        def _build_other_args(cls):
+            return [
+                "--config", cls.config,
+            ]
+
+        def test_config(self):
+            with self.assertRaises(Exception) as ctx:
+                self._launch_server()
+            self.assertIn("Server process exited with code 1, Check server logs for errors ", str(ctx.exception))
 
 '''
 
