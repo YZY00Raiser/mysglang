@@ -211,9 +211,11 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-'''
+
 class TestConfigCmd(TestConfig):
-    """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml.
+    """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
+    set false model path in in the command, set right model path in in the config.yaml,
+    will use false model path service start fail .
 
     [Test Category] Parameter
     [Test Target] --config
@@ -279,7 +281,7 @@ class TestConfigValidation(TestConfig):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
             self.assertIn("Server process exited with code 1", str(ctx.exception))
-
+'''
 '''
 #非yaml文件格式
 class TestConfigFileModeValidation1(TestConfig):
