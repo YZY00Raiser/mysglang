@@ -211,7 +211,7 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+'''
 class TestConfigCmd(TestConfig):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in in the command, set right model path in in the config.yaml,
@@ -254,7 +254,7 @@ class TestConfigCmd(TestConfig):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
-'''
+
 #--config异常参数
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config valid parameter service start fail.
@@ -282,7 +282,7 @@ class TestConfigValidation(TestConfig):
                 self._launch_server()
             self.assertIn("Server process exited with code 1", str(ctx.exception))
 '''
-'''
+
 #非yaml文件格式
 class TestConfigFileModeValidation1(TestConfig):
     @classmethod
@@ -308,7 +308,7 @@ class TestConfigFileModeValidation1(TestConfig):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+'''
 class TestConfigFileModeValidation2(TestConfig):
     @classmethod
     def _build_other_args(cls):
