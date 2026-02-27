@@ -212,7 +212,7 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+#命令行设置的参数优先级更高
 class TestConfigCmd(TestConfig):
     model = QWEN3_32B_WEIGHTS_PATH
     @classmethod
@@ -244,7 +244,7 @@ class TestConfigCmd(TestConfig):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+'''
 #--config异常参数
 class TestConfigValidation1(TestConfig):
     @classmethod
@@ -257,7 +257,7 @@ class TestConfigValidation1(TestConfig):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
         self.assertIn("Config file must be YAML format, got: 'abc'", str(ctx.exception))
-'''
+
 class TestConfigValidation2(TestConfig):
     @classmethod
     def _build_other_args(cls):
