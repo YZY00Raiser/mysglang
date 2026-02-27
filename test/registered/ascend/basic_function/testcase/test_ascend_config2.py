@@ -255,7 +255,7 @@ class TestConfigCmd(TestConfig):
 '''
 #--config异常参数
 class TestConfigValidation(TestConfig):
-    """Testcase: Verify set --config valid parameter service fail.
+    """Testcase: Verify set --config valid parameter service start fail.
 
     [Test Category] Parameter
     [Test Target] --config
@@ -266,33 +266,19 @@ class TestConfigValidation(TestConfig):
         -2,
         None,
         "!@#$",
+        "config1.yaml",
     ]
     for config in test_cases:
         @classmethod
         def _build_other_args(cls):
             return [
                 "--config", cls.config,
-                "--base-gpu-id", "4",
             ]
 
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
             self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-class TestConfigValidation6(TestConfig):
-
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config1.yaml",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
 
 '''
 #非yaml文件格式
