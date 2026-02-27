@@ -225,9 +225,6 @@ class TestConfigCmd(TestConfig):
             other_args=other_args,
         )
 
-    def test_enable_multimodal_func(self):
-        self._launch_server()
-
     def test_config(self):
         # with self.assertRaises(Exception) as ctx:
         self._launch_server()
