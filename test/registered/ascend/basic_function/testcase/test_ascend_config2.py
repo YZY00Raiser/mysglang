@@ -254,9 +254,9 @@ class TestConfigValidation1(TestConfig):
             "--base-gpu-id", "4",
         ]
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("Config file must be YAML format, got: 'abc'", str(ctx.exception))
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Config file must be YAML format, got: 'abc'", str(ctx.exception))
 '''
 class TestConfigValidation2(TestConfig):
     @classmethod
