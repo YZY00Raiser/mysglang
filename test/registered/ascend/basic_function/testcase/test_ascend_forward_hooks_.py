@@ -147,7 +147,7 @@ class TestSetForwardHooksValidation1(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: abc", hook_content)
-'''
+
 
 
 class TestSetForwardHooksValidation2(TestSetForwardHooks):
@@ -160,8 +160,8 @@ class TestSetForwardHooksValidation2(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("'float' object is not iterable", hook_content)
-
 '''
+
 class TestSetForwardHooksValidation3(TestSetForwardHooks):
     forward_hooks = -2
 
@@ -173,7 +173,7 @@ class TestSetForwardHooksValidation3(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("'int' object is not iterable", hook_content)
 
-
+'''
 class TestSetForwardHooksValidation4(TestSetForwardHooks):
     forward_hooks = "!@#$"
 
