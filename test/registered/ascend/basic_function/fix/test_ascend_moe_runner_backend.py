@@ -70,6 +70,8 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         self.assertEqual(
             response.status_code, 200, "The request status code is not 200."
         )
+        print("-----------------------response.json()--------------------------------")
+        print(response.json())
         self.assertEqual(
             response.json()["moe_runner_backend"],
             self.moe_runner_backend,
