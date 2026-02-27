@@ -217,14 +217,16 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-'''
-class TestConfigCmd(TestConfig):
-    """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml.
+class TestConfigPriority(TestConfig):
+    """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
+    set false model path in in the command, set right model path in in the config.yaml,
+    will use false model path service start fail .
 
     [Test Category] Parameter
     [Test Target] --config
     """
     model = "/data/Qwen/Qwen3-32B"
+
     @classmethod
     def _launch_server(cls):
         other_args = cls._build_other_args()
@@ -254,231 +256,81 @@ class TestConfigCmd(TestConfig):
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
+        self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Can't load the configuration of '/data/Qwen/Qwen3-32B'", hook_content)
-'''
+        self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
 
 
 # --config异常参数
-class TestConfigValidation1(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "abc",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-class TestConfigValidation2(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", 3.14,
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-class TestConfigValidation3(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", -2,
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-class TestConfigValidation4(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", None,
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
-class TestConfigValidation5(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "!@#$",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
-
-
 class TestConfigValidation(TestConfig):
+    """Testcase: Verify set --config exception param the service start fail.
+
+    [Test Category] Parameter
+    [Test Target] --config
+    """
     test_cases = [
         "abc",
         3.14,
         -2,
         None,
         "!@#$",
+        "config1.yaml",
     ]
     for config in test_cases:
         @classmethod
         def _build_other_args(cls):
             return [
                 "--config", cls.config,
-                "--base-gpu-id", "4",
             ]
 
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
-            self.assertIn("Server process exited with code 1", str(ctx.exception))
+            self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
 
 
-class TestConfigValidation6(TestConfig):
+# 非yaml文件格式
+class TestConfigFileModeValidation(TestConfig):
+    """Testcase: Verify set --config non yaml file format the service start fail.
 
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config1.yaml",
-            "--base-gpu-id", "4",
-        ]
+    [Test Category] Parameter
+    [Test Target] --config
+    """
+    test_cases = [
+        "config.ini",
+        "config.txt",
+        "config.xml",
+    ]
+    for config in test_cases:
+        @classmethod
+        def _build_other_args(cls):
+            return [
+                "--config", cls.config,
+                "--base-gpu-id", "4"
+            ]
+
+        def test_config(self):
+            with self.assertRaises(Exception) as ctx:
+                self._launch_server()
+            self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
+
+
+# 配置错误的参数
+
+class TestConfigParamValidation(TestConfig):
+    """Testcase: Verify set exception param in config file the service start fail.
+
+    [Test Category] Parameter
+    [Test Target] --config
+    """
+    config = "config_valid.yaml"
 
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code 1", str(ctx.exception))
+        self.assertIn("Server process exited with code 2. Check server logs for errors.", str(ctx.exception))
 
-
-'''
-#非yaml文件格式
-class TestConfigFileModeValidation1(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config.ini",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-class TestConfigFileModeValidation2(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config.txt",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-class TestConfigFileModeValidation3(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "config.xml",
-            "--base-gpu-id", "4",
-        ]
-
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-#配置错误的参数
-
-class TestConfigParamValidation(TestConfig):
-    @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config", "_config.yaml",
-            "--base-gpu-id", "4",
-        ]
-
-    @classmethod
-    def setUpClass(cls):
-        cls.out_log_file_name = "./tmp_out_log.txt"
-        cls.hook_log_file_name = "./tmp_hook_log.txt"
-        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-        cls.out_log_file.close()
-        cls.hook_log_file.close()
-        os.remove(cls.out_log_file_name)
-        os.remove(cls.hook_log_file_name)
-
-    def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("must be YAML format", str(ctx.exception))
-        self.hook_log_file.seek(0)
-        hook_content = self.hook_log_file.read()
-        self.assertIn("--tp-size: invalid int value: 'abcd'", hook_content)
-'''
 
 if __name__ == "__main__":
     unittest.main()

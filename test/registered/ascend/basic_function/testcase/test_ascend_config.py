@@ -5,6 +5,8 @@ from typing import Optional
 import requests
 import unittest
 from sglang.srt.utils import kill_process_tree
+from sglang.test.ascend.test_ascend_utils import popen_launch_server_config
+
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
