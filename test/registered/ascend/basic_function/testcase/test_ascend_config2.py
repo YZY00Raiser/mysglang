@@ -16,7 +16,7 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
-def _popen_launch_server(
+def popen_launch_server_config(
     model: str,
     base_url: str,
     timeout: float,
@@ -186,7 +186,7 @@ class TestConfig(CustomTestCase):
     @classmethod
     def _launch_server(cls):
         other_args = cls._build_other_args()
-        cls.process = _popen_launch_server(
+        cls.process = popen_launch_server_config(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
