@@ -142,7 +142,7 @@ class TestSetForwardHooks(CustomTestCase):
         self.assertIn("hook effect", hook_content)
         # kill_process_tree(self.process.pid)
 
-
+#--forward-hooks参数
 '''
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
     forward_hooks = "abc"
@@ -203,10 +203,8 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 '''
 
-
+#--forward-hooks参数字段名称
 """
-
-
 class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -279,6 +277,7 @@ class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
     ]
 """
 
+# --forward-hooks参数字段 name target_modules hook_factory config 异常参数
 '''
 class TestSetForwardHooksFieldValidation1(TestSetForwardHooks):
 
@@ -379,11 +378,11 @@ class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 
-# 假设你使用的是 Python 标准库的 unittest 框架
+# --forward-hooks参数字段 name target_modules hook_factory config
 import unittest
 
 class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
-    # 定义所有测试用例：(hook_name值, 期望的断言字符串)
+    # 定义所有测试用例：(name值, 期望的断言字符串)
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
         (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
@@ -394,11 +393,11 @@ class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
 
     def test_enable_multimodal_func(self):
         # 遍历所有测试用例，逐个执行测试
-        for hook_name, expected_log in self.test_cases:
+        for name, expected_log in self.test_cases:
             # 为每个用例动态构建 hooks_spec
             self.hooks_spec = [
                 {
-                    "name": hook_name,
+                    "name": name,
                     "target_modules": ["model.layers.0.self_attn"],
                     "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
                     "config": {
@@ -416,27 +415,27 @@ class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
             self.assertIn(
                 expected_log,
                 hook_content,
-                msg=f"测试 hook name={hook_name} 失败：未找到期望的日志内容"
+                msg=f"测试 name={name} 失败：未找到期望的日志内容"
             )
 
 class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
-    # 定义所有测试用例：(hook_name值, 期望的断言字符串)
+    # 定义所有测试用例：(target_modules值, 期望的断言字符串)
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
         (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
         (-2, "Registered forward hook '-2' on model.layers.0.self_attn"),
         (None, "Registered forward hook 'None' on model.layers.0.self_attn"),
-        ("!@#$", "Registered forward hook 'None' on model.layers.0.self_attn"),
+        ("!@#$", "Registered forward hook '!@#$' on model.layers.0.self_attn"),
     ]
 
     def test_enable_multimodal_func(self):
         # 遍历所有测试用例，逐个执行测试
-        for hook_name, expected_log in self.test_cases:
+        for target_modules, expected_log in self.test_cases:
             # 为每个用例动态构建 hooks_spec
             self.hooks_spec = [
                 {
-                    "name": hook_name,
-                    "target_modules": ["model.layers.0.self_attn"],
+                    "name": "qwen_first_layer_attn_monitor",
+                    "target_modules": target_modules,
                     "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
                     "config": {
                         "layer_index": 0
@@ -453,10 +452,81 @@ class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
             self.assertIn(
                 expected_log,
                 hook_content,
-                msg=f"测试 hook name={hook_name} 失败：未找到期望的日志内容"
+                msg=f"测试 target_modules={target_modules} 失败：未找到期望的日志内容"
+            )
+
+class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
+    # 定义所有测试用例：(hook_factory值, 期望的断言字符串)
+    test_cases = [
+        ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
+        (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
+        (-2, "Registered forward hook '-2' on model.layers.0.self_attn"),
+        (None, "Registered forward hook 'None' on model.layers.0.self_attn"),
+        ("!@#$", "Registered forward hook '!@#$' on model.layers.0.self_attn"),
+    ]
+
+    def test_enable_multimodal_func(self):
+        # 遍历所有测试用例，逐个执行测试
+        for hook_factory, expected_log in self.test_cases:
+            # 为每个用例动态构建 hooks_spec
+            self.hooks_spec = [
+                {
+                    "name": "qwen_first_layer_attn_monitor",
+                    "target_modules": ["model.layers.0.self_attn"],
+                    "hook_factory": hook_factory,
+                    "config": {
+                        "layer_index": 0
+                    }
+                }
+            ]
+
+            # 执行核心测试逻辑
+            self._launch_server()
+            self.hook_log_file.seek(0)
+            hook_content = self.hook_log_file.read()
+
+            # 断言，若失败则明确提示是哪个 name 值出了问题
+            self.assertIn(
+                expected_log,
+                hook_content,
+                msg=f"测试 hook_factory={hook_factory} 失败：未找到期望的日志内容"
             )
 
 
+class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
+    # 定义所有测试用例：(config值, 期望的断言字符串)
+    test_cases = [
+        ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
+        (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
+        (-2, "Registered forward hook '-2' on model.layers.0.self_attn"),
+        (None, "Registered forward hook 'None' on model.layers.0.self_attn"),
+        ("!@#$", "Registered forward hook '!@#$' on model.layers.0.self_attn"),
+    ]
+
+    def test_enable_multimodal_func(self):
+        # 遍历所有测试用例，逐个执行测试
+        for config, expected_log in self.test_cases:
+            # 为每个用例动态构建 hooks_spec
+            self.hooks_spec = [
+                {
+                    "name": "qwen_first_layer_attn_monitor",
+                    "target_modules": ["model.layers.0.self_attn"],
+                    "hook_factory": "test_ascend_forward_hooks2:create_attention_monitor_factory",
+                    "config": config
+                }
+            ]
+
+            # 执行核心测试逻辑
+            self._launch_server()
+            self.hook_log_file.seek(0)
+            hook_content = self.hook_log_file.read()
+
+            # 断言，若失败则明确提示是哪个 name 值出了问题
+            self.assertIn(
+                expected_log,
+                hook_content,
+                msg=f"测试 config={config} 失败：未找到期望的日志内容"
+            )
 
 '''
 

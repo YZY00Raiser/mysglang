@@ -245,6 +245,7 @@ class TestConfigCmd(TestConfig):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
+#--config异常参数
 class TestConfigValidation1(TestConfig):
     @classmethod
     def _build_other_args(cls):
@@ -346,7 +347,7 @@ class TestConfigValidation6(TestConfig):
         hook_content = self.hook_log_file.read()
         self.assertIn("Config file not found", hook_content)
 
-
+#非yaml文件格式
 class TestConfigFileModeValidation1(TestConfig):
     @classmethod
     def _build_other_args(cls):
@@ -421,6 +422,8 @@ class TestConfigFileModeValidation3(TestConfig):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
+#配置错误的参数
 
 class TestConfigParamValidation(TestConfig):
     @classmethod
