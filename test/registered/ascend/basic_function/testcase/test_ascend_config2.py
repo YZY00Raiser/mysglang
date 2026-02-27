@@ -168,7 +168,7 @@ def popen_launch_server_config(
     raise TimeoutError(error_msg)
 
 class TestConfig(CustomTestCase):
-    """Testcase: Verify that when the --enable-multimodal parameter is set, mmlu accuracy greater than or equal 0.37
+    """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
     [Test Category] Parameter
     [Test Target] --config
