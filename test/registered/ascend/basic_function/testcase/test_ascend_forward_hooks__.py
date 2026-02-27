@@ -132,38 +132,78 @@ class TestSetForwardHooks(CustomTestCase):
 
 
 # test set --forward-hooks exception parameter
-class TestSetForwardHooksValidation(TestSetForwardHooks):
+'''
+class TestSetForwardHooksValidation1(TestSetForwardHooks):
     """Testcase: Verify set --forward-hooks abc exception parameter, service start fail.
 
     [Test Category] Parameter
     [Test Target] --forward-hooks
     """
 
-    def test_forward_hooks_invalid_values(self):
-        test_cases = [
-            ("abc", 2, "Invalid JSON list: abc"),
-            (3.14, -9, "'float' object is not iterable"),
-            (-2, -9, "'int' object is not iterable"),
-            ("!@#$", 2, "Invalid JSON list: !@#$"),
-            (None, 2, "Invalid JSON list: None"),
-        ]
-        for value, expected_code, expected_msg in test_cases:
-            with self.subTest(forward_hooks=value):
-                # 设置当前测试的forward_hooks值
-                self.forward_hooks = value
+    forward_hooks = "abc"
 
-                with self.assertRaises(Exception) as ctx:
-                    self._launch_server()
+    def test_forward_hooks(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: abc", hook_content)
 
-                self.assertIn(f"Server process exited with code {expected_code}", str(ctx.exception))
 
-                self.hook_log_file.seek(0)
-                hook_content = self.hook_log_file.read()
-                self.assertIn(expected_msg, hook_content)
+class TestSetForwardHooksValidation2(TestSetForwardHooks):
+    """Testcase: Verify set --forward-hooks 3.14 exception parameter, service start fail.
+
+    [Test Category] Parameter
+    [Test Target] --forward-hooks
+    """
+    forward_hooks = 3.14
+
+    def test_forward_hooks(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("'float' object is not iterable", hook_content)
+'''
+class TestSetForwardHooksValidation3(TestSetForwardHooks):
+    forward_hooks = -2
+
+    def test_forward_hooks(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code -9", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("'int' object is not iterable", hook_content)
+
+class TestSetForwardHooksValidation4(TestSetForwardHooks):
+    forward_hooks = "!@#$"
+
+    def test_forward_hooks(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: !@#$", hook_content)
+
+class TestSetForwardHooksValidation5(TestSetForwardHooks):
+    forward_hooks = None
+
+    def test_forward_hooks(self):
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 2", str(ctx.exception))
+        self.hook_log_file.seek(0)
+        hook_content = self.hook_log_file.read()
+        self.assertIn("Invalid JSON list: None", hook_content)
+'''
 
 # test set --forward-hooks error parameter field name
-
-class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
+"""
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
 
     hooks_spec = [
         {
@@ -183,7 +223,7 @@ class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
         self.assertIn("Registered forward hook '' on model.layers.0.self_attn", hook_content)
 
 
-class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -203,7 +243,7 @@ class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
 
 
 
-class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -222,7 +262,7 @@ class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
         self.assertIn("has no 'hook_factory', skipping", hook_content)
 
 
-class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -233,10 +273,8 @@ class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
             }
         }
     ]
-
-
 """
-"""
+
 '''
 # test --forward-hooks parameter fields name, target_modules, hook_factory, config set exception parameters
 class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):

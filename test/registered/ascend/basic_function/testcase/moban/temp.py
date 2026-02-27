@@ -244,3 +244,29 @@ class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: None", hook_content)
 '''
+
+
+class TestSetForwardHooksValidation(TestSetForwardHooks):
+    """Test validation of --forward-hooks parameter with various invalid inputs."""
+
+    def test_forward_hooks_invalid_values(self):
+        test_cases = [
+            ("abc", 2, "Invalid JSON list: abc"),
+            (3.14, -9, "'float' object is not iterable"),
+            (-2, -9, "'int' object is not iterable"),
+            ("!@#$", 2, "Invalid JSON list: !@#$"),
+            (None, 2, "Invalid JSON list: None"),
+        ]
+        for value, expected_code, expected_msg in test_cases:
+            with self.subTest(forward_hooks=value):
+                # 设置当前测试的forward_hooks值
+                self.forward_hooks = value
+
+                with self.assertRaises(Exception) as ctx:
+                    self._launch_server()
+
+                self.assertIn(f"Server process exited with code {expected_code}", str(ctx.exception))
+
+                self.hook_log_file.seek(0)
+                hook_content = self.hook_log_file.read()
+                self.assertIn(expected_msg, hook_content)
