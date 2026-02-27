@@ -306,7 +306,7 @@ class TestConfigFileModeValidation(TestConfig):
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
-            self.assertIn("Server process exited with code 1, Check server logs for errors ", str(ctx.exception))
+            self.assertIn("Server process exited with code 1, Check server logs for errors", str(ctx.exception))
 
 '''
 
