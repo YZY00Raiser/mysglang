@@ -253,7 +253,7 @@ class TestConfigCmd(TestConfig):
         self.assertIn("Server process exited with code 1", str(ctx.exception))
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("Can't load the configuration of '/data/Qwen/Qwen3-32B'", hook_content)
+        self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
 '''
 #--config异常参数
 class TestConfigValidation(TestConfig):
