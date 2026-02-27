@@ -14,14 +14,13 @@ from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
-# hook
 import logging
 import time
 
 
 def create_attention_monitor_factory(config):
     """
-    钩子工厂函数
+    hook factory
     config: from --forward hooks
     """
     layer_index = config.get("layer_index", 0)
@@ -33,16 +32,12 @@ def create_attention_monitor_factory(config):
 
     def attention_monitor_hook(module, inputs, output):
         """
-        实际钩子函数,在self-attention层的前向传播时被调用
+        The actual hook function is called during the forward propagation of the self-attention layer.
         """
-
-        # 获取时间戳
         timestamp = time.time()
 
-        # 提取输入信息
         hidden_states = inputs[1] if inputs else None
 
-        # 记录关键信息
         monitor_record = {
             "timestamp": timestamp,
             "layer_index": layer_index,
@@ -53,7 +48,6 @@ def create_attention_monitor_factory(config):
 
         logging.info(f"hook effect: {monitor_record}")
 
-        # 必须返回输出，否则会中断前向传播
         return output
 
     return attention_monitor_hook
@@ -140,7 +134,8 @@ class TestSetForwardHooks(CustomTestCase):
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
 
-#--forward-hooks参数
+
+# --forward-hooks参数
 '''
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
 
@@ -202,9 +197,9 @@ class TestSetForwardHooksValidation5(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 '''
 
-#--forward-hooks参数字段名称
+# --forward-hooks参数字段名称
 """
-class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "NAME": "qwen_first_layer_attn_monitor",
@@ -224,7 +219,7 @@ class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
 
 
 
-class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -244,7 +239,7 @@ class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
 
 
 
-class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -263,7 +258,7 @@ class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
         self.assertIn("has no 'hook_factory', skipping", hook_content)
 
 
-class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -382,6 +377,7 @@ class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
 # --forward-hooks参数字段 name target_modules hook_factory config
 import unittest
 
+
 class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     # 定义所有测试用例：(name值, 期望的断言字符串)
     test_cases = [
@@ -418,6 +414,8 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
                 hook_content,
                 msg=f"测试 name={name} 失败：未找到期望的日志内容"
             )
+
+
 '''
 class TestSetForwardHooksFieldTargetModulesValidation(TestSetForwardHooks):
     # 定义所有测试用例：(target_modules值, 期望的断言字符串)
