@@ -300,6 +300,7 @@ class TestConfigFileModeValidation(TestConfig):
         def _build_other_args(cls):
             return [
                 "--config", cls.config,
+                "--base-gpu-id", "4"
             ]
 
         def test_config(self):
@@ -316,7 +317,7 @@ class TestConfigParamValidation(TestConfig):
     @classmethod
     def _build_other_args(cls):
         return [
-            "--config", "_config.yaml",
+            "--config", "config_valid.yaml",
             "--base-gpu-id", "4",
         ]
 
