@@ -217,7 +217,6 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-'''
 class TestConfigPriority(TestConfig):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in in the command, set right model path in in the config.yaml,
@@ -227,6 +226,7 @@ class TestConfigPriority(TestConfig):
     [Test Target] --config
     """
     model = "/data/Qwen/Qwen3-32B"
+
     @classmethod
     def _launch_server(cls):
         other_args = cls._build_other_args()
@@ -261,7 +261,8 @@ class TestConfigPriority(TestConfig):
         hook_content = self.hook_log_file.read()
         self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
 
-#--config异常参数
+
+# --config异常参数
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config exception param the service start fail.
 
@@ -289,7 +290,7 @@ class TestConfigValidation(TestConfig):
             self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
 
 
-#非yaml文件格式
+# 非yaml文件格式
 class TestConfigFileModeValidation(TestConfig):
     """Testcase: Verify set --config non yaml file format the service start fail.
 
@@ -313,8 +314,6 @@ class TestConfigFileModeValidation(TestConfig):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
             self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
-
-'''
 
 
 # 配置错误的参数
