@@ -5,7 +5,6 @@ from typing import Optional
 import requests
 import unittest
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -214,7 +213,7 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 #命令行设置的参数优先级更高
 class TestConfigCmd(TestConfig):
-    model = QWEN3_32B_WEIGHTS_PATH
+    model = "/data/Qwen/Qwen3-32B"
     @classmethod
     def _launch_server(cls):
         other_args = cls._build_other_args()
