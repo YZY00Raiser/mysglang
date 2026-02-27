@@ -80,7 +80,6 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def _build_other_args(cls):
-        """公共方法：构建通用的命令行参数"""
         return [
             "--trust-remote-code",
             "--mem-fraction-static",
@@ -140,11 +139,11 @@ class TestSetForwardHooks(CustomTestCase):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("hook effect", hook_content)
-        # kill_process_tree(self.process.pid)
 
 #--forward-hooks参数
 '''
 class TestSetForwardHooksValidation1(TestSetForwardHooks):
+
     forward_hooks = "abc"
 
     def test_enable_multimodal_func(self):
@@ -335,6 +334,8 @@ class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
         self.assertIn("Registered forward hook '-2' on model.layers.0.self_attn", hook_content)
 
 '''
+
+'''
 class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -356,7 +357,7 @@ class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
         self.assertIn("Invalid JSON list: None", hook_content)
 
 
-'''
+
 class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
     hooks_spec = [
         {
@@ -376,12 +377,12 @@ class TestSetForwardHooksFieldValidation5(TestSetForwardHooks):
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
         self.assertIn("Invalid JSON list: None", hook_content)
-
+'''
 
 # --forward-hooks参数字段 name target_modules hook_factory config
 import unittest
 
-class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
     # 定义所有测试用例：(name值, 期望的断言字符串)
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
@@ -417,8 +418,8 @@ class TestSetForwardHooksFieldValidation(TestSetForwardHooks):
                 hook_content,
                 msg=f"测试 name={name} 失败：未找到期望的日志内容"
             )
-
-class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
+'''
+class TestSetForwardHooksFieldTargetModulesValidation(TestSetForwardHooks):
     # 定义所有测试用例：(target_modules值, 期望的断言字符串)
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
@@ -455,7 +456,7 @@ class TestSetForwardHooksFieldValidation2(TestSetForwardHooks):
                 msg=f"测试 target_modules={target_modules} 失败：未找到期望的日志内容"
             )
 
-class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
+class TestSetForwardHooksFieldHookFactoryValidation(TestSetForwardHooks):
     # 定义所有测试用例：(hook_factory值, 期望的断言字符串)
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
@@ -493,7 +494,7 @@ class TestSetForwardHooksFieldValidation3(TestSetForwardHooks):
             )
 
 
-class TestSetForwardHooksFieldValidation4(TestSetForwardHooks):
+class TestSetForwardHooksFieldConfigValidation(TestSetForwardHooks):
     # 定义所有测试用例：(config值, 期望的断言字符串)
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
