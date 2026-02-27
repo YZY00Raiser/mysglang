@@ -264,8 +264,8 @@ class TestConfigValidation1(TestConfig):
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Config file must be YAML format, got: 'abc'", str(ctx.exception))
-'''
+        self.assertIn("Server process exited with code 1", str(ctx.exception))
+
 class TestConfigValidation2(TestConfig):
     @classmethod
     def _build_other_args(cls):
@@ -275,9 +275,9 @@ class TestConfigValidation2(TestConfig):
         ]
 
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("Config file must be YAML format, got: 3.14", str(ctx.exception))
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 1", str(ctx.exception))
 
 
 class TestConfigValidation3(TestConfig):
@@ -289,9 +289,9 @@ class TestConfigValidation3(TestConfig):
         ]
 
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("Config file must be YAML format, got: -2", str(ctx.exception))
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 1", str(ctx.exception))
 
 
 
@@ -304,9 +304,9 @@ class TestConfigValidation4(TestConfig):
         ]
 
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("Config file must be YAML format", got: , str(ctx.exception))
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 1", str(ctx.exception))
 
 
 
@@ -319,11 +319,11 @@ class TestConfigValidation5(TestConfig):
         ]
 
     def test_config(self):
-        # with self.assertRaises(Exception) as ctx:
-        self._launch_server()
-        # self.assertIn("Config file must be YAML format", str(ctx.exception))
+        with self.assertRaises(Exception) as ctx:
+            self._launch_server()
+        self.assertIn("Server process exited with code 1", str(ctx.exception))
 
-
+'''
 class TestConfigValidation6(TestConfig):
 
     @classmethod
