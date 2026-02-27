@@ -84,7 +84,7 @@ class TestSetForwardHooks(CustomTestCase):
             "4",
             "--forward-hooks",
             cls.forward_hooks,
-            "--base-gpu-id", "1",
+            "--base-gpu-id", "4",
         ]
 
     @classmethod
