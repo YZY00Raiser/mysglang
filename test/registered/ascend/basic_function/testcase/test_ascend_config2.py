@@ -15,6 +15,8 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
+
+
 def popen_launch_server_config(
     model: str,
     base_url: str,
@@ -167,6 +169,7 @@ def popen_launch_server_config(
         raise Exception(error_msg + ". Check server logs for errors.")
     raise TimeoutError(error_msg)
 
+
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -175,6 +178,7 @@ class TestConfig(CustomTestCase):
     """
     model = None
     config = "config.yaml"
+
     @classmethod
     def _build_other_args(cls):
         return [
@@ -211,6 +215,8 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
+
 '''
 class TestConfigPriority(TestConfig):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
@@ -311,7 +317,7 @@ class TestConfigFileModeValidation(TestConfig):
 '''
 
 
-#配置错误的参数
+# 配置错误的参数
 
 class TestConfigParamValidation(TestConfig):
     """Testcase: Verify set exception param in config file the service start fail.
