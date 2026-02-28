@@ -133,7 +133,7 @@ class TestSetForwardHooks(CustomTestCase):
 
 # test set --forward-hooks exception parameter
 class TestSetForwardHooksValidation(TestSetForwardHooks):
-    """Testcase: Verify set --forward-hooks abc exception parameter, service start fail.
+    """Testcase: Verify set --forward-hooks parameter exception parameter, service start fail.
 
     [Test Category] Parameter
     [Test Target] --forward-hooks
@@ -149,7 +149,6 @@ class TestSetForwardHooksValidation(TestSetForwardHooks):
         ]
         for value, expected_code, expected_msg in test_cases:
             with self.subTest(forward_hooks=value):
-                # 设置当前测试的forward_hooks值
                 self.forward_hooks = value
 
                 with self.assertRaises(Exception) as ctx:
@@ -162,9 +161,13 @@ class TestSetForwardHooksValidation(TestSetForwardHooks):
                 self.assertIn(expected_msg, hook_content)
 
 # test set --forward-hooks error parameter field name
-
 class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
+    """Testcase: Verify set --forward-hooks parameter field name exception parameter, service start success,
+    prompt county official information.
 
+    [Test Category] Parameter
+    [Test Target] --forward-hooks
+    """
     hooks_spec = [
         {
             "NAME": "qwen_first_layer_attn_monitor",
@@ -239,7 +242,13 @@ class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
 """
 '''
 # test --forward-hooks parameter fields name, target_modules, hook_factory, config set exception parameters
-class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
+class TestSetForwardHooksFieldNameParameterValidation(TestSetForwardHooks):
+    """Testcase: Verify set --forward-hooks parameter field exception parameter, service start success,
+    prompt county official information.
+
+    [Test Category] Parameter
+    [Test Target] --forward-hooks
+    """
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
         (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
@@ -272,7 +281,7 @@ class TestSetForwardHooksFieldNameValidation(TestSetForwardHooks):
             )
 
 
-class TestSetForwardHooksFieldTargetModulesValidation(TestSetForwardHooks):
+class TestSetForwardHooksFieldParameterTargetModulesValidation(TestSetForwardHooks):
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
         (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
@@ -305,7 +314,7 @@ class TestSetForwardHooksFieldTargetModulesValidation(TestSetForwardHooks):
             )
 
 
-class TestSetForwardHooksFieldHookFactoryValidation(TestSetForwardHooks):
+class TestSetForwardHooksFieldParameterHookFactoryValidation(TestSetForwardHooks):
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
         (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
@@ -338,7 +347,7 @@ class TestSetForwardHooksFieldHookFactoryValidation(TestSetForwardHooks):
             )
 
 
-class TestSetForwardHooksFieldConfigValidation(TestSetForwardHooks):
+class TestSetForwardHooksFieldParameterConfigValidation(TestSetForwardHooks):
     test_cases = [
         ("abc", "Registered forward hook 'abc' on model.layers.0.self_attn"),
         (3.14, "Registered forward hook '3.14' on model.layers.0.self_attn"),
