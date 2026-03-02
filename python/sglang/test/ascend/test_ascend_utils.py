@@ -4,7 +4,7 @@ import os
 import subprocess
 import copy
 from typing import NamedTuple
-from typing import  Awaitable, Callable, Optional
+from typing import Awaitable, Callable, Optional
 
 import asyncio
 from sglang.bench_serving import run_benchmark
@@ -235,6 +235,11 @@ QWEN2_5_1_5B_APEACH_WEIGHTS_PATH = os.path.join(
 QWEN2_5_MATH_RM_72B_WEIGHTS_PATH = os.path.join(
     MODEL_WEIGHTS_DIR, "Qwen/Qwen2.5-Math-RM-72B"
 )
+# Other
+DEEPSEEK_CODER_JSON_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/deepseek_coder.json"
+CONFIG_YAML_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/config.yaml"
+CONFIG_VALID_YAML_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/config_valid.yaml"
+HOOK_FUNCTION_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/test_ascend_forward_hooks:create_attention_monitor_factory"
 
 
 class ModelTestConfig(NamedTuple):
@@ -342,6 +347,7 @@ def get_device_ids(index=None):
 
     return device_ids
 
+
 def get_benchmark_args(
     base_url="",
     backend="sglang",
@@ -447,6 +453,7 @@ def get_benchmark_args(
         header=header,
         max_concurrency=max_concurrency,
     )
+
 
 def run_bench_serving(
     model,
@@ -570,7 +577,6 @@ def run_bench_serving(
 
     assert res["completed"] == num_prompts
     return res
-
 
 
 def popen_launch_server_config(
