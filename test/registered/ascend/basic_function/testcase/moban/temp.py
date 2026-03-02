@@ -270,3 +270,11 @@ class TestSetForwardHooksValidation(TestSetForwardHooks):
                 self.hook_log_file.seek(0)
                 hook_content = self.hook_log_file.read()
                 self.assertIn(expected_msg, hook_content)
+register_npu_ci(
+    est_time=400,
+    suite="nightly-1-npu-a3",
+    nightly=True,
+    disabled="run failed",
+)
+资料
+https://github.com/sgl-project/sglang/blob/main/docs/platforms/ascend_npu_support_features.md
