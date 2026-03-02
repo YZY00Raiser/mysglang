@@ -1,24 +1,19 @@
 import os
-import shlex
-from typing import Optional
+import unittest
 
 import requests
-import unittest
+
 from sglang.srt.utils import kill_process_tree
+from sglang.test.ascend.test_ascend_utils import popen_launch_server_config
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
-    auto_config_device, _try_enable_offline_mode_if_cache_complete, _launch_server_process,
-    _wait_for_server_health, popen_launch_server,
+    popen_launch_server,
 )
 
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
-
-
-def popen_launch_server_config(cl):
-
 
 
 class TestConfig(CustomTestCase):
@@ -27,14 +22,15 @@ class TestConfig(CustomTestCase):
     [Test Category] Parameter
     [Test Target] --config
     """
+
     model = None
     config = "config.yaml"
 
     @classmethod
     def _build_other_args(cls):
         return [
-            "--config", cls.config,
-            "--base-gpu-id", "4",
+            "--config",
+            cls.config,
         ]
 
     @classmethod
@@ -76,6 +72,7 @@ class TestConfigPriority(TestConfig):
     [Test Category] Parameter
     [Test Target] --config
     """
+
     model = "/data/Qwen/Qwen3-32B"
 
     @classmethod
@@ -107,19 +104,24 @@ class TestConfigPriority(TestConfig):
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
+        self.assertIn(
+            "Server process exited with code 1. Check server logs for errors.",
+            str(ctx.exception),
+        )
         self.hook_log_file.seek(0)
         hook_content = self.hook_log_file.read()
-        self.assertIn("make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content)
+        self.assertIn(
+            "make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content
+        )
 
 
-# --config异常参数
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config exception param the service start fail.
 
     [Test Category] Parameter
     [Test Target] --config
     """
+
     test_cases = [
         "abc",
         3.14,
@@ -129,45 +131,52 @@ class TestConfigValidation(TestConfig):
         "config1.yaml",
     ]
     for config in test_cases:
+
         @classmethod
         def _build_other_args(cls):
             return [
-                "--config", cls.config,
+                "--config",
+                cls.config,
             ]
 
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
-            self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
+            self.assertIn(
+                "Server process exited with code 1. Check server logs for errors.",
+                str(ctx.exception),
+            )
 
 
-# 非yaml文件格式
 class TestConfigFileModeValidation(TestConfig):
     """Testcase: Verify set --config non yaml file format the service start fail.
 
     [Test Category] Parameter
     [Test Target] --config
     """
+
     test_cases = [
         "config.ini",
         "config.txt",
         "config.xml",
     ]
     for config in test_cases:
+
         @classmethod
         def _build_other_args(cls):
             return [
-                "--config", cls.config,
-                "--base-gpu-id", "4"
+                "--config",
+                cls.config,
             ]
 
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
-            self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
+            self.assertIn(
+                "Server process exited with code 1. Check server logs for errors.",
+                str(ctx.exception),
+            )
 
-
-# 配置错误的参数
 
 class TestConfigParamValidation(TestConfig):
     """Testcase: Verify set exception param in config file the service start fail.
@@ -175,12 +184,16 @@ class TestConfigParamValidation(TestConfig):
     [Test Category] Parameter
     [Test Target] --config
     """
+
     config = "config_valid.yaml"
 
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
             self._launch_server()
-        self.assertIn("Server process exited with code 2. Check server logs for errors.", str(ctx.exception))
+        self.assertIn(
+            "Server process exited with code 2. Check server logs for errors.",
+            str(ctx.exception),
+        )
 
 
 if __name__ == "__main__":
