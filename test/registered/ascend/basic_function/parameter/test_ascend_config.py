@@ -4,7 +4,11 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import popen_launch_server_config
+from sglang.test.ascend.test_ascend_utils import (
+    popen_launch_server_config,
+    CONFIG_YAML_PATH,
+    CONFIG_VALID_YAML_PATH,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -24,7 +28,7 @@ class TestConfig(CustomTestCase):
     """
 
     model = None
-    config = "config.yaml"
+    config = CONFIG_YAML_PATH
 
     @classmethod
     def _build_other_args(cls):
@@ -185,7 +189,7 @@ class TestConfigParamValidation(TestConfig):
     [Test Target] --config
     """
 
-    config = "config_valid.yaml"
+    config = CONFIG_VALID_YAML_PATH
 
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
