@@ -146,6 +146,11 @@ class TestConfigValidation(TestConfig):
         def test_config(self):
             with self.assertRaises(Exception) as ctx:
                 self._launch_server()
+            if self.config == "config1.yaml":
+                self.assertIn(
+                    "Server process exited with code -9. Check server logs for errors.",
+                    str(ctx.exception),
+                )
             self.assertIn(
                 "Server process exited with code 1. Check server logs for errors.",
                 str(ctx.exception),
