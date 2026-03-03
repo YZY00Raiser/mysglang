@@ -84,7 +84,7 @@ pr4
   registered/ascend/llm_models/test_ascend_internlm2_7b.py (exit code 1)第二次pr
   registered/ascend/llm_models/test_ascend_persimmon_8b_chat.py (exit code 1)第二次pr
   registered/ascend/basic_function/parameter/test_ascend_grpc_mode.py (exit code 1) pr4 lxl
-  registered/ascend/basic_function/parameter/test_ascend_fastapi_root_path.py (exit code 1) pr4 lxl
+  registered/ascend/basic_function/parameter/test_ascend_fastapi_root_path.py (exit code 1) pr4 lxl 下
 
 ✗ FAILED:
   registered/ascend/basic_function/test_ascend_fim_completion.py (exit code 1)第二次pr
@@ -106,3 +106,8 @@ pr4
   registered/ascend/basic_function/parameter/test_ascend_debug_tensor_dump_output_folder.py (exit code 1) pr4 cy AssertionError: 16 != 8
 
 6
+
+test_ascend_qwen3_vl_8b_instruct.py (timeout after 3600s)
+
+
+

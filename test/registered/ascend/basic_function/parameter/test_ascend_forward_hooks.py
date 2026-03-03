@@ -5,7 +5,10 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-# from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_32B_WEIGHTS_PATH,
+    HOOK_FUNCTION_PATH
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -13,7 +16,7 @@ from sglang.test.test_utils import (
     CustomTestCase,
     popen_launch_server,
 )
-QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
+
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
 import logging
@@ -58,12 +61,13 @@ class TestSetForwardHooks(CustomTestCase):
     [Test Target] --forward-hooks
     """
 
+    hook_function_path=HOOK_FUNCTION_PATH
     model = QWEN3_32B_WEIGHTS_PATH
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+            "hook_factory": hook_function_path,
             "config": {"layer_index": 0},
         }
     ]
@@ -177,7 +181,7 @@ class TestSetForwardHooksFieldNameValidation1(TestSetForwardHooks):
         {
             "NAME": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+            "hook_factory": "hook_function_path",
             "config": {"layer_index": 0},
         }
     ]
@@ -196,7 +200,7 @@ class TestSetForwardHooksFieldNameValidation2(TestSetForwardHooks):
         {
             "name": "qwen_first_layer_attn_monitor",
             "TARGET_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+            "hook_factory": "hook_function_path",
             "config": {"layer_index": 0},
         }
     ]
@@ -213,7 +217,7 @@ class TestSetForwardHooksFieldNameValidation3(TestSetForwardHooks):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_Factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+            "hook_Factory": "hook_function_path",
             "config": {"layer_index": 0},
         }
     ]
@@ -230,7 +234,7 @@ class TestSetForwardHooksFieldNameValidation4(TestSetForwardHooks):
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+            "hook_factory": "hook_function_path",
             "Config": {"layer_index": 0},
         }
     ]
@@ -259,7 +263,7 @@ class TestSetForwardHooksFieldNameParameterValidation(TestSetForwardHooks):
                 {
                     "name": name,
                     "target_modules": ["model.layers.0.self_attn"],
-                    "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+                    "hook_factory": "hook_function_path",
                     "config": {"layer_index": 0},
                 }
             ]
@@ -290,7 +294,7 @@ class TestSetForwardHooksFieldParameterTargetModulesValidation(TestSetForwardHoo
                 {
                     "name": "qwen_first_layer_attn_monitor",
                     "target_modules": target_modules,
-                    "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+                    "hook_factory": "hook_function_path",
                     "config": {"layer_index": 0},
                 }
             ]
@@ -352,7 +356,7 @@ class TestSetForwardHooksFieldParameterConfigValidation(TestSetForwardHooks):
                 {
                     "name": "qwen_first_layer_attn_monitor",
                     "target_modules": ["model.layers.0.self_attn"],
-                    "hook_factory": "test_ascend_forward_hooks:create_attention_monitor_factory",
+                    "hook_factory": "hook_function_path",
                     "config": config,
                 }
             ]
