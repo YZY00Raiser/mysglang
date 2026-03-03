@@ -130,30 +130,17 @@ class TestConfigValidation(TestConfig):
     [Test Target] --config
     """
 
-    test_cases = [
-        "abc",
-        3.14,
-        -2,
-        None,
-        "!@#$",
-        "config1.yaml",
-    ]
-    for config in test_cases:
-
-        @classmethod
-        def _build_other_args(cls):
-            return [
-                "--config",
-                cls.config,
-            ]
-
-        def test_config(self):
-            with self.assertRaises(Exception) as ctx:
-                self._launch_server()
-            self.assertIn(
-                "Server process exited with code 1. Check server logs for errors.",
-                str(ctx.exception),
-            )
+    def test_config_invalid(self):
+        test_cases = ["abc", 3.14, -2, None, "!@#$", "config1.yaml"]
+        for invalid_config in test_cases:
+            with self.subTest(config=invalid_config):  # 子测试，不中断整体执行
+                self.config = invalid_config  # 覆盖当前用例的配置
+                with self.assertRaises(Exception) as ctx:
+                    self._launch_server()
+                self.assertIn(
+                    "Server process exited with code 1. Check server logs for errors.",
+                    str(ctx.exception)
+                )
 
 '''
 class TestConfigFileModeValidation(TestConfig):
