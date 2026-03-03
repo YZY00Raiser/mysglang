@@ -109,5 +109,5 @@ pr4
 
 test_ascend_qwen3_vl_8b_instruct.py (timeout after 3600s)
 
-
+test_ascend_grok_2
 
