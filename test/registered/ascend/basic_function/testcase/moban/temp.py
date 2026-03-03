@@ -280,3 +280,5 @@ register_npu_ci(
 https://github.com/sgl-project/sglang/blob/main/docs/platforms/ascend_npu_support_features.md
 报错
 https://github.com/sgl-project/sglang/actions/runs/22572263028/job/65382799761?pr=19539
+
+"--base-gpu-id", "4",
