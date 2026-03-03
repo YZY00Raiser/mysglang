@@ -17,6 +17,8 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
+MODEL_PATH = "/home/weights/Qwen3-0.6B"
+
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
 
@@ -67,6 +69,10 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
+
+
+
 
 '''
 
@@ -122,6 +128,8 @@ class TestConfigPriority(TestConfig):
 '''
 
 
+'''
+
 
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config exception param the service start fail.
@@ -141,9 +149,75 @@ class TestConfigValidation(TestConfig):
                     "Server process exited with code 1. Check server logs for errors.",
                     str(ctx.exception)
                 )
+'''
+
+class TestAscendConfig(CustomTestCase):
+    """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
+
+    [Test Category] Parameter
+    [Test Target] --config
+    """
+
+    config = CONFIG_YAML_PATH
+
+    @classmethod
+    def setUpClass(cls):
+        cls.model = MODEL_PATH
+        cls.base_url = DEFAULT_URL_FOR_TEST
+        # cls.url = urlparse(cls.base_url)
+        cls.other_args = [
+            "--config",
+            cls.config,
+        ]
+
+        cls.process = popen_launch_server_config(
+            cls.model,
+            cls.base_url,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=cls.other_args,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+
+    def test_config(self):
+        response = requests.post(
+            f"{self.base_url}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+
+
+
+
+
+
+
+
+
+
 
 '''
-class TestConfigFileModeValidation(TestConfig):
+
+
+
+
+
+
+
+
+
+class TestConfigFileTypeValidation(TestConfig):
     """Testcase: Verify set --config non yaml file format the service start fail.
 
     [Test Category] Parameter
