@@ -245,10 +245,10 @@ QWEN2_5_MATH_RM_72B_WEIGHTS_PATH = os.path.join(
 # Other
 DEEPSEEK_CODER_JSON_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/deepseek_coder.json"
 CONFIG_YAML_PATH = (
-    "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/config.yaml"
+    "/home/y30082119/mysglang/test/registered/ascend/basic_function/parameter/config.yaml"
 )
-CONFIG_VALID_YAML_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/config_valid.yaml"
-HOOK_FUNCTION_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/test_ascend_forward_hooks:create_attention_monitor_factory"
+CONFIG_VALID_YAML_PATH = "/home/y30082119/mysglang/test/registered/ascend/basic_function/parameter/config_valid.yaml"
+HOOK_FUNCTION_PATH = "/home/y30082119/mysglang/test/registered/ascend/basic_function/parameter/test_ascend_forward_hooks:create_attention_monitor_factory"
 
 
 class ModelTestConfig(NamedTuple):
