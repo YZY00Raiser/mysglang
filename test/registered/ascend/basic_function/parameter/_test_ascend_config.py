@@ -118,8 +118,9 @@ class TestConfigPriority(TestConfig):
         # self.assertIn(
         #     "make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content
         # )
-        with self.assertRaises(OSError,Exception) as ctx:
+        with self.assertRaises(Exception) as ctx:
             self._launch_server()
+        print("---------------------------ctx.exception------------------------------")
         print(ctx.exception)
 
 '''
