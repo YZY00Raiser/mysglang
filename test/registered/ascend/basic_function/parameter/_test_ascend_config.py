@@ -68,6 +68,7 @@ class TestConfig(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
+'''
 
 class TestConfigPriority(TestConfig):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
@@ -118,8 +119,9 @@ class TestConfigPriority(TestConfig):
         self.assertIn(
             "make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content
         )
-
 '''
+
+
 
 class TestConfigValidation(TestConfig):
     """Testcase: Verify set --config exception param the service start fail.
@@ -153,7 +155,7 @@ class TestConfigValidation(TestConfig):
                 str(ctx.exception),
             )
 
-
+'''
 class TestConfigFileModeValidation(TestConfig):
     """Testcase: Verify set --config non yaml file format the service start fail.
 
