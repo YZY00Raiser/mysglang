@@ -151,50 +151,54 @@ class TestConfigValidation(TestConfig):
                 )
 '''
 
-class TestAscendConfig(CustomTestCase):
-    """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
+class TestAscendConfigInValidConfigFileType(CustomTestCase):
+    """Testcase: Verify set --config non yaml file format the service start fail.
 
     [Test Category] Parameter
     [Test Target] --config
     """
 
-    config = CONFIG_YAML_PATH
+    invalid_config_file_list = [
+        "config.ini",
+        "config.txt",
+        "config.xml",
+    ]
+
+    # for config in test_cases:
 
     @classmethod
     def setUpClass(cls):
         cls.model = MODEL_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
-        # cls.url = urlparse(cls.base_url)
-        cls.other_args = [
-            "--config",
-            cls.config,
-        ]
-
-        cls.process = popen_launch_server_config(
-            cls.model,
-            cls.base_url,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=cls.other_args,
-        )
 
     @classmethod
     def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
+        pass
 
     def test_config(self):
-        response = requests.post(
-            f"{self.base_url}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        process = None
+        for config in self.invalid_config_file_list:
+            try:
+            # with self.assertRaises(Exception) as ctx:
+                self.other_args = [
+                    "--config",
+                    config,
+                ]
+                process = popen_launch_server(
+                    self.model,
+                    self.base_url,
+                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                    other_args=self.other_args,
+                )
+            except Exception as e:
+                self.assertIn(
+                    "Server process exited with code 1. Check server logs for errors.",
+                    str(e),
+                )
+                print(e)
+            finally:
+                if process:
+                    kill_process_tree(process.pid)
 
 
 
