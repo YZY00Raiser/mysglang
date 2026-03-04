@@ -25,7 +25,7 @@ class TestEXAONE(GSM8KAscendMixin, CustomTestCase):
         "ascend",
         "--disable-cuda-graph",
         "--max-mamba-cache-size",
-        "None"
+        "None",
         "--mamba-ssm-dtype",
         "float32",
         "--mamba-full-memory-ratio",
