@@ -8,8 +8,8 @@ from sglang.test.test_utils import CustomTestCase
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 
-class TestEXAONE(GSM8KAscendMixin, CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
+class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
+    """Testcase：Verify the MambaCache
 
     [Test Category] Parameter
     [Test Target] --lora-target-modules
