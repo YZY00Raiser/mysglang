@@ -32,6 +32,20 @@ class TestAscendConfig(CustomTestCase):
     config = CONFIG_YAML_PATH
 
     @classmethod
+    def _launch_server_with_config_yaml(cls, config_file, url, timeout):
+        command = [
+            "python3",
+            "-m",
+            "sglang.launch_server",
+            "--config",
+            config_file,
+        ]
+        process = subprocess.Popen(command, stdout=None, stderr=None,
+                                   env=_create_clean_subprocess_env(os.environ.copy()))
+        _wait_for_server_health(process, url, None, timeout)
+        return process
+
+    @classmethod
     def setUpClass(cls):
         cls.model = MODEL_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
@@ -69,22 +83,6 @@ class TestAscendConfig(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-    @classmethod
-    def _launch_server_with_config_yaml(cls, config_file, url, timeout):
-        command = [
-            "python3",
-            "-m",
-            "sglang.launch_server",
-            "--config",
-            config_file,
-        ]
-        process = subprocess.Popen(command, stdout=None, stderr=None,
-                                       env=_create_clean_subprocess_env(os.environ.copy()))
-        _wait_for_server_health(process, url, None, timeout)
-        return process
-
-
-
 
 class TestAscendConfigInValidConfigFileType(CustomTestCase):
     """Testcase: Verify set --config non yaml file format the service start fail.
@@ -114,13 +112,12 @@ class TestAscendConfigInValidConfigFileType(CustomTestCase):
         process = None
         for config in self.invalid_config_file_list:
             try:
-            # with self.assertRaises(Exception) as ctx:
+                # with self.assertRaises(Exception) as ctx:
 
                 self.other_args = [
                     "--config",
                     config,
                 ]
-
 
                 process = popen_launch_server(
                     self.model,
@@ -137,9 +134,6 @@ class TestAscendConfigInValidConfigFileType(CustomTestCase):
             finally:
                 if process:
                     kill_process_tree(process.pid)
-
-
-
 
 
 # class TestConfigParamValidation(TestConfig):
