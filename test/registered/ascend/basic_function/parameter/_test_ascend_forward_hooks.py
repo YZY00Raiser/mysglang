@@ -7,7 +7,7 @@ import requests
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     # QWEN3_32B_WEIGHTS_PATH,
-    HOOK_FUNCTION_PATH
+    # HOOK_FUNCTION_PATH
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -61,7 +61,7 @@ class TestSetForwardHooks(CustomTestCase):
     [Test Target] --forward-hooks
     """
     QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-32B"
-    hook_function_path=HOOK_FUNCTION_PATH
+    # hook_function_path=HOOK_FUNCTION_PATH
     hp = "home.y30082119.mysglang.test.registered.ascend.basic_function.parameter.test_ascend_forward_hooks.create_attention_monitor_factory"
 
     model = QWEN3_32B_WEIGHTS_PATH
