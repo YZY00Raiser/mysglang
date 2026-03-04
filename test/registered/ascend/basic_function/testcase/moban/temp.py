@@ -282,3 +282,11 @@ https://github.com/sgl-project/sglang/blob/main/docs/platforms/ascend_npu_suppor
 https://github.com/sgl-project/sglang/actions/runs/22572263028/job/65382799761?pr=19539
 
 "--base-gpu-id", "4",
+
+
+register_npu_ci(
+    est_time=400,
+    suite="nightly-1-npu-a3",
+    nightly=True,
+    disabled="run failed",
+)
