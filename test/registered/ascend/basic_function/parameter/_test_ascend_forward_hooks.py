@@ -62,7 +62,7 @@ class TestSetForwardHooks(CustomTestCase):
     """
     QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-32B"
     hook_function_path=HOOK_FUNCTION_PATH
-    hp = ".home.y30082119.mysglang.test.registered.ascend.basic_function.parameter.test_ascend_forward_hooks:create_attention_monitor_factory"
+    hp = "home.y30082119.mysglang.test.registered.ascend.basic_function.parameter.test_ascend_forward_hooks.create_attention_monitor_factory"
 
     model = QWEN3_32B_WEIGHTS_PATH
     hooks_spec = [
