@@ -73,7 +73,7 @@ class TestConfig(CustomTestCase):
 
 class TestConfigPriority(TestConfig):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
-    set false model path in in the command, set right model path in in the config.yaml,
+    set false model path in the command, set right model path in the config.yaml,
     will use false model path service start fail .
 
     [Test Category] Parameter

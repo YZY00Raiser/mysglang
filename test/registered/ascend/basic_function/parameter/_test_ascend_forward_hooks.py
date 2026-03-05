@@ -65,7 +65,7 @@ class TestSetForwardHooks(CustomTestCase):
     [Test Target] --forward-hooks
     """
 
-    hook_function_path = "test_ascend_forward_hooks:create_attention_monitor_factory"
+    hook_function_path = "sglang.test.test_ascend_forward_hooks:create_attention_monitor_factory"
     model = "/home/weights/Qwen/Qwen3-32B"
     hooks_spec = [
         {
