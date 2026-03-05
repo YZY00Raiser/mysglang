@@ -24,7 +24,7 @@ class TestMambaCache(CustomTestCase):
         other_args = [
             "--trust-remote-code",
             "--mem-fraction-static",
-            "0.8",
+            "0.6",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
@@ -39,7 +39,7 @@ class TestMambaCache(CustomTestCase):
             # "--mamba-track-interval",
             # "256",
             "--tp-size",
-            "4",
+            "8",
             "--disable-radix-cache",
             "--quantization",
             "modelslim",
