@@ -53,9 +53,6 @@ class TestConfig(CustomTestCase):
     def setUpClass(cls):
         # cls.model = MODEL_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
-
-        # TODO：或许应该在这里生成config文件
-
         cls.process = cls._launch_server_with_config_yaml(cls.config, cls.base_url, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
         # command = [
         #     "python3",
@@ -255,6 +252,8 @@ class TestConfigFileTypeValidation(TestConfig):
             )
 
 '''
+
+
 class TestConfigParamValidation(TestConfig):
     """Testcase: Verify set exception param in config file the service start fail.
 
