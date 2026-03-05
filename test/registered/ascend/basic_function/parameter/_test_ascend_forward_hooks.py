@@ -6,8 +6,8 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import (
-#     WEN3_32B_WEIGHTS_PATH,
-#     HOOK_FUNCTION_PATH
+#     HOOK_FUNCTION_PATH,
+#     QWEN3_32B_WEIGHTS_PATH,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -17,7 +17,11 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
+register_npu_ci(
+    est_time=400,
+    suite="nightly-4-npu-a3",
+    nightly=True,
+)
 
 import logging
 import time
@@ -60,16 +64,14 @@ class TestSetForwardHooks(CustomTestCase):
     [Test Category] Parameter
     [Test Target] --forward-hooks
     """
-    QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-32B"
-    # hook_function_path=HOOK_FUNCTION_PATH
-    hp = "test_ascend_forward_hooks:create_attention_monitor_factory"
 
-    model = QWEN3_32B_WEIGHTS_PATH
+    hook_function_path = "test_ascend_forward_hooks:create_attention_monitor_factory"
+    model = "/home/weights/Qwen/Qwen3-32B"
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
             "target_modules": ["model.layers.0.self_attn"],
-            "hook_factory": hp,
+            "hook_factory": hook_function_path,
             "config": {"layer_index": 0},
         }
     ]
