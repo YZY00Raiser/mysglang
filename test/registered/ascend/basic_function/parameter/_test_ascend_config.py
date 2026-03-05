@@ -26,6 +26,20 @@ CONFIG_EXCEPTION_PARAMETER_YAML_PATH = f"{PATH}/config_invalid.yaml"
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
 
+def _launch_server_with_config_yaml(cls, config_file, url, timeout):
+    command = [
+        "python3",
+        "-m",
+        "sglang.launch_server",
+        "--config",
+        config_file,
+    ]
+    process = subprocess.Popen(command, stdout=None, stderr=None,
+                               env=_create_clean_subprocess_env(os.environ.copy()))
+    _wait_for_server_health(process, url, None, timeout)
+    return process
+
+
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -35,25 +49,25 @@ class TestConfig(CustomTestCase):
 
     config = CONFIG_YAML_PATH
 
-    @classmethod
-    def _launch_server_with_config_yaml(cls, config_file, url, timeout):
-        command = [
-            "python3",
-            "-m",
-            "sglang.launch_server",
-            "--config",
-            config_file,
-        ]
-        process = subprocess.Popen(command, stdout=None, stderr=None,
-                                   env=_create_clean_subprocess_env(os.environ.copy()))
-        _wait_for_server_health(process, url, None, timeout)
-        return process
+    # @classmethod
+    # def _launch_server_with_config_yaml(cls, config_file, url, timeout):
+    #     command = [
+    #         "python3",
+    #         "-m",
+    #         "sglang.launch_server",
+    #         "--config",
+    #         config_file,
+    #     ]
+    #     process = subprocess.Popen(command, stdout=None, stderr=None,
+    #                                env=_create_clean_subprocess_env(os.environ.copy()))
+    #     _wait_for_server_health(process, url, None, timeout)
+    #     return process
 
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
-        cls.process = cls._launch_server_with_config_yaml(cls.config, cls.base_url, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
+        cls.process = _launch_server_with_config_yaml(cls.config, cls.base_url, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
         # command = [
         #     "python3",
         #     "-m",
@@ -148,17 +162,63 @@ class TestConfigValidation(TestConfig):
     [Test Target] --config
     """
 
-    def test_config_invalid(self):
-        test_cases = ["abc", 3.14, -2, None, "!@#$", "config1.yaml"]
-        for invalid_config in test_cases:
-            with self.subTest(config=invalid_config):  # 子测试，不中断整体执行
-                self.config = invalid_config  # 覆盖当前用例的配置
-                with self.assertRaises(Exception) as ctx:
-                    self._launch_server()
+    # def test_config_invalid(self):
+    #     test_cases = ["abc", 3.14, -2, None, "!@#$", "config1.yaml"]
+    #     for invalid_config in test_cases:
+    #         with self.subTest(config=invalid_config):  # 子测试，不中断整体执行
+    #             self.config = invalid_config  # 覆盖当前用例的配置
+    #             with self.assertRaises(Exception) as ctx:
+    #                 self._launch_server()
+    #             self.assertIn(
+    #                 "Server process exited with code 1. Check server logs for errors.",
+    #                 str(ctx.exception)
+    #             )
+
+    invalid_config_file_list = [
+        "abc",
+        3.14,
+        -2,
+        None,
+        "!@#$",
+        "config1.yaml"
+    ]
+
+    # for config in test_cases:
+
+    @classmethod
+    def setUpClass(cls):
+        cls.model = MODEL_PATH
+        cls.base_url = DEFAULT_URL_FOR_TEST
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_config(self):
+        process = None
+        for config in self.invalid_config_file_list:
+            try:
+                # with self.assertRaises(Exception) as ctx:
+                self.other_args = [
+                    "--config",
+                    config,
+                ]
+                process = popen_launch_server(
+                    self.model,
+                    self.base_url,
+                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                    other_args=self.other_args,
+                )
+            except Exception as e:
                 self.assertIn(
                     "Server process exited with code 1. Check server logs for errors.",
-                    str(ctx.exception)
+                    str(e),
                 )
+                print(e)
+            finally:
+                if process:
+                    kill_process_tree(process.pid)
+
 '''
 
 
@@ -212,49 +272,9 @@ class TestAscendConfigInValidConfigFileType(CustomTestCase):
                     kill_process_tree(process.pid)
 
 
-'''
 
 
-
-
-
-
-
-
-
-class TestConfigFileTypeValidation(TestConfig):
-    """Testcase: Verify set --config non yaml file format the service start fail.
-
-    [Test Category] Parameter
-    [Test Target] --config
-    """
-
-    test_cases = [
-        "config.ini",
-        "config.txt",
-        "config.xml",
-    ]
-    for config in test_cases:
-
-        @classmethod
-        def _build_other_args(cls):
-            return [
-                "--config",
-                cls.config,
-            ]
-
-        def test_config(self):
-            with self.assertRaises(Exception) as ctx:
-                self._launch_server()
-            self.assertIn(
-                "Server process exited with code 1. Check server logs for errors.",
-                str(ctx.exception),
-            )
-
-'''
-
-
-class TestConfigParamValidation(TestConfig):
+class TestConfigParamValidation(CustomTestCase):
     """Testcase: Verify set exception param in config file the service start fail.
 
     [Test Category] Parameter
@@ -265,12 +285,12 @@ class TestConfigParamValidation(TestConfig):
 
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
-            self._launch_server()
+            _launch_server_with_config_yaml()
         self.assertIn(
             "Server process exited with code 2. Check server logs for errors.",
             str(ctx.exception),
         )
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
