@@ -36,7 +36,8 @@ class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
         "--mamba-track-interval",
         "256",
         "--tp-size",
-        8,
+        4,
+        "--disable-radix-cache"
     ]
     # args = SimpleNamespace(
     #     num_shots=5,
