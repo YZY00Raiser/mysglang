@@ -19,13 +19,12 @@ class TestMambaCache(CustomTestCase):
     """
 
     model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
-    accuracy = 0.92
     @classmethod
     def setUpClass(cls):
         other_args = [
             "--trust-remote-code",
             "--mem-fraction-static",
-            "0.7",
+            "0.6",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
