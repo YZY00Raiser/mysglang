@@ -5,7 +5,6 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
-    CONFIG_VALID_YAML_PATH,
     CONFIG_YAML_PATH,
     popen_launch_server_config,
 )
@@ -21,7 +20,6 @@ register_npu_ci(
     est_time=400,
     suite="nightly-4-npu-a3",
     nightly=True,
-    disabled="run failed",
 )
 
 
