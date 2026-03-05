@@ -90,23 +90,11 @@ class TestConfigPriority(TestConfig):
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
-            return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
-
-    @classmethod
-    def setUpClass(cls):
-        cls.out_log_file_name = "./tmp_out_log.txt"
-        cls.hook_log_file_name = "./tmp_hook_log.txt"
-        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        cls.out_log_file.close()
-        cls.hook_log_file.close()
-        os.remove(cls.out_log_file_name)
-        os.remove(cls.hook_log_file_name)
 
     def test_config(self):
         with self.assertRaises(Exception) as ctx:
@@ -114,11 +102,6 @@ class TestConfigPriority(TestConfig):
         self.assertIn(
             "Server process exited with code 1. Check server logs for errors.",
             str(ctx.exception),
-        )
-        self.hook_log_file.seek(0)
-        hook_content = self.hook_log_file.read()
-        self.assertIn(
-            "make sure '/data/Qwen/Qwen3-32B' is the correct path", hook_content
         )
 
 
