@@ -33,14 +33,16 @@ class TestMambaCache(CustomTestCase):
             # "--mamba-ssm-dtype",
             # "float32",
             # "--mamba-full-memory-ratio",
-            # "0.9",
+            # "0.5",
             # "--mamba-scheduler-strategy",
             # "auto",
             # "--mamba-track-interval",
             # "256",
             "--tp-size",
             "4",
-            "--disable-radix-cache"
+            "--disable-radix-cache",
+            "--quantization",
+            "modelslim",
         ]
         cls.process = popen_launch_server(
             cls.model,
