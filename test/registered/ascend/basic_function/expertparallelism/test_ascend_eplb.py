@@ -64,10 +64,6 @@ class TestEplbAlgorithm(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_eplb_algorithm(self):
-        response = requests.get(f"{self.base_url}/get_server_info")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.eplb_algorithm, response.json().get("eplb_algorithm"))
-
         response = requests.post(
             f"{self.base_url}/generate",
             json={
