@@ -41,6 +41,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--attention-backend",
                 "ascend",
                 "--disable-cuda-graph",
+                "--mem-fraction-static",
+                "0.7",
                 "--quantization",
                 "modelslim",
                 "--disable-radix-cache"
