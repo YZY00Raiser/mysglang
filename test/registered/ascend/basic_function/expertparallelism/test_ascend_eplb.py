@@ -37,14 +37,14 @@ class TestEplbAlgorithm(CustomTestCase):
             other_args=[
                 "--trust-remote-code",
                 "--tp-size",
-                "8",
+                "2",
+                "--ep-size",
+                "2",
                 "--attention-backend",
                 "ascend",
                 "--disable-cuda-graph",
                 "--mem-fraction-static",
                 "0.7",
-                "--moe-a2a-backend",
-                "deepep",
                 "--disable-radix-cache",
             ],
         )
