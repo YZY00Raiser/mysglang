@@ -43,7 +43,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
             other_args=[
                 "--trust-remote-code",
                 "--tp-size",
-                "4",
+                "2",
                 "--dp-size",
                 "2",
                 "--attention-backend",
