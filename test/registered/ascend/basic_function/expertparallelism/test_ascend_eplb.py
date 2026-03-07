@@ -25,8 +25,6 @@ class TestEplbAlgorithm(CustomTestCase):
     [Test Target] --eplb-algorithm
     """
 
-    eplb_algorithm = "deepseek"
-
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
@@ -50,6 +48,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "deepep",
                 "--deepep-mode",
                 "auto",
+                "--eplb-algorithm",
+                "deepseek",
                 "--disable-cuda-graph",
             ],
             env={
