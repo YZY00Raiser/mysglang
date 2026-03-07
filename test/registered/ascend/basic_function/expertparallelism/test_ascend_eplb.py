@@ -46,12 +46,9 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--quantization",
                 "modelslim",
                 "--disable-radix-cache"
+                "--chunked-prefill-size",
+                "1024",
             ],
-            # env={
-            #     "SGL_ENABLE_JIT_DEEPGEMM": "0",
-            #     "HCCL_BUFFSIZE": "1024",
-            #     **os.environ,
-            # },
         )
 
     @classmethod
