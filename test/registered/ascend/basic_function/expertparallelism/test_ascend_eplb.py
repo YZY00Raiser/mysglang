@@ -48,8 +48,6 @@ class TestEplbAlgorithm(CustomTestCase):
                 "deepep",
                 "--deepep-mode",
                 "auto",
-                "--eplb-algorithm",
-                "deepseek",
                 "--disable-cuda-graph",
                 "--quantization",
                 "modelslim",
