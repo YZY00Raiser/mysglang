@@ -50,7 +50,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
-                "auto"
+                "auto",
                 "--disable-cuda-graph",
             ],
             env={
