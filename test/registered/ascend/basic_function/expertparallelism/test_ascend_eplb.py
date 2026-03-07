@@ -35,7 +35,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
-        cls.model = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8"
+        cls.model = "/home/weights/DeepSeek-R1-0528-W8A8"
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
