@@ -53,6 +53,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--disable-cuda-graph",
                 "--quantization",
                 "modelslim",
+                "--disable-radix-cache"
             ],
             env={
                 "SGL_ENABLE_JIT_DEEPGEMM": "0",
