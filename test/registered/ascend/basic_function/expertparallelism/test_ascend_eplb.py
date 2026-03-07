@@ -43,7 +43,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--attention-backend",
                 "ascend",
                 "--mem-fraction-static",
-                "0.7",
+                "0.8",
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
