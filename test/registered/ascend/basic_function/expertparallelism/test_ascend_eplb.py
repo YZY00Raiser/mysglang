@@ -51,6 +51,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--eplb-algorithm",
                 "deepseek",
                 "--disable-cuda-graph",
+                "--quantization",
+                "modelslim",
             ],
             env={
                 "SGL_ENABLE_JIT_DEEPGEMM": "0",
