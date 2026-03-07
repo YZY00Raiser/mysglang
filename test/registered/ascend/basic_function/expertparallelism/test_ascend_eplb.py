@@ -38,8 +38,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--trust-remote-code",
                 "--tp-size",
                 "2",
-                "--dp-size",
-                "2",
+                "--ep-size",
+                "2"
                 "--attention-backend",
                 "ascend",
                 "--mem-fraction-static",
