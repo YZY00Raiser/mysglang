@@ -28,7 +28,7 @@ class TestEplbAlgorithm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
-        cls.model = "/mnt/weight/weights/DeepSeek-V3_W8A8"
+        cls.model = "/mnt/weight/weight/DeepSeek-V3_W8A8"
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
