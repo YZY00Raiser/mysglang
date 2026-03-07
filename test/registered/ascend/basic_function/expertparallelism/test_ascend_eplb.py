@@ -40,7 +40,6 @@ class TestEplbAlgorithm(CustomTestCase):
                 "2",
                 "--ep-size",
                 "2",
-                ""
                 "--attention-backend",
                 "ascend",
                 "--disable-cuda-graph",
