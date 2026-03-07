@@ -28,7 +28,7 @@ class TestEplbAlgorithm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
-        cls.model = "/mnt/weight/weight/DeepSeek-V3_W8A8"
+        cls.model = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -45,7 +45,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "0.7",
                 "--quantization",
                 "modelslim",
-                "--disable-radix-cache"
+                "--disable-radix-cache",
                 "--chunked-prefill-size",
                 "1024",
             ],
