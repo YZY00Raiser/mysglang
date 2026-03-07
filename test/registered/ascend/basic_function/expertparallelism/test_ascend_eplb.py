@@ -39,7 +39,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--tp-size",
                 "2",
                 "--ep-size",
-                "2"
+                "2",
                 "--attention-backend",
                 "ascend",
                 "--mem-fraction-static",
@@ -53,11 +53,11 @@ class TestEplbAlgorithm(CustomTestCase):
                 "modelslim",
                 "--disable-radix-cache"
             ],
-            env={
-                "SGL_ENABLE_JIT_DEEPGEMM": "0",
-                "HCCL_BUFFSIZE": "1024",
-                **os.environ,
-            },
+            # env={
+            #     "SGL_ENABLE_JIT_DEEPGEMM": "0",
+            #     "HCCL_BUFFSIZE": "1024",
+            #     **os.environ,
+            # },
         )
 
     @classmethod
