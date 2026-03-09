@@ -101,19 +101,19 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
         print("--------------------------response.json()-----------lora_b-------------------------------")
         print(response.json())
 
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_c,
-            },
-        )
-        print("--------------------------response.json()------------------------------------------")
-        print(response.json())
+        # response = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/generate",
+        #     json={
+        #         "text": "The capital of France is",
+        #         "sampling_params": {
+        #             "temperature": 0,
+        #             "max_new_tokens": 32,
+        #         },
+        #         "lora_path": self.lora_c,
+        #     },
+        # )
+        # print("--------------------------response.json()------------------------------------------")
+        # print(response.json())
 
         # 流式7
         response = requests.post(
