@@ -79,7 +79,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                     "temperature": 0,
                     "max_new_tokens": 32,
                 },
-                "lora_path": self.lora_a,
+                "lora_path": "lora_a",
             },
         )
         print("--------------------------response.json()----------lora_a--------------------------------")
@@ -95,7 +95,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                     "temperature": 0,
                     "max_new_tokens": 32,
                 },
-                "lora_path": self.lora_b,
+                "lora_path": "lora_b",
             },
         )
         print("--------------------------response.json()-----------lora_b-------------------------------")
