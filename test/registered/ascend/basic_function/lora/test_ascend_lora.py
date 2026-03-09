@@ -284,6 +284,8 @@ class TestLoraBasicFunction_13(CustomTestCase):
             f"lora_2={cls.lora_b}",
             f"lora_3={cls.lora_c}",
             "--lora-target-modules",
+            "--max-load-rank",
+            "2",
             "all",
             "--attention-backend",
             "ascend",
