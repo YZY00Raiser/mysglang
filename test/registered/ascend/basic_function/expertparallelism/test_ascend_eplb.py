@@ -45,7 +45,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
-                "nomal",
+                "normal",
                 "--attention-backend",
                 "ascend",
                 "--disable-cuda-graph",
