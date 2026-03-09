@@ -28,7 +28,10 @@ class TestEplbAlgorithm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
+        # cls.model = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+        # cls.model = "/home/weights/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct"
         cls.model = "/mnt/weight/weight/DeepSeek-V3_W8A8"
+
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -37,17 +40,14 @@ class TestEplbAlgorithm(CustomTestCase):
             other_args=[
                 "--trust-remote-code",
                 "--tp-size",
-                "8",
+                "2",
+                "--ep-size",
+                "2",
                 "--attention-backend",
                 "ascend",
                 "--disable-cuda-graph",
                 "--mem-fraction-static",
                 "0.7",
-                "--quantization",
-                "modelslim",
-                "--disable-radix-cache",
-                "--chunked-prefill-size",
-                "1024",
             ],
         )
 
