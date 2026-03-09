@@ -82,7 +82,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 "lora_path": self.lora_a,
             },
         )
-        print("--------------------------response.json()------------------------------------------")
+        print("--------------------------response.json()----------lora_a--------------------------------")
         print(response.json())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
@@ -98,7 +98,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 "lora_path": self.lora_b,
             },
         )
-        print("--------------------------response.json()------------------------------------------")
+        print("--------------------------response.json()-----------lora_b-------------------------------")
         print(response.json())
 
         response = requests.post(
