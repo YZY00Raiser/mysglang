@@ -27,7 +27,8 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
 
 
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_b = "/home/weights/codelion/Llama-3.2-1B-Instruct-language-lora"
+    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    # lora_c = "/home/weights/codelion/OneLLM-Doey-"
     lora_c = "None"
 
     @classmethod
