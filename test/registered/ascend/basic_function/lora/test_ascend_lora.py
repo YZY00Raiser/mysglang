@@ -1,3 +1,4 @@
+import json
 import unittest
 
 import requests
@@ -18,6 +19,8 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
+
+
 class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
@@ -25,9 +28,9 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
     [Test Target] --lora-target-modules
     """
 
-
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
     lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+
     # lora_c = "/home/weights/codelion/OneLLM-Doey-"
     # lora_c = "None"
 
@@ -126,9 +129,19 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 "lora_path": "lora_a",
                 "stream": True,
             },
+
         )
-        print("--------------------------response.json()-------stream--true---------------------------------")
-        print(response.json())
+        prev = 0
+        for chunk in response.iter_lines(decode_unicode=False):
+            chunk = chunk.decode("utf-8")
+            if chunk and chunk.startswith("data:"):
+                if chunk == "data: [DONE]":
+                    break
+                data = json.loads(chunk[5:].strip("\n"))
+                output = data["text"]
+                print(output[prev:], end="", flush=True)
+                print("--------------------------chunk-------stream--true---------------------------------")
+                prev = len(output)
 
 
 '''
