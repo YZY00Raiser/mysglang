@@ -17,7 +17,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
-LLAMA_3_2_1B_WEIGHTS_PATH = "home/weights/LLM-Research/Llama-3.2-1B-Instruct"
+LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
