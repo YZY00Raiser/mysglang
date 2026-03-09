@@ -29,7 +29,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
     lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
     # lora_c = "/home/weights/codelion/OneLLM-Doey-"
-    lora_c = "None"
+    # lora_c = "None"
 
     @classmethod
     def setUpClass(cls):
@@ -40,7 +40,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
             "--lora-path",
             f"lora_1={cls.lora_a}",
             f"lora_2={cls.lora_b}",
-            f"lora_3={cls.lora_c}",
+            # f"lora_3={cls.lora_c}",
             "--lora-target-modules",
             "all",
             "--attention-backend",
@@ -133,9 +133,6 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
 
 
 '''
-
-
-
 class TestLoraBasicFunction_6(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
