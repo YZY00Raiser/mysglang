@@ -131,17 +131,16 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
             },
 
         )
-        prev = 0
+        stream_text = ""
         for chunk in response.iter_lines(decode_unicode=False):
             chunk = chunk.decode("utf-8")
             if chunk and chunk.startswith("data:"):
                 if chunk == "data: [DONE]":
                     break
                 data = json.loads(chunk[5:].strip("\n"))
-                output = data["text"]
-                print(output[prev:], end="", flush=True)
+                stream_text += data["text"]
                 print("--------------------------chunk-------stream--true---------------------------------")
-                prev = len(output)
+                print(stream_text)
 
 '''
 class TestLoraBasicFunction_6(CustomTestCase):
