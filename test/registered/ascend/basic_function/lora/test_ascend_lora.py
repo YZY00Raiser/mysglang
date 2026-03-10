@@ -143,7 +143,6 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 print("--------------------------chunk-------stream--true---------------------------------")
                 prev = len(output)
 
-
 '''
 class TestLoraBasicFunction_6(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
