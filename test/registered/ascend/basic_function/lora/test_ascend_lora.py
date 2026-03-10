@@ -52,6 +52,8 @@ class TestLoraBasicFunction(CustomTestCase):
             "--disable-cuda-graph",
             "--base-gpu-id",
             "6",
+            "--max-loras-per-batch",
+            "3",
             # "--lora-backend",
             # "ascend",
         ]
