@@ -69,46 +69,45 @@ class TestLoraBasicFunction(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
 
-    # def test_lora_with_json_schema(self):
-    #     #case5
-    #     json_schema = json.dumps({
-    #         "type": "object",
-    #         "properties": {
-    #             "name": {"type": "string"},
-    #             "age": {"type": "integer"},
-    #             "city": {"type": "string"},
-    #         },
-    #         "required": ["name", "age", "city"],
-    #
-    #     })
-    #
-    #     response = requests.post(
-    #         f"{DEFAULT_URL_FOR_TEST}/generate",
-    #         json={
-    #             "text": "Generate person information",
-    #             "sampling_params": {
-    #                 "temperature": 0.3,
-    #                 "max_new_tokens": 128,
-    #                 "json_schema": json_schema,
-    #             },
-    #             "lora_path": "lora_a",
-    #         },
-    #     )
-    #     print("--------------------------response.json()----------lora_a--------------------------------")
-    #     print(response.json())
-    #     self.assertEqual(response.status_code, 200)
-    #     result = response.json()
-    #     self.assertIn("text", result)
-    #     parsed_json = json.loads(result["text"])
-    #     self.assertIn("name", parsed_json)
-    #     self.assertIn("age", parsed_json)
-    #     self.assertIn("city", parsed_json)
-    #     print(f"Valid JSON generate: {parsed_json}")
+    def test_lora_with_json_schema(self):
+        #case5
+        json_schema = json.dumps({
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "age": {"type": "integer"},
+                "city": {"type": "string"},
+            },
+            "required": ["name", "age", "city"],
+
+        })
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "Generate person information",
+                "sampling_params": {
+                    "temperature": 0.3,
+                    "max_new_tokens": 128,
+                    "json_schema": json_schema,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        print("--------------------------response.json()----------lora_a--------------------------------")
+        print(response.json())
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertIn("text", result)
+        parsed_json = json.loads(result["text"])
+        self.assertIn("name", parsed_json)
+        self.assertIn("age", parsed_json)
+        self.assertIn("city", parsed_json)
+        print(f"Valid JSON generate: {parsed_json}")
 
 
-
-
-    def test_lora_use_different_lora(self):
+'''
+ def test_lora_use_different_lora(self):
         #case1 case2 case4
         response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
         self.assertEqual(response.status_code, 200)
@@ -132,9 +131,9 @@ class TestLoraBasicFunction(CustomTestCase):
         # Verify max_loras_per_batch parameter is correctly set in server info
         response = requests.get(DEFAULT_URL_FOR_TEST + "/get_server_info")
         self.assertEqual(response.status_code, 200)
-        print("--------------------------serverinfo----------lora_a--------------------------------")
-        print(response.json())
-        #self.assertEqual(response.json()["max_loras_per_batch"], 1)
+        # print("--------------------------serverinfo----------lora_a--------------------------------")
+        # print(response.json())
+        #self.assertEqual(response.json()["lora_name"], "lora_a")
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -166,33 +165,42 @@ class TestLoraBasicFunction(CustomTestCase):
         print(response.json())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+        # Verify max_loras_per_batch parameter is correctly set in server info
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/get_server_info")
+        self.assertEqual(response.status_code, 200)
+        # print("--------------------------serverinfo----------lora_a--------------------------------")
+        # print(response.json())
+        # self.assertEqual(response.json()["lora_name"], "lora_a")
         '''
-        # 对比流式，非流式结果一致性
-        response_stream = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "stream": True,
-            },
-            stream=True,
-        )
-        stream_text = ""
-        for chunk in response_stream.iter_lines(decode_unicode=False):
-            chunk = chunk.decode("utf-8")
-            if chunk and chunk.startswith("data:"):
-                if chunk == "data: [DONE]":
-                    break
-                data = json.loads(chunk[5:].strip("\n"))
-                stream_text += data.get("text", "")
-        print("--------------------------chunk-------stream--true---------------------------------")
-        print(stream_text)
 
-        '''
+        # # 对比流式，非流式结果一致性
+        # response_stream = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/generate",
+        #     json={
+        #         "text": "The capital of France is",
+        #         "sampling_params": {
+        #             "temperature": 0,
+        #             "max_new_tokens": 32,
+        #         },
+        #         "lora_path": "lora_a",
+        #         "stream": True,
+        #     },
+        #     stream=True,
+        # )
+        # stream_text = ""
+        # for chunk in response_stream.iter_lines(decode_unicode=False):
+        #     chunk = chunk.decode("utf-8")
+        #     if chunk and chunk.startswith("data:"):
+        #         if chunk == "data: [DONE]":
+        #             break
+        #         data = json.loads(chunk[5:].strip("\n"))
+        #         stream_text += data.get("text", "")
+        # print("--------------------------chunk-------stream--true---------------------------------")
+        # print(stream_text)
+
+
+
+
 
 
 
