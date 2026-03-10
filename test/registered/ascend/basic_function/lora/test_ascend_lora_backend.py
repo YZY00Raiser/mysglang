@@ -46,7 +46,7 @@ class TestLoraBackend(ABC):
             f"tool_calling={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+            LLAMA_3_2_1B_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
