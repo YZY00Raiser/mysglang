@@ -3,6 +3,7 @@ import unittest
 
 import requests
 
+
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
@@ -117,7 +118,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
         print("--------------------------response.json()----------non--lora------------------------------")
         print(response.json())
 
-        # 流式7
+        #对比流式，非流式结果一致性
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -139,9 +140,11 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                     break
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data["text"]
+                print("--------------------------data-------stream--true---------------------------------")
+                print(data)
+        # print("--------------------------chunk-------stream--true---------------------------------")
+        # print(stream_text)
 
-        print("--------------------------chunk-------stream--true---------------------------------")
-        print(stream_text)
 
 '''
 class TestLoraBasicFunction_6(CustomTestCase):
