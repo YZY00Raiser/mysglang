@@ -118,7 +118,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
         print(response.json())
 
         # 流式7
-        response = requests.post(
+        response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
@@ -132,13 +132,13 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
 
         )
         stream_text = ""
-        for chunk in response.iter_lines(decode_unicode=False):
+        for chunk in response_stream.iter_lines(decode_unicode=False):
             chunk = chunk.decode("utf-8")
             if chunk and chunk.startswith("data:"):
                 if chunk == "data: [DONE]":
                     break
                 data = json.loads(chunk[5:].strip("\n"))
-                stream_text += data.get["text",""]
+                stream_text += data["text",""]
         print("--------------------------chunk-------stream--true---------------------------------")
         print(stream_text)
 
