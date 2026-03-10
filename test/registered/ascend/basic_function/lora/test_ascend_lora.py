@@ -133,6 +133,7 @@ class TestLoraBasicFunction(CustomTestCase):
         response = requests.get(DEFAULT_URL_FOR_TEST + "/get_server_info")
         self.assertEqual(response.status_code, 200)
         print("--------------------------serverinfo----------lora_a--------------------------------")
+        print(response.json())
         #self.assertEqual(response.json()["max_loras_per_batch"], 1)
 
         response = requests.post(
