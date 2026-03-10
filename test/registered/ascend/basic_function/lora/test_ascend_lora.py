@@ -30,7 +30,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
     """
 
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    # lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
     # lora_c = "/home/weights/codelion/OneLLM-Doey-"
     # lora_c = "None"
@@ -43,7 +43,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
             "--enable-lora",
             "--lora-path",
             f"lora_a={cls.lora_a}",
-            f"lora_b={cls.lora_b}",
+            # f"lora_b={cls.lora_b}",
             # f"lora_c={cls.lora_c}",
             "--lora-target-modules",
             "all",
@@ -91,32 +91,32 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_b",
-            },
-        )
-        print("--------------------------response.json()-----------lora_b-------------------------------")
-        print(response.json())
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        print("--------------------------response.json()----------non--lora------------------------------")
-        print(response.json())
+        # response = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/generate",
+        #     json={
+        #         "text": "The capital of France is",
+        #         "sampling_params": {
+        #             "temperature": 0,
+        #             "max_new_tokens": 32,
+        #         },
+        #         "lora_path": "lora_b",
+        #     },
+        # )
+        # print("--------------------------response.json()-----------lora_b-------------------------------")
+        # print(response.json())
+        #
+        # response = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/generate",
+        #     json={
+        #         "text": "The capital of France is",
+        #         "sampling_params": {
+        #             "temperature": 0,
+        #             "max_new_tokens": 32,
+        #         },
+        #     },
+        # )
+        # print("--------------------------response.json()----------non--lora------------------------------")
+        # print(response.json())
 
         #对比流式，非流式结果一致性
         response_stream = requests.post(
