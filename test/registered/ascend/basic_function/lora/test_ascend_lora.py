@@ -138,7 +138,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 if chunk == "data: [DONE]":
                     break
                 data = json.loads(chunk[5:].strip("\n"))
-                stream_text += data["text"]
+                stream_text += data.get["text",""]
         print("--------------------------chunk-------stream--true---------------------------------")
         print(stream_text)
 
