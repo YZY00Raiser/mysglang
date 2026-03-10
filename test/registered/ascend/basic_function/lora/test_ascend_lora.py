@@ -3,7 +3,7 @@ import unittest
 
 import requests
 
-
+from benchmark.long_json_decode.build_dataset import city_name
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
@@ -17,12 +17,12 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 
 
-class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
+class TestLoraBasicFunction(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
     [Test Category] Parameter
@@ -30,6 +30,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
     """
 
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+
     # lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
     # lora_c = "/home/weights/codelion/OneLLM-Doey-"
@@ -52,6 +53,8 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
             "--disable-cuda-graph",
             "--base-gpu-id",
             "6",
+            "--lora-backend",
+            "ascend",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -65,13 +68,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
+        #case1 case2 case4
         response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
         self.assertEqual(response.status_code, 200)
 
@@ -91,34 +88,44 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        # response = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/generate",
-        #     json={
-        #         "text": "The capital of France is",
-        #         "sampling_params": {
-        #             "temperature": 0,
-        #             "max_new_tokens": 32,
-        #         },
-        #         "lora_path": "lora_b",
-        #     },
-        # )
-        # print("--------------------------response.json()-----------lora_b-------------------------------")
-        # print(response.json())
-        #
-        # response = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/generate",
-        #     json={
-        #         "text": "The capital of France is",
-        #         "sampling_params": {
-        #             "temperature": 0,
-        #             "max_new_tokens": 32,
-        #         },
-        #     },
-        # )
-        # print("--------------------------response.json()----------non--lora------------------------------")
-        # print(response.json())
+        # Verify max_loras_per_batch parameter is correctly set in server info
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/get_server_info")
+        self.assertEqual(response.status_code, 200)
+        print("--------------------------serverinfo----------lora_a--------------------------------")
+        # self.assertEqual(response.json()["max_loras_per_batch"], 1)
 
-        #对比流式，非流式结果一致性
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0.8,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_b",
+            },
+        )
+        print("--------------------------response.json()-----------lora_b-------------------------------")
+        print(response.json())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+        print("--------------------------response.json()----------non--lora------------------------------")
+        print(response.json())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+        # 对比流式，非流式结果一致性
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -139,9 +146,45 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 if chunk == "data: [DONE]":
                     break
                 data = json.loads(chunk[5:].strip("\n"))
-                stream_text += data.get("text","")
+                stream_text += data.get("text", "")
         print("--------------------------chunk-------stream--true---------------------------------")
         print(stream_text)
+
+    def test_lora_with_json_schema(self):
+        #case5
+        json_schema = json.dumps({
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "age": {"type": "integer"},
+                "city": {"type": "string"},
+            },
+            "required": ["name", "age", "city"],
+
+        })
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "Generate person information",
+                "sampling_params": {
+                    "temperature": 0.3,
+                    "max_new_tokens": 128,
+                    "json_schema": json_schema,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        print("--------------------------response.json()----------lora_a--------------------------------")
+        print(response.json())
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertIn("text", result)
+        parsed_json = json.loads(result["text"])
+        self.assertIn("name", parsed_json)
+        self.assertIn("age", parsed_json)
+        self.assertIn("city", parsed_json)
+        print(f"Valid JSON generate: {parsed_json}")
 
 
 '''
@@ -164,8 +207,6 @@ class TestLoraBasicFunction_6(CustomTestCase):
             "--lora-path",
             f"lora_1={cls.lora_a}",
             f"lora_2={cls.lora_b}",
-            f"lora_3={cls.lora_c}",
-            f"lora_3={cls.lora_c}",
             "--max-load-loras",
             "3",
             "--lora-target-modules",
