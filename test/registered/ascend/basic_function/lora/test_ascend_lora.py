@@ -139,8 +139,8 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                     break
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data["text"]
-                print("--------------------------chunk-------stream--true---------------------------------")
-                print(stream_text)
+        print("--------------------------chunk-------stream--true---------------------------------")
+        print(stream_text)
 
 '''
 class TestLoraBasicFunction_6(CustomTestCase):
