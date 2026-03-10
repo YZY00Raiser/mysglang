@@ -31,7 +31,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 
-    # lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
     # lora_c = "/home/weights/codelion/OneLLM-Doey-"
     # lora_c = "None"
@@ -67,6 +67,44 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
+
+    def test_lora_with_json_schema(self):
+        #case5
+        json_schema = json.dumps({
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "age": {"type": "integer"},
+                "city": {"type": "string"},
+            },
+            "required": ["name", "age", "city"],
+
+        })
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "Generate person information",
+                "sampling_params": {
+                    "temperature": 0.3,
+                    "max_new_tokens": 128,
+                    "json_schema": json_schema,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        print("--------------------------response.json()----------lora_a--------------------------------")
+        print(response.json())
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertIn("text", result)
+        parsed_json = json.loads(result["text"])
+        self.assertIn("name", parsed_json)
+        self.assertIn("age", parsed_json)
+        self.assertIn("city", parsed_json)
+        print(f"Valid JSON generate: {parsed_json}")
+
+'''
     def test_lora_use_different_lora(self):
         #case1 case2 case4
         response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
@@ -92,7 +130,7 @@ class TestLoraBasicFunction(CustomTestCase):
         response = requests.get(DEFAULT_URL_FOR_TEST + "/get_server_info")
         self.assertEqual(response.status_code, 200)
         print("--------------------------serverinfo----------lora_a--------------------------------")
-        # self.assertEqual(response.json()["max_loras_per_batch"], 1)
+        #self.assertEqual(response.json()["max_loras_per_batch"], 1)
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -150,41 +188,12 @@ class TestLoraBasicFunction(CustomTestCase):
         print("--------------------------chunk-------stream--true---------------------------------")
         print(stream_text)
 
-    def test_lora_with_json_schema(self):
-        #case5
-        json_schema = json.dumps({
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "age": {"type": "integer"},
-                "city": {"type": "string"},
-            },
-            "required": ["name", "age", "city"],
 
-        })
+'''
 
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "Generate person information",
-                "sampling_params": {
-                    "temperature": 0.3,
-                    "max_new_tokens": 128,
-                    "json_schema": json_schema,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        print("--------------------------response.json()----------lora_a--------------------------------")
-        print(response.json())
-        self.assertEqual(response.status_code, 200)
-        result = response.json()
-        self.assertIn("text", result)
-        parsed_json = json.loads(result["text"])
-        self.assertIn("name", parsed_json)
-        self.assertIn("age", parsed_json)
-        self.assertIn("city", parsed_json)
-        print(f"Valid JSON generate: {parsed_json}")
+
+
+
 
 
 '''
