@@ -70,10 +70,8 @@ class TestLoraBasicFunction(CustomTestCase):
 
 
 
-
-
     def test_lora_use_different_lora(self):
-        #case1 case2 case4
+        #case1 case2
         response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
         self.assertEqual(response.status_code, 200)
 
@@ -105,7 +103,7 @@ class TestLoraBasicFunction(CustomTestCase):
             json={
                 "text": "The capital of France is",
                 "sampling_params": {
-                    "temperature": 0.8,
+                    "temperature": 0,
                     "max_new_tokens": 32,
                 },
                 "lora_path": "lora_b",
@@ -138,32 +136,52 @@ class TestLoraBasicFunction(CustomTestCase):
         # self.assertEqual(response.json()["lora_name"], "lora_a")
 
 
+    # # 对比流式，非流式结果一致性
+    # response_stream = requests.post(
+    #     f"{DEFAULT_URL_FOR_TEST}/generate",
+    #     json={
+    #         "text": "The capital of France is",
+    #         "sampling_params": {
+    #             "temperature": 0,
+    #             "max_new_tokens": 32,
+    #         },
+    #         "lora_path": "lora_a",
+    #         "stream": True,
+    #     },
+    #     stream=True,
+    # )
+    # stream_text = ""
+    # for chunk in response_stream.iter_lines(decode_unicode=False):
+    #     chunk = chunk.decode("utf-8")
+    #     if chunk and chunk.startswith("data:"):
+    #         if chunk == "data: [DONE]":
+    #             break
+    #         data = json.loads(chunk[5:].strip("\n"))
+    #         stream_text += data.get("text", "")
+    # print("--------------------------chunk-------stream--true---------------------------------")
+    # print(stream_text)
 
-        # # 对比流式，非流式结果一致性
-        # response_stream = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/generate",
-        #     json={
-        #         "text": "The capital of France is",
-        #         "sampling_params": {
-        #             "temperature": 0,
-        #             "max_new_tokens": 32,
-        #         },
-        #         "lora_path": "lora_a",
-        #         "stream": True,
-        #     },
-        #     stream=True,
-        # )
-        # stream_text = ""
-        # for chunk in response_stream.iter_lines(decode_unicode=False):
-        #     chunk = chunk.decode("utf-8")
-        #     if chunk and chunk.startswith("data:"):
-        #         if chunk == "data: [DONE]":
-        #             break
-        #         data = json.loads(chunk[5:].strip("\n"))
-        #         stream_text += data.get("text", "")
-        # print("--------------------------chunk-------stream--true---------------------------------")
-        # print(stream_text)
-
+    def test_lora_with_temperature(self):
+        # case4
+        response_texts = []
+        for i in range(5):
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": "The capital of France is",
+                    "sampling_params": {
+                        "temperature": 0.8,
+                        "max_new_tokens": 32,
+                    },
+                    "lora_path": "lora_a",
+                },
+            )
+            self.assertEqual(response.status_code, 200)
+            response_text = response.json()["text"]
+            response_texts.append(response_text)
+        first_text = response_texts[0]
+        for idx, text in enumerate(response_texts[1:], start=2):
+            self.assertEqual(text, first_text, f"same response_text")
 
 '''
 
