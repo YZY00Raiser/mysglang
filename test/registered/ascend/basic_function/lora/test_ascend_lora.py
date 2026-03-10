@@ -129,7 +129,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                 "lora_path": "lora_a",
                 "stream": True,
             },
-
+            stream=True,
         )
         stream_text = ""
         for chunk in response_stream.iter_lines(decode_unicode=False):
@@ -139,6 +139,7 @@ class TestLoraBasicFunction_1_2_3_7_8(CustomTestCase):
                     break
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data["text"]
+
         print("--------------------------chunk-------stream--true---------------------------------")
         print(stream_text)
 
