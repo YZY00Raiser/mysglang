@@ -24,7 +24,7 @@ class TestMambaCache(CustomTestCase):
         other_args = [
             "--trust-remote-code",
             "--mem-fraction-static",
-            "0.6",
+            "0.5",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
