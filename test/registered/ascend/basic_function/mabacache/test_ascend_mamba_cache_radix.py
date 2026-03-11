@@ -30,6 +30,9 @@ class TestMambaCache(CustomTestCase):
             "--disable-cuda-graph",
             "--device",
             "npu",
+            "--tp-size",
+            "8",
+            "--disable-radix-cache",
             # "--max-mamba-cache-size",
             # "127",
             # "--mamba-ssm-dtype",
@@ -40,9 +43,6 @@ class TestMambaCache(CustomTestCase):
             # "auto",
             # "--mamba-track-interval",
             # "256",
-            "--tp-size",
-            "8",
-            "--disable-radix-cache",
         ]
         cls.process = popen_launch_server(
             cls.model,
