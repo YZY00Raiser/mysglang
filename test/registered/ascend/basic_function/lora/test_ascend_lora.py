@@ -22,10 +22,10 @@ LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 
 
 class TestLoraBasicFunction(CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
+    """Testcase：Verify the lora functionality
 
     [Test Category] Parameter
-    [Test Target] --lora-target-modules
+    [Test Target] --enable-lora, --lora-path
     """
 
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
@@ -266,15 +266,16 @@ class TestLoraBasicFunction(CustomTestCase):
 
 
 
-class TestLoraBasicFunction_6(CustomTestCase):
+class TestLoraMemoryEviction(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
     [Test Category] Parameter
     [Test Target] --lora-target-modules
     """
-    lora_a = ""
-    lora_b = ""
-    lora_c = "None"
+    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_c = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_d = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 
     @classmethod
     def setUpClass(cls):
@@ -287,12 +288,13 @@ class TestLoraBasicFunction_6(CustomTestCase):
             f"lora_2={cls.lora_b}",
             "--max-load-loras",
             "3",
+            "--lora-eviction-policy"
+            "fifo"
             "--lora-target-modules",
             "all",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -305,17 +307,7 @@ class TestLoraBasicFunction_6(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
-
+    def test_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -324,7 +316,7 @@ class TestLoraBasicFunction_6(CustomTestCase):
                     "temperature": 0,
                     "max_new_tokens": 32,
                 },
-                "lora_path": self.lora_a,
+                "lora_path": self.lora_c,
             },
         )
         self.assertEqual(response.status_code, 200)
@@ -519,69 +511,8 @@ class TestLoraBasicFunction_14(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-
-class TestLoraBasicFunction_15_low(CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
-
-    [Test Category] Parameter
-    [Test Target] --lora-target-modules
-    """
-    lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-    lora_c = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-
-    @classmethod
-    def setUpClass(cls):
-        other_args = [
-            "--tp-size"
-            "2"
-            "--enable-lora",
-            "--lora-path",
-            f"lora_1={cls.lora_a}",
-            f"lora_2={cls.lora_b}",
-            f"lora_3={cls.lora_c}",
-            "--lora-target-modules",
-            "all",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-        cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_a,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
 '''
+
 
 if __name__ == "__main__":
     unittest.main()
