@@ -8,8 +8,8 @@ from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import CustomTestCase, DEFAULT_URL_FOR_TEST, popen_launch_server, \
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
 
-register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
-QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST="/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct-W8A8"
+register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
+QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST="/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
 
 class TestMambaCache(CustomTestCase):
     """Testcase：Verify the MambaCache
@@ -41,8 +41,6 @@ class TestMambaCache(CustomTestCase):
             "--tp-size",
             "8",
             "--disable-radix-cache",
-            "--quantization",
-            "modelslim",
         ]
         cls.process = popen_launch_server(
             cls.model,
