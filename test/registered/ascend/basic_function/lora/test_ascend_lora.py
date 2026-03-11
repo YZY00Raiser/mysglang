@@ -140,6 +140,21 @@ class TestLoraBasicFunction(CustomTestCase):
             f"same response.text"
         )
 
+    def test_openai_with_different_loras(self):
+        #case 11
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/chat/completions",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        text_lora_a = response.text
+
     '''
     def test_batch_with_different_loras(self):
         # case3
