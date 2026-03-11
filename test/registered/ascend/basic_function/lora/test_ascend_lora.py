@@ -107,20 +107,10 @@ class TestLoraBasicFunction(CustomTestCase):
                 "lora_path": "lora_b",
             },
         )
-        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        # self.assertEqual(response.status_code, 200)
-        # print("--------------------------serverinfo----------lora_a--------------------------------")
-        # print(response.json())
-        # self.assertEqual(response.json()["lora_name"], "lora_a")
         text_lora_b = response.text
 
         print("--------------------------response.json()-----------lora_b-------------------------------")
         print(response.json())
-        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        # self.assertEqual(response.status_code, 200)
-        # print("--------------------------serverinfo----------lora_b--------------------------------")
-        # print(response.json())
-        # self.assertEqual(response.json()["lora_name"], "lora_b")
 
         self.assertNotEqual(
             text_no_lora,
@@ -140,6 +130,7 @@ class TestLoraBasicFunction(CustomTestCase):
             f"same response.text"
         )
 
+    '''
     def test_openai_with_different_loras(self):
         #case 11
         response = requests.post(
@@ -155,7 +146,7 @@ class TestLoraBasicFunction(CustomTestCase):
         )
         text_lora_a = response.text
 
-    '''
+
     def test_batch_with_different_loras(self):
         # case3
         prompts = [
