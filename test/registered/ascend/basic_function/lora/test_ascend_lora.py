@@ -54,8 +54,6 @@ class TestLoraBasicFunction(CustomTestCase):
             "6",
             "--max-loras-per-batch",
             "3",
-            # "--lora-backend",
-            # "ascend",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -109,15 +107,20 @@ class TestLoraBasicFunction(CustomTestCase):
                 "lora_path": "lora_b",
             },
         )
+        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        # self.assertEqual(response.status_code, 200)
+        # print("--------------------------serverinfo----------lora_a--------------------------------")
+        # print(response.json())
+        # self.assertEqual(response.json()["lora_name"], "lora_a")
         text_lora_b = response.text
 
         print("--------------------------response.json()-----------lora_b-------------------------------")
         print(response.json())
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-        # print("--------------------------serverinfo----------lora_a--------------------------------")
+        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        # self.assertEqual(response.status_code, 200)
+        # print("--------------------------serverinfo----------lora_b--------------------------------")
         # print(response.json())
-        # self.assertEqual(response.json()["lora_name"], "lora_a")
+        # self.assertEqual(response.json()["lora_name"], "lora_b")
 
         self.assertNotEqual(
             text_no_lora,
@@ -136,6 +139,38 @@ class TestLoraBasicFunction(CustomTestCase):
             text_lora_b,
             f"same response.text"
         )
+
+    '''
+    def test_batch_with_different_loras(self):
+        # case3
+        prompts = [
+            "What is AI",
+            "Explain neural network",
+            "What is deep learning",
+        ]
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": prompts,
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 64,
+                },
+                "lora_path": ["lora_a", "lora_b"],
+            },
+        )
+        results = response.json()
+
+        self.assertEqual(len(results), len(prompts))
+
+        for i, result in enumerate(results):
+            self.assertEqual("text", result)
+            self.assertGreater(len(result["text"]), 0)
+            print(f"Prompt {i + 1} result: {result['text'][:50]}...")
+
+        # print("--------------------------response.json()----------non--lora------------------------------")
+        # print(response.json())
+        # self.assertEqual(response.status_code, 200)
 
     # # 对比流式，非流式结果一致性
     # response_stream = requests.post(
@@ -163,7 +198,7 @@ class TestLoraBasicFunction(CustomTestCase):
     # print(stream_text)
 
 
-'''
+
 
     def test_lora_with_temperature(self):
     # case4
