@@ -44,7 +44,6 @@ class TestLoraBasicFunction(CustomTestCase):
             "--lora-path",
             f"lora_a={cls.lora_a}",
             f"lora_b={cls.lora_b}",
-            # f"lora_c={cls.lora_c}",
             "--lora-target-modules",
             "all",
             "--attention-backend",
