@@ -28,6 +28,8 @@ class TestMambaCache(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
+            "--device",
+            "npu",
             # "--max-mamba-cache-size",
             # "127",
             # "--mamba-ssm-dtype",
