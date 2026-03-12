@@ -472,10 +472,10 @@ class TestLoraKVCache(CustomTestCase):
 
 '''
 class TestLoraMaxLoraRank(CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
+    """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
 
     [Test Category] Parameter
-    [Test Target] --lora-target-modules
+    [Test Target] --max-load-rank
     """
     lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
     lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
@@ -492,9 +492,9 @@ class TestLoraMaxLoraRank(CustomTestCase):
             f"lora_1={cls.lora_a}",
             f"lora_2={cls.lora_b}",
             f"lora_3={cls.lora_c}",
-            "--lora-target-modules",
             "--max-load-rank",
             "2",
+            "--lora-target-modules",
             "all",
             "--attention-backend",
             "ascend",
