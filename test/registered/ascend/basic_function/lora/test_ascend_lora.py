@@ -425,6 +425,9 @@ class TestLoraKVCache(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         print("-----------------------a111111--------------------------")
         print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------a111111server_info--------------------------")
+        print(response.json())
 
         response = requests.post(
         f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -439,6 +442,9 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         print("-----------------------b111111--------------------------")
+        print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------b111111server_info--------------------------")
         print(response.json())
 
         response = requests.post(
@@ -455,6 +461,9 @@ class TestLoraKVCache(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         print("-----------------------a222222--------------------------")
         print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------a222222server_info--------------------------")
+        print(response.json())
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -469,6 +478,9 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         print("-----------------------b222222--------------------------")
+        print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------b222222server_info--------------------------")
         print(response.json())
 
 
