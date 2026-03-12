@@ -395,7 +395,7 @@ class TestLoraMemoryEviction(CustomTestCase):
 '''
 
 '''
-class TestLoraMaxLoraRank(CustomTestCase):
+class TestLoraSessionManagement(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
     [Test Category] Parameter
@@ -459,7 +459,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
 '''
 
 '''
-class TestLoraBasicFunction_13(CustomTestCase):
+class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
     [Test Category] Parameter
@@ -469,6 +469,7 @@ class TestLoraBasicFunction_13(CustomTestCase):
     lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
     lora_c = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
 
+    #case13
     @classmethod
     def setUpClass(cls):
         other_args = [
@@ -522,70 +523,6 @@ class TestLoraBasicFunction_13(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
-class TestLoraBasicFunction_14(CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
-
-    [Test Category] Parameter
-    [Test Target] --lora-target-modules
-    """
-    lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-    lora_c = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-
-    @classmethod
-    def setUpClass(cls):
-        other_args = [
-            "--tp-size"
-            "2"
-            "--enable-lora",
-            "--lora-path",
-            f"lora_1={cls.lora_a}",
-            f"lora_2={cls.lora_b}",
-            f"lora_3={cls.lora_c}",
-            "--lora-target-modules",
-            "all",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-        cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_a,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-
 '''
 
 
