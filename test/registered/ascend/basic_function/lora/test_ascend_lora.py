@@ -22,18 +22,14 @@ LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 
 
 class TestLoraBasicFunction(CustomTestCase):
-    """Testcase：Verify the lora functionality
+    """Testcase：Verify the use different lora, inference request succeeded
 
     [Test Category] Parameter
-    [Test Target] --enable-lora, --lora-path
+    [Test Target] --enable-lora, --lora-path,
     """
 
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-
     lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
-
-    # lora_c = "/home/weights/codelion/OneLLM-Doey-"
-    # lora_c = "None"
 
     @classmethod
     def setUpClass(cls):
@@ -51,8 +47,6 @@ class TestLoraBasicFunction(CustomTestCase):
             "--disable-cuda-graph",
             "--base-gpu-id",
             "6",
-            "--max-loras-per-batch",
-            "3",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -265,6 +259,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("city", parsed_json)
         print(f"Valid JSON generate: {parsed_json}")
 '''
+
 
 '''
 class TestLoraKVCache(CustomTestCase):
@@ -524,7 +519,6 @@ class TestLoraMaxLoraRank(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 '''
-
 
 if __name__ == "__main__":
     unittest.main()
