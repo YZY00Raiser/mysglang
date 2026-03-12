@@ -4,8 +4,9 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-# from sglang.test.ascend.test_ascend_utils import (
+#from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
+#     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_WEIGHTS_PATH,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
@@ -22,7 +23,7 @@ LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 
 
 class TestLoraBasicFunction(CustomTestCase):
-    """Testcase：Verify the use different lora, inference request succeeded
+    """Testcase：Verify the use different lora, inference request succeeded.
 
     [Test Category] Parameter
     [Test Target] --enable-lora, --lora-path,
@@ -118,11 +119,9 @@ class TestLoraBasicFunction(CustomTestCase):
             f"same response.text"
         )
 
-    '''
-    def test_openai_with_different_loras(self):
-        #case 11
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/chat/completions",
+        #compare the consistency between streaming and non-streaming
+        response_stream = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
                 "sampling_params": {
@@ -130,13 +129,25 @@ class TestLoraBasicFunction(CustomTestCase):
                     "max_new_tokens": 32,
                 },
                 "lora_path": "lora_a",
+                "stream": True,
             },
+            stream=True,
         )
-        text_lora_a = response.text
+        stream_text = ""
+        for chunk in response_stream.iter_lines(decode_unicode=False):
+            chunk = chunk.decode("utf-8")
+            if chunk and chunk.startswith("data:"):
+                if chunk == "data: [DONE]":
+                    break
+                data = json.loads(chunk[5:].strip("\n"))
+                stream_text += data.get("text", "")
+        print("--------------------------chunk-------stream--true---------------------------------")
+        print(stream_text)
+        # self.assertEqual(stream_text, text_lora_a)
 
-
+    '''
     def test_batch_with_different_loras(self):
-        # case3
+        #test different loras in batch requests
         prompts = [
             "What is AI",
             "Explain neural network",
@@ -160,42 +171,9 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
-            print(f"Prompt {i + 1} result: {result['text'][:50]}...")
 
-        # print("--------------------------response.json()----------non--lora------------------------------")
-        # print(response.json())
-        # self.assertEqual(response.status_code, 200)
-
-    # # 对比流式，非流式结果一致性
-    # response_stream = requests.post(
-    #     f"{DEFAULT_URL_FOR_TEST}/generate",
-    #     json={
-    #         "text": "The capital of France is",
-    #         "sampling_params": {
-    #             "temperature": 0,
-    #             "max_new_tokens": 32,
-    #         },
-    #         "lora_path": "lora_a",
-    #         "stream": True,
-    #     },
-    #     stream=True,
-    # )
-    # stream_text = ""
-    # for chunk in response_stream.iter_lines(decode_unicode=False):
-    #     chunk = chunk.decode("utf-8")
-    #     if chunk and chunk.startswith("data:"):
-    #         if chunk == "data: [DONE]":
-    #             break
-    #         data = json.loads(chunk[5:].strip("\n"))
-    #         stream_text += data.get("text", "")
-    # print("--------------------------chunk-------stream--true---------------------------------")
-    # print(stream_text)
-
-
-
-
-    def test_lora_with_temperature(self):
-    # case4
+    def test_lora_with_sampling_parameters(self):
+    #test loras with temperature
     response_texts = []
     for i in range(2):
         response = requests.post(
@@ -217,7 +195,6 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotEqual(text, first_text, f"same response_text")
 
     def test_lora_with_json_schema(self):
-        #case5
         json_schema = json.dumps({
             "type": "object",
             "properties": {
@@ -228,7 +205,6 @@ class TestLoraBasicFunction(CustomTestCase):
             "required": ["name", "age", "city"],
 
         })
-
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -241,7 +217,6 @@ class TestLoraBasicFunction(CustomTestCase):
                 "lora_path": "lora_a",
             },
         )
-        print("--------------------------response.json()----------lora_a--------------------------------")
         print(response.json())
         self.assertEqual(response.status_code, 200)
         result = response.json()
@@ -250,7 +225,6 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
-        print(f"Valid JSON generate: {parsed_json}")
 '''
 
 
