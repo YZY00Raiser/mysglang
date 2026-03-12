@@ -36,7 +36,7 @@ class TestEplbAlgorithm(CustomTestCase):
         cls.process = popen_launch_server(
             cls.model,
             cls.base_url,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            timeout=6000,
             other_args=[
                 "--trust-remote-code",
                 "--tp-size",
