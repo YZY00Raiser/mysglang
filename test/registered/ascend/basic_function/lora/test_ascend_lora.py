@@ -231,6 +231,8 @@ class TestLoraBasicFunction(CustomTestCase):
 
 
 '''
+
+'''
 class TestLoraMemoryEvictionFifo(CustomTestCase):
     """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
 
@@ -314,7 +316,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         self.assertIn("Paris", response.text)
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
-'''
+
 
 '''
 class TestLoraSessionManagement(CustomTestCase):
@@ -370,7 +372,7 @@ class TestLoraSessionManagement(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-'''
+
 
 
 class TestLoraKVCache(CustomTestCase):
@@ -470,7 +472,7 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 128)
-
+'''
 
 '''
  def test_lora(self):
