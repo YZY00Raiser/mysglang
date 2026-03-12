@@ -20,8 +20,10 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
-LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH="/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH="/home/weights/codelion/FastLlama-3.2-LoRA"
+LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
+
+
 class TestLoraBasicFunction(CustomTestCase):
     """Testcase：Verify the use different lora, inference request succeeded.
 
@@ -370,7 +372,7 @@ class TestLoraSessionManagement(CustomTestCase):
 
 '''
 
-'''
+
 class TestLoraKVCache(CustomTestCase):
     """Testcase：Verify the LoRA adapter can work properly with Radix Cache
 
@@ -410,6 +412,98 @@ class TestLoraKVCache(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_lora(self):
+        input_ids_first = [1] * 200
+        input_ids_second = [1] * 270
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids_first,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                # "lora_path": "lora_a",
+                # "lora_id": "lora_a",
+                "lora_path": self.lora_a,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------a111111--------------------------")
+        print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------a111111server_info--------------------------")
+        print(response.json())
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids_first,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_b",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------b111111--------------------------")
+        print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------b111111server_info--------------------------")
+        print(response.json())
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids_second,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------a222222--------------------------")
+        print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------a222222server_info--------------------------")
+        print(response.json())
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids_second,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_b",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------b222222--------------------------")
+        print(response.json())
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        print("-----------------------b222222server_info--------------------------")
+        print(response.json())
+
+        input_ids = [1] * 600
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_tokens": 1,
+                },
+            },
+        )
+
+
+'''
+ def test_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -484,12 +578,21 @@ class TestLoraKVCache(CustomTestCase):
         print("-----------------------b222222server_info--------------------------")
         print(response.json())
 
-
+        input_ids = [1] * 600
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "input_ids": input_ids,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_tokens": 1,
+                },
+            },
+        )
 
 '''
 
-
-
+'''
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
 
@@ -545,6 +648,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
         )
 
 
+'''
 
 if __name__ == "__main__":
     unittest.main()
