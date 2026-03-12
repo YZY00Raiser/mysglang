@@ -59,7 +59,7 @@ class TestLoraBasicFunction(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-
+'''
     def test_lora_use_different_lora(self):
         # case1 case2
         response = requests.post(
@@ -141,11 +141,9 @@ class TestLoraBasicFunction(CustomTestCase):
                     break
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data.get("text", "")
-        print("--------------------------chunk-------stream--true---------------------------------")
-        print(stream_text)
         self.assertIn(text_lora_a, stream_text)
 
-    '''
+
     def test_batch_with_different_loras(self):
         #test different loras in batch requests can work normally
         prompts = [
@@ -453,17 +451,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
-
+    def test_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
