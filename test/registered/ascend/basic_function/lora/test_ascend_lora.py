@@ -251,7 +251,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
             "--enable-lora",
             "--lora-path",
             f"lora_1={cls.lora_a}",
-            "--max-load-loras",
+            "--max-loaded-loras",
             "2",
             "--lora-eviction-policy",
             cls.lora_eviction_policy,
