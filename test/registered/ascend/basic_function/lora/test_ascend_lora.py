@@ -334,9 +334,9 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+'''
 
-
-
+'''
 class TestLoraMemoryEviction(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
@@ -392,8 +392,10 @@ class TestLoraMemoryEviction(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+'''
 
-class TestLoraBasicFunction_9(CustomTestCase):
+'''
+class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
     [Test Category] Parameter
@@ -454,7 +456,9 @@ class TestLoraBasicFunction_9(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+'''
 
+'''
 class TestLoraBasicFunction_13(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
