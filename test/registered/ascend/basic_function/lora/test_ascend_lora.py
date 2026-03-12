@@ -392,6 +392,8 @@ class TestLoraKVCache(CustomTestCase):
             f"lora_b={cls.lora_b}",
             "--lora-target-modules",
             "all",
+            # "enable-radix-cache",
+            "enable-hierarchical-cache",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
@@ -521,7 +523,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
                     "temperature": 0,
                     "max_new_tokens": 32,
                 },
-                "lora_path": self.lora_a,
+                "lora_path": "lora_a",
             },
         )
         self.assertEqual(response.status_code, 200)
