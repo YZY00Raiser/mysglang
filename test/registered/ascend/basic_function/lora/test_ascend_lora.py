@@ -94,6 +94,8 @@ class TestLoraBasicFunction(CustomTestCase):
             },
         )
         text_lora_a = response.text
+        print("--------------------------response.json()-----------lora_a-------------------------------")
+        print(response.json())
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
