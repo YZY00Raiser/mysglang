@@ -48,7 +48,9 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--disable-cuda-graph",
                 "--mem-fraction-static",
                 "0.75",
-
+                "--disable-radix-cache",
+                "--quantization",
+                "modelslim",
             ],
         )
 
