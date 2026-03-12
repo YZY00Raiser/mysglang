@@ -392,8 +392,6 @@ class TestLoraKVCache(CustomTestCase):
             "--lora-path",
             f"lora_a={cls.lora_a}",
             f"lora_b={cls.lora_b}",
-            # "enable-radix-cache",
-            # "enable-hierarchical-cache",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
