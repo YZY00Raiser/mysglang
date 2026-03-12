@@ -227,10 +227,93 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
+
+    def test_session_reset(self):
+        #Test session reset functionality
+        session_id = "test-session-reset"
+
+        # First conversation
+        response1 = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "我的宠物是一只猫，叫咪咪",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 64,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id,
+                    "enable": True
+                }
+            },
+        )
+        self.assertEqual(response1.status_code, 200)
+
+        # Second conversation
+        response2 = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "我的宠物叫什么名字？",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id,
+                    "enable": True
+                }
+            },
+        )
+        self.assertEqual(response2.status_code, 200)
+        response_text_2 = response2.json()["text"]
+        self.assertIn("咪咪", response_text_2,
+                      f"Session should remember pet name '咪咪', but got: {response_text_2}")
+
+        # Reset session (disable then re-enable)
+        response_reset = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "重置会话",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id,
+                    "enable": False  # Disable session
+                }
+            },
+        )
+        self.assertEqual(response_reset.status_code, 200)
+
+        # Start new session with same ID
+        response3 = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "我的宠物叫什么名字？",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_b,
+                "session_params": {
+                    "id": session_id,
+                    "enable": True  # Re-enable session
+                }
+            },
+        )
+        self.assertEqual(response3.status_code, 200)
+        response_text_3 = response3.json()["text"]
+
+        # Verify new session doesn't remember previous context
+        self.assertNotIn("咪咪", response_text_3,
+                         f"New session should not remember old context, but got: {response_text_3}")
+
 '''
 
-
-'''
 
 '''
 class TestLoraMemoryEvictionFifo(CustomTestCase):
@@ -316,64 +399,12 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         self.assertIn("Paris", response.text)
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
+,,,
+
+'''
 
 
 '''
-class TestLoraSessionManagement(CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
-
-    [Test Category] Parameter
-    [Test Target] --lora-target-modules
-    """
-    lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
-    lora_c = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-
-    @classmethod
-    def setUpClass(cls):
-        other_args = [
-            "--tp-size",
-            "2",
-            "--enable-lora",
-            "--lora-path",
-            f"lora_1={cls.lora_a}",
-            f"lora_2={cls.lora_b}",
-            f"lora_3={cls.lora_c}",
-            "--lora-target-modules",
-            "all",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-        cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_lora(self):
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_a,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-
-
 
 class TestLoraKVCache(CustomTestCase):
     """Testcase：Verify the LoRA adapter can work properly with Radix Cache
@@ -472,99 +503,12 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 128)
-'''
 
-'''
- def test_lora(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                # "lora_path": "lora_a",
-                # "lora_id": "lora_a",
-                "lora_path": self.lora_a,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        print("-----------------------a111111--------------------------")
-        print(response.json())
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        print("-----------------------a111111server_info--------------------------")
-        print(response.json())
-
-        response = requests.post(
-        f"{DEFAULT_URL_FOR_TEST}/generate",
-        json={
-            "text": "The capital of France is",
-            "sampling_params": {
-                "temperature": 0,
-                "max_new_tokens": 32,
-            },
-            "lora_path": "lora_b",
-        },
-        )
-        self.assertEqual(response.status_code, 200)
-        print("-----------------------b111111--------------------------")
-        print(response.json())
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        print("-----------------------b111111server_info--------------------------")
-        print(response.json())
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is Paris",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        print("-----------------------a222222--------------------------")
-        print(response.json())
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        print("-----------------------a222222server_info--------------------------")
-        print(response.json())
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is Paris",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_b",
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        print("-----------------------b222222--------------------------")
-        print(response.json())
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        print("-----------------------b222222server_info--------------------------")
-        print(response.json())
-
-        input_ids = [1] * 600
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "input_ids": input_ids,
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_tokens": 1,
-                },
-            },
-        )
 
 '''
 
 '''
+
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
 
@@ -621,6 +565,127 @@ class TestLoraMaxLoraRank(CustomTestCase):
 
 
 '''
+
+
+
+class TestLoraSessionManagement(CustomTestCase):
+    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
+
+    [Test Category] Parameter
+    [Test Target] --lora-target-modules
+    """
+    lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
+
+    @classmethod
+    def setUpClass(cls):
+        other_args = [
+            "--tp-size",
+            "2",
+            "--enable-lora",
+            "--lora-path",
+            f"lora_a={cls.lora_a}",
+            "--lora-target-modules",
+            "all",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+        ]
+        cls.process = popen_launch_server(
+            LLAMA_3_2_1B_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=other_args,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+
+    def test_session_reset(self):
+        #test the correct collaboration of lora  with session management functionality
+        session_id_first = "test-session-first"
+        session_id_second = "test-session-second"
+
+        # First conversation round - establish context
+        response1 = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "我的宠物是一只猫，叫咪咪",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 64,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id_first,
+                    "enable": True
+                }
+            },
+        )
+        self.assertEqual(response1.status_code, 200)
+
+        # Second conversation round - verify context
+        response2 = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "我的宠物叫什么名字？",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id_first,
+                    "enable": True
+                }
+            },
+        )
+        self.assertEqual(response2.status_code, 200)
+        response_text_2 = response2.text
+        self.assertIn("咪咪", response_text_2,
+                      f"Session should remember pet name '咪咪', but got: {response_text_2}")
+
+        # Reset session (disable then re-enable)
+        response_reset = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "重置会话",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id_first,
+                    "enable": False  # Disable session
+                }
+            },
+        )
+        self.assertEqual(response_reset.status_code, 200)
+
+        # Start new session with same ID
+        response3 = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "我的宠物叫什么名字？",
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "session_params": {
+                    "id": session_id_second,
+                    "enable": True  # Re-enable session
+                }
+            },
+        )
+        self.assertEqual(response3.status_code, 200)
+        response_text_3 = response3.text
+
+        # Verify new session doesn't remember previous context
+        self.assertNotIn("咪咪", response_text_3,
+                         f"New session should not remember old context, but got: {response_text_3}")
+
 
 if __name__ == "__main__":
     unittest.main()
