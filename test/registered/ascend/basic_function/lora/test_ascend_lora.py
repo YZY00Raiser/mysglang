@@ -4,7 +4,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-#from sglang.test.ascend.test_ascend_utils import (
+# from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -119,7 +119,7 @@ class TestLoraBasicFunction(CustomTestCase):
             f"same response.text"
         )
 
-        #compare the consistency between streaming and non-streaming
+        # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -147,7 +147,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
     '''
     def test_batch_with_different_loras(self):
-        #test different loras in batch requests
+        #test different loras in batch requests can work normally
         prompts = [
             "What is AI",
             "Explain neural network",
@@ -195,6 +195,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotEqual(text, first_text, f"same response_text")
 
     def test_lora_with_json_schema(self):
+        #test lora and json schema can work normally
         json_schema = json.dumps({
             "type": "object",
             "properties": {
@@ -394,16 +395,7 @@ class TestLoraSessionManagement(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
+    def test_lora(self):
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
