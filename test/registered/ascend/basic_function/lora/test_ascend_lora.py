@@ -429,8 +429,6 @@ class TestLoraKVCache(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        print("-----------------------a111111--------------------------")
-        print(response.json())
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 0)
 
         response = requests.post(
@@ -446,8 +444,6 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 0)
-        print("-----------------------b111111--------------------------")
-        print(response.json())
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -462,8 +458,6 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 128)
-        print("-----------------------a222222--------------------------")
-        print(response.json())
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -478,8 +472,6 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 128)
-        print("-----------------------b222222--------------------------")
-        print(response.json())
 
 
 '''
