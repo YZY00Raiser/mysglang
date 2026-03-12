@@ -413,7 +413,7 @@ class TestLoraKVCache(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital",
+                "text": "The capital of France is",
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 32,
@@ -428,7 +428,7 @@ class TestLoraKVCache(CustomTestCase):
         response = requests.post(
         f"{DEFAULT_URL_FOR_TEST}/generate",
         json={
-            "text": "The capital of France",
+            "text": "The capital of France is",
             "sampling_params": {
                 "temperature": 0,
                 "max_new_tokens": 32,
@@ -443,7 +443,7 @@ class TestLoraKVCache(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is Paris",
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 32,
@@ -458,7 +458,7 @@ class TestLoraKVCache(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is Paris",
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 32,
