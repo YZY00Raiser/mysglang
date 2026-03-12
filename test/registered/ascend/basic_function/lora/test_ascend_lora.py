@@ -262,6 +262,62 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
         print(f"Valid JSON generate: {parsed_json}")
+'''
+
+'''
+class TestLoraKVCache(CustomTestCase):
+    """Testcase：Verify the LoRA adapter can work properly with Radix Cache
+
+    [Test Category] Parameter
+    [Test Target] --lora-target-modules
+    """
+    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_c = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_d = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+
+    @classmethod
+    def setUpClass(cls):
+        other_args = [
+            "--tp-size"
+            "2"
+            "--enable-lora",
+            "--lora-path",
+            f"lora_1={cls.lora_a}",
+            f"lora_2={cls.lora_b}",
+            "--max-load-loras",
+            "3",
+            "--lora-target-modules",
+            "all",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+        ]
+        cls.process = popen_launch_server(
+            LLAMA_3_2_1B_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=other_args,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+
+    def test_lora(self):
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_a,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
 
 
 
