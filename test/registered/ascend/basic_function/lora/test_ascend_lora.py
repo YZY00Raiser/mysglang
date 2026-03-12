@@ -59,6 +59,8 @@ class TestLoraBasicFunction(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+
+
 '''
     def test_lora_use_different_lora(self):
         # case1 case2
@@ -226,13 +228,12 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("city", parsed_json)
 '''
 
-
 '''
 class TestLoraKVCache(CustomTestCase):
     """Testcase：Verify the LoRA adapter can work properly with Radix Cache
 
     [Test Category] Parameter
-    [Test Target] --enable-lora
+    [Test Target] --enable-lora, --enable-radix-cache
     """
     #case 14
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
@@ -297,7 +298,7 @@ class TestLoraKVCache(CustomTestCase):
         self.assertIn("Paris", response.text)
 '''
 
-'''
+
 class TestLoraMemoryEviction(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
@@ -317,9 +318,8 @@ class TestLoraMemoryEviction(CustomTestCase):
             "--enable-lora",
             "--lora-path",
             f"lora_1={cls.lora_a}",
-            f"lora_2={cls.lora_b}",
             "--max-load-loras",
-            "3",
+            "2",
             "--lora-eviction-policy"
             "fifo"
             "--lora-target-modules",
@@ -340,6 +340,35 @@ class TestLoraMemoryEviction(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_lora(self):
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_b,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_b,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -353,7 +382,7 @@ class TestLoraMemoryEviction(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-'''
+
 
 '''
 class TestLoraSessionManagement(CustomTestCase):
