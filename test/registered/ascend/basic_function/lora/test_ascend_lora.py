@@ -423,9 +423,9 @@ class TestLoraKVCache(CustomTestCase):
                     "temperature": 0,
                     "max_new_tokens": 32,
                 },
-                # "lora_path": "lora_a",
+                "lora_path": "lora_a",
                 # "lora_id": "lora_a",
-                "lora_path": self.lora_a,
+                # "lora_path": self.lora_a,
             },
         )
         self.assertEqual(response.status_code, 200)
@@ -489,17 +489,6 @@ class TestLoraKVCache(CustomTestCase):
         print("-----------------------b222222server_info--------------------------")
         print(response.json())
 
-        input_ids = [1] * 600
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "input_ids": input_ids,
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_tokens": 1,
-                },
-            },
-        )
 
 
 '''
