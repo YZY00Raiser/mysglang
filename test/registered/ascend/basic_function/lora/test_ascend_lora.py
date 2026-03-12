@@ -228,77 +228,8 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("city", parsed_json)
 '''
 
+
 '''
-class TestLoraKVCache(CustomTestCase):
-    """Testcase：Verify the LoRA adapter can work properly with Radix Cache
-
-    [Test Category] Parameter
-    [Test Target] --enable-lora, --enable-radix-cache
-    """
-    #case 14
-    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_c = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_d = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-
-    @classmethod
-    def setUpClass(cls):
-        other_args = [
-            "--tp-size"
-            "2"
-            "--enable-lora",
-            "--lora-path",
-            f"lora_1={cls.lora_a}",
-            f"lora_2={cls.lora_b}",
-            "--enable-radix-cache",
-            "--lora-target-modules",
-            "all",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-        cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_lora(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_a,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-         response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_b,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-'''
-
-
 class TestLoraMemoryEvictionFifo(CustomTestCase):
     """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
 
@@ -382,6 +313,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         self.assertIn("Paris", response.text)
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
+'''
 
 '''
 class TestLoraSessionManagement(CustomTestCase):
@@ -436,7 +368,107 @@ class TestLoraSessionManagement(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
 '''
+
+
+class TestLoraKVCache(CustomTestCase):
+    """Testcase：Verify the LoRA adapter can work properly with Radix Cache
+
+    [Test Category] Parameter
+    [Test Target] --enable-lora, --enable-radix-cache
+    """
+
+    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+
+    @classmethod
+    def setUpClass(cls):
+        other_args = [
+            "--tp-size"
+            "2"
+            "--enable-lora",
+            "--lora-path",
+            f"lora_1={cls.lora_a}",
+            f"lora_2={cls.lora_b}",
+            "--enable-radix-cache",
+            "--lora-target-modules",
+            "all",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+        ]
+        cls.process = popen_launch_server(
+            LLAMA_3_2_1B_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=other_args,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+
+    def test_lora(self):
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_a,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------a111111--------------------------")
+        print(response.json())
+
+        response = requests.post(
+        f"{DEFAULT_URL_FOR_TEST}/generate",
+        json={
+            "text": "The capital of France",
+            "sampling_params": {
+                "temperature": 0,
+                "max_new_tokens": 32,
+            },
+            "lora_path": self.lora_b,
+        },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------b111111--------------------------")
+        print(response.json())
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_a,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------a222222--------------------------")
+        print(response.json())
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": self.lora_b,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        print("-----------------------b222222--------------------------")
+        print(response.json())
 
 '''
 class TestLoraMaxLoraRank(CustomTestCase):
