@@ -71,8 +71,6 @@ class TestLoraBasicFunction(CustomTestCase):
                 },
             },
         )
-        print("--------------------------response.json()----------non--lora------------------------------")
-        print(response.json())
         self.assertEqual(response.status_code, 200)
         text_no_lora = response.text
 
@@ -88,8 +86,6 @@ class TestLoraBasicFunction(CustomTestCase):
             },
         )
         text_lora_a = response.text
-        print("--------------------------response.json()-----------lora_a-------------------------------")
-        print(response.json())
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -103,9 +99,6 @@ class TestLoraBasicFunction(CustomTestCase):
             },
         )
         text_lora_b = response.text
-
-        print("--------------------------response.json()-----------lora_b-------------------------------")
-        print(response.json())
 
         self.assertNotEqual(
             text_no_lora,
