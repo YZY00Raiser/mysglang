@@ -413,7 +413,7 @@ class TestLoraKVCache(CustomTestCase):
 
     def test_lora(self):
         input_ids_first = [1] * 200
-        input_ids_second = [1] * 270
+        input_ids_second = input_ids_first + [2] * 70
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -431,7 +431,7 @@ class TestLoraKVCache(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         print("-----------------------a111111--------------------------")
         print(response.json())
-
+        self.assertEqual(response.json()["cached_tokens"], 0)
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -445,9 +445,9 @@ class TestLoraKVCache(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
+        self.assertGreater(response.json()["cached_tokens"], 0)
         print("-----------------------b111111--------------------------")
         print(response.json())
-
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -461,9 +461,9 @@ class TestLoraKVCache(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
+        self.assertGreater(response.json()["cached_tokens"], 128)
         print("-----------------------a222222--------------------------")
         print(response.json())
-
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -477,10 +477,9 @@ class TestLoraKVCache(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
+        self.assertGreater(response.json()["cached_tokens"], 128)
         print("-----------------------b222222--------------------------")
         print(response.json())
-
-
 
 
 '''
