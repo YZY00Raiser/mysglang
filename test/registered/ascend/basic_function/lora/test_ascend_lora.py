@@ -20,8 +20,8 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
-
-
+LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH="/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH="/home/weights/codelion/FastLlama-3.2-LoRA"
 class TestLoraBasicFunction(CustomTestCase):
     """Testcase：Verify the use different lora, inference request succeeded.
 
@@ -29,8 +29,8 @@ class TestLoraBasicFunction(CustomTestCase):
     [Test Target] --enable-lora, --lora-path,
     """
 
-    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
+    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH"
 
     @classmethod
     def setUpClass(cls):
@@ -235,9 +235,9 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
     [Test Category] Parameter
     [Test Target] --lora-eviction-policy
     """
-    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_c = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
+    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH"
+    lora_c = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
     lora_eviction_policy="fifo"
     @classmethod
     def setUpClass(cls):
@@ -322,7 +322,7 @@ class TestLoraSessionManagement(CustomTestCase):
     [Test Target] --lora-target-modules
     """
     lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
+    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH"
     lora_c = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
 
     @classmethod
@@ -378,8 +378,8 @@ class TestLoraKVCache(CustomTestCase):
     [Test Target] --enable-lora, --enable-radix-cache
     """
 
-    lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
+    lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
+    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH"
 
     @classmethod
     def setUpClass(cls):
@@ -497,10 +497,9 @@ class TestLoraMaxLoraRank(CustomTestCase):
     [Test Target] --max-load-rank
     """
     lora_a = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
-    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
+    lora_b = "LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH"
     lora_c = "LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH"
 
-    #case13
     @classmethod
     def setUpClass(cls):
         other_args = [
