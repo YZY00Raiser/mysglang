@@ -143,7 +143,7 @@ class TestLoraBasicFunction(CustomTestCase):
                 stream_text += data.get("text", "")
         print("--------------------------chunk-------stream--true---------------------------------")
         print(stream_text)
-        # self.assertEqual(stream_text, text_lora_a)
+        self.assertIn(text_lora_a, stream_text)
 
     '''
     def test_batch_with_different_loras(self):
@@ -308,8 +308,8 @@ class TestLoraMemoryEviction(CustomTestCase):
     """
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
     lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_c = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_d = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_c = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_d = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
     @classmethod
     def setUpClass(cls):
