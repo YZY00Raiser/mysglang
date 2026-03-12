@@ -419,7 +419,8 @@ class TestLoraKVCache(CustomTestCase):
                     "max_new_tokens": 32,
                 },
                 # "lora_path": "lora_a",
-                "lora_id": "lora_a",
+                # "lora_id": "lora_a",
+                "lora_path": self.lora_a,
             },
         )
         self.assertEqual(response.status_code, 200)
