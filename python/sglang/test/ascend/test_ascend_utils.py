@@ -35,6 +35,10 @@ LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH = os.path.join(
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = os.path.join(
     MODEL_WEIGHTS_DIR, "codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 )
+LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = os.path.join(
+    MODEL_WEIGHTS_DIR, "suayptalha/FastLlama-3.2-LoRA"
+)
+
 META_LLAMA_3_1_8B_INSTRUCT = os.path.join(
     MODEL_WEIGHTS_DIR, "LLM-Research/Meta-Llama-3.1-8B-Instruct"
 )
