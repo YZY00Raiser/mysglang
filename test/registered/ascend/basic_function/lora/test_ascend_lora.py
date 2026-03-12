@@ -299,17 +299,16 @@ class TestLoraKVCache(CustomTestCase):
 '''
 
 
-class TestLoraMemoryEviction(CustomTestCase):
-    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
+class TestLoraMemoryEvictionFifo(CustomTestCase):
+    """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
 
     [Test Category] Parameter
-    [Test Target] --lora-target-modules
+    [Test Target] --lora-eviction-policy
     """
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
     lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
     lora_c = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-    lora_d = "/home/weights/codelion/FastLlama-3.2-LoRA"
-
+    lora_eviction_policy="fifo"
     @classmethod
     def setUpClass(cls):
         other_args = [
@@ -320,8 +319,8 @@ class TestLoraMemoryEviction(CustomTestCase):
             f"lora_1={cls.lora_a}",
             "--max-load-loras",
             "2",
-            "--lora-eviction-policy"
-            "fifo"
+            "--lora-eviction-policy",
+            cls.lora_eviction_policy,
             "--lora-target-modules",
             "all",
             "--attention-backend",
@@ -340,7 +339,6 @@ class TestLoraMemoryEviction(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_lora(self):
-
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -382,7 +380,8 @@ class TestLoraMemoryEviction(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+class TestLoraMemoryEvictionLru(CustomTestCase):
+    lora_eviction_policy = "lru"
 
 '''
 class TestLoraSessionManagement(CustomTestCase):

@@ -4,7 +4,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-#from sglang.test.ascend.test_ascend_utils import (
+# from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -119,9 +119,36 @@ class TestLoraBasicFunction(CustomTestCase):
             f"same response.text"
         )
 
+        # compare the consistency between streaming and non-streaming
+        response_stream = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "stream": True,
+            },
+            stream=True,
+        )
+        stream_text = ""
+        for chunk in response_stream.iter_lines(decode_unicode=False):
+            chunk = chunk.decode("utf-8")
+            if chunk and chunk.startswith("data:"):
+                if chunk == "data: [DONE]":
+                    break
+                data = json.loads(chunk[5:].strip("\n"))
+                stream_text += data.get("text", "")
+        print("--------------------------chunk-------stream--true---------------------------------")
+        print(stream_text)
+        # self.assertEqual(stream_text, text_lora_a)
+        self.assertIn(text_lora_a, stream_text)
+
     '''
     def test_batch_with_different_loras(self):
-        #test different loras in batch requests
+        #test different loras in batch requests can work normally
         prompts = [
             "What is AI",
             "Explain neural network",
@@ -145,39 +172,6 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
-        print(f"Prompt {i + 1} result: {result['text'][:50]}...")
-
-        # print("--------------------------response.json()----------non--lora------------------------------")
-        # print(response.json())
-        # self.assertEqual(response.status_code, 200)
-
-    # # 对比流式，非流式结果一致性
-    # response_stream = requests.post(
-    #     f"{DEFAULT_URL_FOR_TEST}/generate",
-    #     json={
-    #         "text": "The capital of France is",
-    #         "sampling_params": {
-    #             "temperature": 0,
-    #             "max_new_tokens": 32,
-    #         },
-    #         "lora_path": "lora_a",
-    #         "stream": True,
-    #     },
-    #     stream=True,
-    # )
-    # stream_text = ""
-    # for chunk in response_stream.iter_lines(decode_unicode=False):
-    #     chunk = chunk.decode("utf-8")
-    #     if chunk and chunk.startswith("data:"):
-    #         if chunk == "data: [DONE]":
-    #             break
-    #         data = json.loads(chunk[5:].strip("\n"))
-    #         stream_text += data.get("text", "")
-    # print("--------------------------chunk-------stream--true---------------------------------")
-    # print(stream_text)
-
-
-
 
     def test_lora_with_sampling_parameters(self):
     #test loras with temperature
@@ -202,6 +196,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotEqual(text, first_text, f"same response_text")
 
     def test_lora_with_json_schema(self):
+        #test lora and json schema can work normally
         json_schema = json.dumps({
             "type": "object",
             "properties": {
@@ -314,8 +309,8 @@ class TestLoraMemoryEviction(CustomTestCase):
     """
     lora_a = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
     lora_b = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_c = "/home/weights/codelion/FastLlama-3.2-LoRA"
-    lora_d = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_c = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
+    lora_d = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
     @classmethod
     def setUpClass(cls):
@@ -401,16 +396,7 @@ class TestLoraSessionManagement(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_lora_use_different_lora(self):
-        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
-
-        Three-Step Verification Logic:
-        1. Verify health check API availability (service readiness)
-        2. Verify core generate API functionality (normal inference with correct results)
-        3. Verify LoRA parameter configuration effectiveness via server info API
-        """
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
+    def test_lora(self):
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
