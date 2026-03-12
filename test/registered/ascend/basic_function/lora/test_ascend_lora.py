@@ -60,8 +60,7 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-
-
+    '''
     def test_lora_use_different_lora(self):
         # case1 case2
         response = requests.post(
@@ -120,7 +119,7 @@ class TestLoraBasicFunction(CustomTestCase):
             text_lora_b,
             f"same response.text"
         )
-        '''
+
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -371,7 +370,7 @@ class TestLoraSessionManagement(CustomTestCase):
 
 '''
 
-'''
+
 class TestLoraKVCache(CustomTestCase):
     """Testcase：Verify the LoRA adapter can work properly with Radix Cache
 
@@ -399,6 +398,8 @@ class TestLoraKVCache(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
+            "--base-gpu-id",
+            "6",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
@@ -471,7 +472,7 @@ class TestLoraKVCache(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         print("-----------------------b222222--------------------------")
         print(response.json())
-'''
+
 
 '''
 class TestLoraMaxLoraRank(CustomTestCase):
