@@ -243,7 +243,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--tp-size"
+            "--tp-size",
             "2",
             "--enable-lora",
             "--lora-path",
@@ -329,7 +329,7 @@ class TestLoraSessionManagement(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--tp-size"
+            "--tp-size",
             "2",
             "--enable-lora",
             "--lora-path",
@@ -385,7 +385,7 @@ class TestLoraKVCache(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--tp-size"
+            "--tp-size",
             "2",
             "--enable-lora",
             "--lora-path",
@@ -485,7 +485,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--tp-size"
+            "--tp-size",
             "2",
             "--enable-lora",
             "--lora-path",
