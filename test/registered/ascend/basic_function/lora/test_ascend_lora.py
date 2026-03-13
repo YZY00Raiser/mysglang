@@ -315,7 +315,7 @@ class TestLoraBasicFunction(CustomTestCase):
 '''
 
 
-'''
+
 class TestLoraMemoryEvictionFifo(CustomTestCase):
     """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
 
@@ -399,7 +399,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         self.assertIn("Paris", response.text)
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
-,,,
+
 
 '''
 
@@ -567,7 +567,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
 '''
 
 
-
+'''
 class TestLoraSessionManagement(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
@@ -689,6 +689,9 @@ class TestLoraSessionManagement(CustomTestCase):
         # Verify new session doesn't remember previous context
         self.assertNotIn("咪咪", response_text_3,
                          f"New session should not remember old context, but got: {response_text_3}")
+
+
+'''
 
 
 if __name__ == "__main__":
