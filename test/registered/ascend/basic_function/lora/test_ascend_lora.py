@@ -618,7 +618,6 @@ class TestLoraSessionManagement(CustomTestCase):
                 "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_first,
-                    "enable": True
                 }
             },
         )
@@ -636,7 +635,6 @@ class TestLoraSessionManagement(CustomTestCase):
                 "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_first,
-                    "enable": True
                 }
             },
         )
@@ -657,7 +655,6 @@ class TestLoraSessionManagement(CustomTestCase):
                 "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_first,
-                    "enable": False  # Disable session
                 }
             },
         )
@@ -675,7 +672,6 @@ class TestLoraSessionManagement(CustomTestCase):
                 "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_second,
-                    "enable": True  # Re-enable session
                 }
             },
         )
