@@ -559,7 +559,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
             f"lora_b={cls.lora_b}",
             # f"lora_c={cls.lora_c}",
             "--max-lora-rank",
-            "3",
+            "64",
             "--max-loaded-loras",
             "2",
             "--max-loras-per-batch",
@@ -593,6 +593,8 @@ class TestLoraMaxLoraRank(CustomTestCase):
                 "lora_path": "lora_a",
             },
         )
+
+
 
 
 if __name__ == "__main__":
