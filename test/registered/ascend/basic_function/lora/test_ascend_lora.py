@@ -369,9 +369,11 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
                 "lora_path": "lora_b",
             },
         )
+        print("------------------------response.json()----------------------------------------------------")
+        print(response.json())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        print(response.text)
+        print(response.json())
 
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
