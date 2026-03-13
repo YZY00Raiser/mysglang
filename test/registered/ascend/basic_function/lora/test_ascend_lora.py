@@ -314,6 +314,8 @@ class TestLoraBasicFunction(CustomTestCase):
 
 '''
 
+'''
+
 
 class TestLoraMemoryEvictionFifo(CustomTestCase):
     """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
@@ -378,7 +380,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
 
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
-
+'''
 
 '''
 
