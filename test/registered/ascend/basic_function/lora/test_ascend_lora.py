@@ -550,6 +550,26 @@ class TestLoraMaxLoraRank(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
+        # other_args = [
+        #     "--tp-size",
+        #     "2",
+        #     "--enable-lora",
+        #     "--lora-path",
+        #     f"lora_a={cls.lora_a}",
+        #     f"lora_b={cls.lora_b}",
+        #     # f"lora_c={cls.lora_c}",
+        #     "--max-lora-rank",
+        #     "64",
+        #     "--max-loaded-loras",
+        #     "2",
+        #     "--max-loras-per-batch",
+        #     "2",
+        #     "--lora-target-modules",
+        #     "all",
+        #     "--attention-backend",
+        #     "ascend",
+        #     "--disable-cuda-graph",
+        # ]
         other_args = [
             "--tp-size",
             "2",
@@ -557,13 +577,8 @@ class TestLoraMaxLoraRank(CustomTestCase):
             "--lora-path",
             f"lora_a={cls.lora_a}",
             f"lora_b={cls.lora_b}",
-            # f"lora_c={cls.lora_c}",
             "--max-lora-rank",
             "64",
-            "--max-loaded-loras",
-            "2",
-            "--max-loras-per-batch",
-            "2",
             "--lora-target-modules",
             "all",
             "--attention-backend",
@@ -593,6 +608,22 @@ class TestLoraMaxLoraRank(CustomTestCase):
                 "lora_path": "lora_a",
             },
         )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_b",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
 
 
 
