@@ -617,7 +617,7 @@ class TestLoraSessionManagement(CustomTestCase):
 
                 },
                 "session_params": {
-                    "id": session_id_first,
+                    "session_id": session_id_first,
                 },
                 "lora_path": "lora_a",
 
@@ -635,7 +635,7 @@ class TestLoraSessionManagement(CustomTestCase):
                     "max_new_tokens": 32,
                 },
                 "session_params": {
-                    "id": session_id_first,
+                    "session_id": session_id_first,
                 },
                 "lora_path": "lora_a",
 
@@ -674,7 +674,7 @@ class TestLoraSessionManagement(CustomTestCase):
                     "max_new_tokens": 32,
                 },
                 "session_params": {
-                    "id": session_id_second,
+                    "session_id": session_id_second,
                 },
                 "lora_path": "lora_a",
 
