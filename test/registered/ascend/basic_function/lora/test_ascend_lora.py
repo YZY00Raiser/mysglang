@@ -613,11 +613,11 @@ class TestLoraSessionManagement(CustomTestCase):
                 "text": "我的宠物是一只猫，叫咪咪",
                 "sampling_params": {
                     "temperature": 0,
-                    "max_new_tokens": 64,
+                    "max_new_tokens": 32,
 
                 },
                 "session_params": {
-                    "session_id": session_id_first,
+                    "id": session_id_first,
                 },
                 "lora_path": "lora_a",
 
@@ -635,7 +635,7 @@ class TestLoraSessionManagement(CustomTestCase):
                     "max_new_tokens": 32,
                 },
                 "session_params": {
-                    "session_id": session_id_first,
+                    "id": session_id_first,
                 },
                 "lora_path": "lora_a",
 
@@ -670,11 +670,11 @@ class TestLoraSessionManagement(CustomTestCase):
             json={
                 "text": "我的宠物叫什么名字？",
                 "sampling_params": {
-                    "temperature": 0.7,
+                    "temperature": 0,
                     "max_new_tokens": 32,
                 },
                 "session_params": {
-                    "session_id": session_id_second,
+                    "id": session_id_second,
                 },
                 "lora_path": "lora_a",
 
