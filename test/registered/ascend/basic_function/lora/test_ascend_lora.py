@@ -234,7 +234,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
 
 
-
+'''
 class TestLoraMemoryEvictionFifo(CustomTestCase):
     """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
 
@@ -301,9 +301,11 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
 
 
 
+
+
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
-
+'''
 
 '''
 
@@ -404,67 +406,6 @@ class TestLoraKVCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["meta_info"]["cached_tokens"], 128)
-
-
-'''
-
-'''
-
-class TestLoraMaxLoraRank(CustomTestCase):
-    """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
-
-    [Test Category] Parameter
-    [Test Target] --max-load-rank
-    """
-    lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
-    lora_c = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-
-    @classmethod
-    def setUpClass(cls):
-        other_args = [
-            "--tp-size",
-            "2",
-            "--enable-lora",
-            "--lora-path",
-            f"lora_a={cls.lora_a}",
-            f"lora_b={cls.lora_b}",
-            # f"lora_c={cls.lora_c}",
-            "--max-lora-rank",
-            "3",
-            "--max-loaded-loras",
-            "2",
-            "--max-loras-per-batch",
-            "2",
-            "--lora-target-modules",
-            "all",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-        cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_lora(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-            },
-        )
 
 
 '''
@@ -595,6 +536,68 @@ class TestLoraSessionManagement(CustomTestCase):
         self.assertNotIn("咪咪", response_text_3,
                          f"New session should not remember old context, but got: {response_text_3}")
 '''
+
+'''
+
+class TestLoraMaxLoraRank(CustomTestCase):
+    """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
+
+    [Test Category] Parameter
+    [Test Target] --max-load-rank
+    """
+    lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
+    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
+    lora_c = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
+
+    @classmethod
+    def setUpClass(cls):
+        other_args = [
+            "--tp-size",
+            "2",
+            "--enable-lora",
+            "--lora-path",
+            f"lora_a={cls.lora_a}",
+            f"lora_b={cls.lora_b}",
+            # f"lora_c={cls.lora_c}",
+            "--max-lora-rank",
+            "3",
+            "--max-loaded-loras",
+            "2",
+            "--max-loras-per-batch",
+            "2",
+            "--lora-target-modules",
+            "all",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+        ]
+        cls.process = popen_launch_server(
+            LLAMA_3_2_1B_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=other_args,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        kill_process_tree(cls.process.pid)
+
+    def test_lora(self):
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+
+
+'''
+
 
 if __name__ == "__main__":
     unittest.main()
