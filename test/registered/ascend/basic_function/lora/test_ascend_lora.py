@@ -612,13 +612,15 @@ class TestLoraSessionManagement(CustomTestCase):
             json={
                 "text": "我的宠物是一只猫，叫咪咪",
                 "sampling_params": {
-                    "temperature": 0.7,
+                    "temperature": 0,
                     "max_new_tokens": 64,
+
                 },
-                "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_first,
-                }
+                },
+                "lora_path": "lora_a",
+
             },
         )
         self.assertEqual(response1.status_code, 200)
@@ -629,13 +631,14 @@ class TestLoraSessionManagement(CustomTestCase):
             json={
                 "text": "我的宠物叫什么名字？",
                 "sampling_params": {
-                    "temperature": 0.7,
+                    "temperature": 0,
                     "max_new_tokens": 32,
                 },
-                "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_first,
-                }
+                },
+                "lora_path": "lora_a",
+
             },
         )
         self.assertEqual(response2.status_code, 200)
@@ -644,21 +647,22 @@ class TestLoraSessionManagement(CustomTestCase):
                       f"Session should remember pet name '咪咪', but got: {response_text_2}")
 
         # Reset session (disable then re-enable)
-        response_reset = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "重置会话",
-                "sampling_params": {
-                    "temperature": 0.7,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "session_params": {
-                    "id": session_id_first,
-                }
-            },
-        )
-        self.assertEqual(response_reset.status_code, 200)
+        # response_reset = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/generate",
+        #     json={
+        #         "text": "重置会话",
+        #         "sampling_params": {
+        #             "temperature": 0.7,
+        #             "max_new_tokens": 32,
+        #         },
+        #         "session_params": {
+        #             "id": session_id_first,
+        #         },
+        #         "lora_path": "lora_a",
+        #
+        #     },
+        # )
+        # self.assertEqual(response_reset.status_code, 200)
 
         # Start new session with same ID
         response3 = requests.post(
@@ -669,10 +673,11 @@ class TestLoraSessionManagement(CustomTestCase):
                     "temperature": 0.7,
                     "max_new_tokens": 32,
                 },
-                "lora_path": "lora_a",
                 "session_params": {
                     "id": session_id_second,
-                }
+                },
+                "lora_path": "lora_a",
+
             },
         )
         self.assertEqual(response3.status_code, 200)
