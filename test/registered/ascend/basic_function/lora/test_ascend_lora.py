@@ -587,10 +587,7 @@ class TestLoraSessionManagement(CustomTestCase):
         print("---------------------session_id_first----------------------------")
         print(session_id_first)
 
-        # session_id_second = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/open_session",
-        #     json={"capacity_of_str_len": 1000},
-        # ).json()
+
 
         # session_id_first = "test-session-first"
         # session_id_second = "test-session-second"
@@ -655,7 +652,11 @@ class TestLoraSessionManagement(CustomTestCase):
         # )
         # self.assertEqual(response_reset.status_code, 200)
 
-        # Start new session with same ID
+        # Start new session
+        session_id_second = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/open_session",
+            json={"capacity_of_str_len": 1000},
+        )
         response3 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
