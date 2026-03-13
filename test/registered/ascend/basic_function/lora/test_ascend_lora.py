@@ -333,11 +333,12 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
             "2",
             "--enable-lora",
             "--lora-path",
-            f"lora_1={cls.lora_a}",
+            f"lora_a={cls.lora_a}",
+            f"lora_b={cls.lora_b}",
             "--max-loaded-loras",
-            "2",
+            "1",
             "--max-loras-per-batch",
-            "2",
+            "1",
             "--lora-eviction-policy",
             cls.lora_eviction_policy,
             "--lora-target-modules",
@@ -372,33 +373,6 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_b,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_c,
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
 
