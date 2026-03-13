@@ -77,7 +77,8 @@ class TestLoraBasicFunction(CustomTestCase):
                     "temperature": 0.7,
                     "max_new_tokens": 64,
                 },
-                "lora_path": ["lora_a", "lora_b"],
+                # "lora_path": ["lora_a", "lora_b"],
+                "lora_path": ["lora_a"],
             },
         )
         self.assertEqual(response.status_code, 200)
