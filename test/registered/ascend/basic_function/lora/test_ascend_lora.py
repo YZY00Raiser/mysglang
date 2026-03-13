@@ -533,7 +533,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
-                    # "rid": rid_first,
+
                 },
                 "lora_path": "lora_a",
 
@@ -578,7 +578,6 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_second,
-                    # "rid": rid_third,
                 },
                 "lora_path": "lora_a",
 
