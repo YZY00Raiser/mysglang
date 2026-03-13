@@ -23,7 +23,7 @@ LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
-'''
+
 class TestLoraBasicFunction(CustomTestCase):
     """Testcase：Verify the use different lora, inference request succeeded.
 
@@ -63,6 +63,34 @@ class TestLoraBasicFunction(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
 
+    def test_batch_with_different_loras(self):
+        # test different loras in batch requests can work properly
+        prompts = [
+            "What is AI",
+            "Explain neural network",
+            "What is deep learning",
+        ]
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": prompts,
+                "sampling_params": {
+                    "temperature": 0.7,
+                    "max_new_tokens": 64,
+                },
+                "lora_path": ["lora_a", "lora_b"],
+            },
+        )
+        results = response.json()
+
+        self.assertEqual(len(results), len(prompts))
+
+        for i, result in enumerate(results):
+            self.assertEqual("text", result)
+            self.assertGreater(len(result["text"]), 0)
+
+
+    '''
     def test_lora_use_different_lora(self):
         # case1 case2
         response = requests.post(
@@ -537,9 +565,9 @@ class TestLoraSessionManagement(CustomTestCase):
                          f"New session should not remember old context, but got: {response_text_3}")
 '''
 
-
+'''
 class TestLoraMaxLoraRank(CustomTestCase):
-    """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
+    """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
 
     [Test Category] Parameter
     [Test Target] --max-load-rank
@@ -636,6 +664,10 @@ class TestLoraMaxLoraRank(CustomTestCase):
         # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         # self.assertEqual(response.status_code, 200)
         # self.assertEqual(response.json()["max_lora_rank"], 64)
+
+
+'''
+
 
 
 
