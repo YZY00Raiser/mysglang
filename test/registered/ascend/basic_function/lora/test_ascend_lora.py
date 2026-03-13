@@ -537,7 +537,6 @@ class TestLoraSessionManagement(CustomTestCase):
                          f"New session should not remember old context, but got: {response_text_3}")
 '''
 
-'''
 
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter can limit lora memory poll size
@@ -595,8 +594,6 @@ class TestLoraMaxLoraRank(CustomTestCase):
             },
         )
 
-
-'''
 
 
 if __name__ == "__main__":
