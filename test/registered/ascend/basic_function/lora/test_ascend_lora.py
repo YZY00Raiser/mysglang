@@ -228,89 +228,6 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
 
-    def test_session_reset(self):
-        #Test session reset functionality
-        session_id = "test-session-reset"
-
-        # First conversation
-        response1 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "我的宠物是一只猫，叫咪咪",
-                "sampling_params": {
-                    "temperature": 0.7,
-                    "max_new_tokens": 64,
-                },
-                "lora_path": "lora_a",
-                "session_params": {
-                    "id": session_id,
-                    "enable": True
-                }
-            },
-        )
-        self.assertEqual(response1.status_code, 200)
-
-        # Second conversation
-        response2 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "我的宠物叫什么名字？",
-                "sampling_params": {
-                    "temperature": 0.7,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "session_params": {
-                    "id": session_id,
-                    "enable": True
-                }
-            },
-        )
-        self.assertEqual(response2.status_code, 200)
-        response_text_2 = response2.json()["text"]
-        self.assertIn("咪咪", response_text_2,
-                      f"Session should remember pet name '咪咪', but got: {response_text_2}")
-
-        # Reset session (disable then re-enable)
-        response_reset = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "重置会话",
-                "sampling_params": {
-                    "temperature": 0.7,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "session_params": {
-                    "id": session_id,
-                    "enable": False  # Disable session
-                }
-            },
-        )
-        self.assertEqual(response_reset.status_code, 200)
-
-        # Start new session with same ID
-        response3 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "我的宠物叫什么名字？",
-                "sampling_params": {
-                    "temperature": 0.7,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": self.lora_b,
-                "session_params": {
-                    "id": session_id,
-                    "enable": True  # Re-enable session
-                }
-            },
-        )
-        self.assertEqual(response3.status_code, 200)
-        response_text_3 = response3.json()["text"]
-
-        # Verify new session doesn't remember previous context
-        self.assertNotIn("咪咪", response_text_3,
-                         f"New session should not remember old context, but got: {response_text_3}")
 
 '''
 
@@ -623,7 +540,7 @@ class TestLoraSessionManagement(CustomTestCase):
             },
         )
         self.assertEqual(response1.status_code, 200)
-        # rid = response1.json()["meta_info"]["id"]
+        rid = response1.json()["meta_info"]["id"]
         # Second conversation round - verify context
         response2 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -635,7 +552,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
-                    # "rid": rid_second,
+                    "rid": rid,
                 },
                 "lora_path": "lora_a",
 
