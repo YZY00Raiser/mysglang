@@ -1,3 +1,5 @@
+import unittest
+
 import requests
 
 from sglang.srt.utils import kill_process_tree
@@ -18,6 +20,8 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
+
+
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
 
@@ -101,3 +105,7 @@ class TestLoraMaxLoraRankFault(TestLoraMaxLoraRank):
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
+
+
+if __name__ == "__main__":
+    unittest.main()
