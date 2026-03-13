@@ -612,7 +612,7 @@ class TestLoraSessionManagement(CustomTestCase):
             },
         )
         self.assertEqual(response1.status_code, 200)
-        rid = response1.json()["meta_info"]["id"]
+        # rid = response1.json()["meta_info"]["id"]
         # Second conversation round - verify context
         response2 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -624,7 +624,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
-                    "rid": rid,
+                    # "rid": rid,
                 },
                 "lora_path": "lora_a",
 
@@ -634,24 +634,6 @@ class TestLoraSessionManagement(CustomTestCase):
         response_text_2 = response2.text
         self.assertIn("咪咪", response_text_2,
                       f"Session should remember pet name '咪咪', but got: {response_text_2}")
-
-        # Reset session (disable then re-enable)
-        # response_reset = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/generate",
-        #     json={
-        #         "text": "重置会话",
-        #         "sampling_params": {
-        #             "temperature": 0.7,
-        #             "max_new_tokens": 32,
-        #         },
-        #         "session_params": {
-        #             "id": session_id_first,
-        #         },
-        #         "lora_path": "lora_a",
-        #
-        #     },
-        # )
-        # self.assertEqual(response_reset.status_code, 200)
 
         # Start new session
         session_id_second = requests.post(
@@ -668,7 +650,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_second,
-                    "rid": None,
+                    # "rid": None,
                 },
                 "lora_path": "lora_a",
 
