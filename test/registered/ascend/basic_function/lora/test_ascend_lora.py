@@ -590,6 +590,14 @@ class TestLoraSessionManagement(CustomTestCase):
         print("---------------------session_id_first----------------------------")
         print(session_id_first)
 
+        session_id_second = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/open_session",
+            json={"capacity_of_str_len": 1000},
+        ).json()
+        print("---------------------session_id_second----------------------------")
+        print(session_id_second)
+
+
         # session_id_first = "test-session-first"
         # session_id_second = "test-session-second"
         rid = None
@@ -636,10 +644,10 @@ class TestLoraSessionManagement(CustomTestCase):
                       f"Session should remember pet name '咪咪', but got: {response_text_2}")
 
         # Start new session
-        session_id_second = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/open_session",
-            json={"capacity_of_str_len": 1000},
-        ).json()
+        # session_id_second = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/open_session",
+        #     json={"capacity_of_str_len": 1000},
+        # ).json()
         response3 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
