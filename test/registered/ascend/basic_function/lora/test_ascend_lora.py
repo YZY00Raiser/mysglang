@@ -584,6 +584,8 @@ class TestLoraSessionManagement(CustomTestCase):
             f"{DEFAULT_URL_FOR_TEST}/open_session",
             json={"capacity_of_str_len": 1000},
         )
+        print("---------------------session_id_first----------------------------")
+        print(session_id_first)
 
         # session_id_second = requests.post(
         #     f"{DEFAULT_URL_FOR_TEST}/open_session",
