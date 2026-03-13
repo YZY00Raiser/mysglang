@@ -253,6 +253,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
             "--enable-lora",
             "--lora-path",
             f"lora_a={cls.lora_a}",
+            f"lora_b={cls.lora_b}",
             "--max-loaded-loras",
             "1",
             "--max-loras-per-batch",
