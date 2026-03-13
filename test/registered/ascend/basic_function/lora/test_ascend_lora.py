@@ -315,7 +315,6 @@ class TestLoraBasicFunction(CustomTestCase):
 '''
 
 
-
 class TestLoraMemoryEvictionFifo(CustomTestCase):
     """Testcase：Verify the eviction policy works properly, when the number of load lora exceed max-load-loras.
 
@@ -325,7 +324,8 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
     lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
     lora_c = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    lora_eviction_policy="fifo"
+    lora_eviction_policy = "fifo"
+
     @classmethod
     def setUpClass(cls):
         other_args = [
@@ -375,11 +375,9 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         self.assertIn("Paris", response.text)
         print(response.json())
 
+
 class TestLoraMemoryEvictionLru(CustomTestCase):
     lora_eviction_policy = "lru"
-
-
-
 
 
 '''
@@ -547,7 +545,6 @@ class TestLoraMaxLoraRank(CustomTestCase):
 '''
 
 
-'''
 class TestLoraSessionManagement(CustomTestCase):
     """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
@@ -582,9 +579,19 @@ class TestLoraSessionManagement(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_session_reset(self):
-        #test the correct collaboration of lora  with session management functionality
-        session_id_first = "test-session-first"
-        session_id_second = "test-session-second"
+        # test the correct collaboration of lora  with session management functionality
+        session_id_first = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/open_session",
+            json={"capacity_of_str_len": 1000},
+        ).json()
+
+        session_id_second = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/open_session",
+            json={"capacity_of_str_len": 1000},
+        ).json()
+
+        # session_id_first = "test-session-first"
+        # session_id_second = "test-session-second"
         rid = None
         # First conversation round - establish context
         response1 = requests.post(
@@ -669,9 +676,6 @@ class TestLoraSessionManagement(CustomTestCase):
         # Verify new session doesn't remember previous context
         self.assertNotIn("咪咪", response_text_3,
                          f"New session should not remember old context, but got: {response_text_3}")
-
-
-'''
 
 
 if __name__ == "__main__":
