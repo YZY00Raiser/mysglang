@@ -597,10 +597,13 @@ class TestLoraSessionManagement(CustomTestCase):
         print("---------------------session_id_second----------------------------")
         print(session_id_second)
 
+        rid_first = 1
+        rid_second = 2
+        rid_third = 3
 
         # session_id_first = "test-session-first"
         # session_id_second = "test-session-second"
-        rid = None
+
         # First conversation round - establish context
         response1 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -613,7 +616,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
-                    "rid": rid,
+                    "rid": rid_first,
                 },
                 "lora_path": "lora_a",
 
@@ -632,7 +635,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
-                    # "rid": rid,
+                    "rid": rid_second,
                 },
                 "lora_path": "lora_a",
 
@@ -658,7 +661,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_second,
-                    # "rid": None,
+                    "rid": rid_third,
                 },
                 "lora_path": "lora_a",
 
