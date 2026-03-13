@@ -605,7 +605,7 @@ class TestLoraSessionManagement(CustomTestCase):
         #test the correct collaboration of lora  with session management functionality
         session_id_first = "test-session-first"
         session_id_second = "test-session-second"
-
+        rid = None
         # First conversation round - establish context
         response1 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -618,13 +618,14 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
+                    "rid": rid,
                 },
                 "lora_path": "lora_a",
 
             },
         )
         self.assertEqual(response1.status_code, 200)
-
+        rid = response1.json()["meta_info"]["id"]
         # Second conversation round - verify context
         response2 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -636,6 +637,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_first,
+                    "rid": rid,
                 },
                 "lora_path": "lora_a",
 
@@ -675,6 +677,7 @@ class TestLoraSessionManagement(CustomTestCase):
                 },
                 "session_params": {
                     "id": session_id_second,
+                    "rid": None,
                 },
                 "lora_path": "lora_a",
 
