@@ -62,7 +62,6 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-
     def test_batch_with_different_loras(self):
         # test different loras in batch requests can work properly
         prompts = [
@@ -81,6 +80,7 @@ class TestLoraBasicFunction(CustomTestCase):
                 "lora_path": ["lora_a", "lora_b"],
             },
         )
+        self.assertEqual(response.status_code, 200)
         results = response.json()
 
         self.assertEqual(len(results), len(prompts))
@@ -88,7 +88,6 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
-
 
     '''
     def test_lora_use_different_lora(self):
@@ -259,7 +258,6 @@ class TestLoraBasicFunction(CustomTestCase):
 
 
 '''
-
 
 
 '''
@@ -667,10 +665,6 @@ class TestLoraMaxLoraRank(CustomTestCase):
 
 
 '''
-
-
-
-
 
 if __name__ == "__main__":
     unittest.main()
