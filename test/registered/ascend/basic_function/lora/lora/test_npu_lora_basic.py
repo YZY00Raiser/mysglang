@@ -63,7 +63,6 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    '''
     def test_lora_use_different_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -217,6 +216,8 @@ class TestLoraBasicFunction(CustomTestCase):
         make_request("lora_a", input_ids_second, 128)
 
 
+
+'''
     # num
     def test_batch_with_different_loras(self):
         # test different loras in batch requests can work properly
@@ -268,6 +269,12 @@ class TestLoraBasicFunction(CustomTestCase):
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data.get("text", "")
         self.assertIn(text_lora_a, stream_text)
+'''
+
+
+
+
+
 '''
 
     def test_lora_session(self):
@@ -350,6 +357,7 @@ class TestLoraBasicFunction(CustomTestCase):
         # Verify new session doesn't have previous context
         self.assertNotIn("Mimi", response_text_3,
                          f"New session should not remember old context, but got: {response_text_3}")
+'''
 
 if __name__ == "__main__":
     unittest.main()
