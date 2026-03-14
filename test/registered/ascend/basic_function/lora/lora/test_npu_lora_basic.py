@@ -64,49 +64,30 @@ class TestLoraBasicFunction(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_lora_use_different_lora(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
+        base_params = {
+            "text": "The capital of France is",
+            "sampling_params": {"temperature": 0, "max_new_tokens": 32},
+        }
+
+        # Get base model output
+        response = requests.post(f"{DEFAULT_URL_FOR_TEST}/generate", json=base_params)
         self.assertEqual(response.status_code, 200)
         text_no_lora = response.json()["text"]
 
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        text_lora_a = response.json()["text"]
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_b",
-            },
-        )
-        text_lora_b = response.json()["text"]
+        # Test different LoRA adapters
+        texts = []
+        for lora_path in ["lora_a", "lora_b"]:
+            params = base_params.copy()
+            params["lora_path"] = lora_path
+            response = requests.post(f"{DEFAULT_URL_FOR_TEST}/generate", json=params)
+            texts.append(response.json()["text"])
 
-        self.assertNotEqual(text_no_lora, text_lora_a, f"same text")
+        text_lora_a, text_lora_b = texts
 
-        self.assertNotEqual(text_no_lora, text_lora_b, f"same text")
-
-        self.assertNotEqual(text_lora_a, text_lora_b, f"same text")
+        # Verify all outputs are different
+        self.assertNotEqual(text_no_lora, text_lora_a, "Base model and LoRA A produced same text")
+        self.assertNotEqual(text_no_lora, text_lora_b, "Base model and LoRA B produced same text")
+        self.assertNotEqual(text_lora_a, text_lora_b, "LoRA A and LoRA B produced same text")
 
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
