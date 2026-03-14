@@ -220,7 +220,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
-    '''
+
 
     '''
     # num
