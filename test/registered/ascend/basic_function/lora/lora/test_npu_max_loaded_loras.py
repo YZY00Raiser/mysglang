@@ -6,7 +6,7 @@ import requests
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
-#     LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH,
+#     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -48,7 +48,7 @@ class TestMaxLoadedLoras(CustomTestCase):
             f"lora_3={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH,
+            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -113,7 +113,7 @@ class TestMaxLoadedLorasError(CustomTestCase):
         err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         try:
             popen_launch_server(
-                LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH,
+                LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
                 DEFAULT_URL_FOR_TEST,
                 timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
                 other_args=other_args,
