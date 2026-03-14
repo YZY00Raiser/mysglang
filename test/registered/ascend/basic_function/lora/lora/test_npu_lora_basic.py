@@ -254,6 +254,7 @@ class TestLoraBasicFunction(CustomTestCase):
         results = response.json()
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
+            print("----------------text------------------------")
             print(result["text"])
 
         '''
