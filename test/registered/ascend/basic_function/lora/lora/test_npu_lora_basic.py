@@ -245,17 +245,16 @@ class TestLoraBasicFunction(CustomTestCase):
             json={
                 "text": prompts,
                 "sampling_params": {
-                    "temperature": 0.7,
+                    "temperature": 0,
                     "max_new_tokens": 64,
                 },
                 "lora_path": "lora_a",
             },
         )
         results = response.json()
-        print("-----------------response.json()------------------------")
-        print(results)
-        # for i, result in enumerate(results):
-        #     self.assertGreater(len(result), 0)
+        for i, result in enumerate(results):
+            self.assertGreater(len(result["text"]), 0)
+            print(result["text"])
 
         '''
         # compare the consistency between streaming and non-streaming
