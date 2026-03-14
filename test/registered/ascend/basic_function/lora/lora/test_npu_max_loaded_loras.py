@@ -121,7 +121,7 @@ class TestMaxLoadedLorasError(CustomTestCase):
             )
         except Exception as e:
             self.assertIn(
-                "Server launch failed",
+                "Server process exited with code 1",
                 str(e),
             )
         finally:
