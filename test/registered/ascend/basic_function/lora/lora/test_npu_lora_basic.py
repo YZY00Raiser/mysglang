@@ -231,6 +231,7 @@ class TestLoraBasicFunction(CustomTestCase):
         prompts = [
             "What is AI",
             "Explain neural network",
+
         ]
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -248,7 +249,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertEqual(len(results), len(prompts))
 
         for i, result in enumerate(results):
-            self.assertEqual("text", result)
+            self.assertEqual("text", result["text"])
             self.assertGreater(len(result["text"]), 0)
 
         '''
