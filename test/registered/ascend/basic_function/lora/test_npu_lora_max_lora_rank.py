@@ -87,7 +87,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
     """
 
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
     max_lora_rank = "32"
 
     def test_max_loaded_loras_error(self):
@@ -116,8 +115,7 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             return_stdout_stderr=(out_log_file, err_log_file),
         )
         try:
-            '''
-            response = requests.post(
+            requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",
                 json={
                     "text": "The capital of France is",
@@ -128,9 +126,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                     "lora_path": "lora_a",
                 },
             )
-            '''
-
         except Exception as e:
+            print("------------------------exception-------------------------")
             print(f"Server launch failed as expects:{e}")
         finally:
             err_log_file.seek(0)
