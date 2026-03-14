@@ -133,16 +133,16 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
         #     # )
         #     print("-------------------exception--------------------------")
         #     print(e)
-        finally:
-            err_log_file.seek(0)
-            content = err_log_file.read()
-            # error_message information is recorded in the error log
-            error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
-            self.assertIn(error_message, content)
-            out_log_file.close()
-            err_log_file.close()
-            os.remove("./cache_out_log.txt")
-            os.remove("./cache_err_log.txt")
+        # finally:
+        err_log_file.seek(0)
+        content = err_log_file.read()
+        # error_message information is recorded in the error log
+        error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
+        self.assertIn(error_message, content)
+        out_log_file.close()
+        err_log_file.close()
+        os.remove("./cache_out_log.txt")
+        os.remove("./cache_err_log.txt")
 
         # with self.assertRaises(Exception) as ctx:
         #     popen_launch_server(
