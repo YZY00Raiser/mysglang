@@ -143,6 +143,21 @@ class TestLoraMaxLoraRank(CustomTestCase):
                 other_args=other_args,
                 return_stdout_stderr=(out_log_file, err_log_file),
             )
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": "The capital of France is",
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 32,
+                    },
+                    "lora_path": "lora_a",
+                },
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Paris", response.text)
+
+
         except Exception as e:
             print(f"Server launch failed as expects:{e}")
         finally:
