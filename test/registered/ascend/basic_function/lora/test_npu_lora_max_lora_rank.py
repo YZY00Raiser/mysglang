@@ -116,7 +116,7 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             #     str(e),
             # )
             print("-------------------exception--------------------------")
-            print(e.)
+            print(e)
         finally:
             err_log_file.seek(0)
             content = err_log_file.read()
