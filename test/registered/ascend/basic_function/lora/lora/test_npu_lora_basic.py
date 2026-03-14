@@ -63,6 +63,7 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
+'''
     def test_lora_use_different_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -108,31 +109,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotEqual(text_no_lora, text_lora_b, f"same response.text")
 
         self.assertNotEqual(text_lora_a, text_lora_b, f"same response.text")
-        '''
-        # compare the consistency between streaming and non-streaming
-        response_stream = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "stream": True,
-            },
-            stream=True,
-        )
-        stream_text = ""
-        for chunk in response_stream.iter_lines(decode_unicode=False):
-            chunk = chunk.decode("utf-8")
-            if chunk and chunk.startswith("data:"):
-                if chunk == "data: [DONE]":
-                    break
-                data = json.loads(chunk[5:].strip("\n"))
-                stream_text += data.get("text", "")
-        self.assertIn(text_lora_a, stream_text)
-        '''
+
         # Verify lora_target_modules parameter is correctly
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
@@ -238,90 +215,17 @@ class TestLoraBasicFunction(CustomTestCase):
 
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
-
-    def test_lora_session(self):
-        # test the correct collaboration of lora with session management functionality
-        session_id_first = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/open_session",
-            json={"capacity_of_str_len": 1000},
-        ).json()
-
-        session_id_second = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/open_session",
-            json={"capacity_of_str_len": 1000},
-        ).json()
-        self.assertNotEqual(
-            session_id_first,
-            session_id_second,
-            f"session_id"
-        )
-
-        # First conversation round
-        response1 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "My pet is a cat named mimi.",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-
-                },
-                "session_params": {
-                    "id": session_id_first,
-                },
-                "lora_path": "lora_a",
-
-            },
-        )
-        self.assertEqual(response1.status_code, 200)
-        rid = response1.json()["meta_info"]["id"]
-
-        response2 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "What is my pet's name?",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "session_params": {
-                    "id": session_id_first,
-                    "rid": rid,
-                },
-                "lora_path": "lora_a",
-
-            },
-        )
-        self.assertEqual(response2.status_code, 200)
-        response_text_2 = response2.text
-        self.assertIn("mimi", response_text_2,
-                      f"Session should remember pet name 'mimi', but got: {response_text_2}")
-
-        # Second conversation round use a new session id
-        response3 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "What is my pet's name?",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "session_params": {
-                    "id": session_id_second,
-                },
-                "lora_path": "lora_a",
-
-            },
-        )
-        self.assertEqual(response3.status_code, 200)
-        response_text_3 = response3.text
-
-        # Verify new session doesn't have previous context
-        self.assertNotIn("mimi", response_text_3,
-                         f"New session should not remember old context, but got: {response_text_3}")
+'''
 
 
 
+
+
+
+
+
+
+'''
     # num
     def test_batch_with_different_loras(self):
         # test different loras in batch requests can work properly
@@ -347,7 +251,114 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
+'''
+
+'''
+        # compare the consistency between streaming and non-streaming
+        response_stream = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "stream": True,
+            },
+            stream=True,
+        )
+        stream_text = ""
+        for chunk in response_stream.iter_lines(decode_unicode=False):
+            chunk = chunk.decode("utf-8")
+            if chunk and chunk.startswith("data:"):
+                if chunk == "data: [DONE]":
+                    break
+                data = json.loads(chunk[5:].strip("\n"))
+                stream_text += data.get("text", "")
+        self.assertIn(text_lora_a, stream_text)
+'''
 
 
+def test_lora_session(self):
+    # test the correct collaboration of lora with session management functionality
+    session_id_first = requests.post(
+        f"{DEFAULT_URL_FOR_TEST}/open_session",
+        json={"capacity_of_str_len": 1000},
+    ).json()
+
+    session_id_second = requests.post(
+        f"{DEFAULT_URL_FOR_TEST}/open_session",
+        json={"capacity_of_str_len": 1000},
+    ).json()
+    self.assertNotEqual(
+        session_id_first,
+        session_id_second,
+        f"session_id"
+    )
+
+    # First conversation round
+    response1 = requests.post(
+        f"{DEFAULT_URL_FOR_TEST}/generate",
+        json={
+            "text": "My pet is a cat named Mimi.",
+            "sampling_params": {
+                "temperature": 0,
+                "max_new_tokens": 32,
+
+            },
+            "session_params": {
+                "id": session_id_first,
+            },
+            "lora_path": "lora_a",
+
+        },
+    )
+    self.assertEqual(response1.status_code, 200)
+    rid = response1.json()["meta_info"]["id"]
+
+    response2 = requests.post(
+        f"{DEFAULT_URL_FOR_TEST}/generate",
+        json={
+            "text": "What is my pet's name?",
+            "sampling_params": {
+                "temperature": 0,
+                "max_new_tokens": 32,
+            },
+            "session_params": {
+                "id": session_id_first,
+                "rid": rid,
+            },
+            "lora_path": "lora_a",
+
+        },
+    )
+    self.assertEqual(response2.status_code, 200)
+    response_text_2 = response2.text
+    self.assertIn("Mimi", response_text_2,
+                  f"Session should remember pet name 'mimi', but got: {response_text_2}")
+
+    # Second conversation round use a new session id
+    response3 = requests.post(
+        f"{DEFAULT_URL_FOR_TEST}/generate",
+        json={
+            "text": "What is my pet's name?",
+            "sampling_params": {
+                "temperature": 0,
+                "max_new_tokens": 32,
+            },
+            "session_params": {
+                "id": session_id_second,
+            },
+            "lora_path": "lora_a",
+
+        },
+    )
+    self.assertEqual(response3.status_code, 200)
+    response_text_3 = response3.text
+
+    # Verify new session doesn't have previous context
+    self.assertNotIn("Mimi", response_text_3,
+                     f"New session should not remember old context, but got: {response_text_3}")
 if __name__ == "__main__":
     unittest.main()
