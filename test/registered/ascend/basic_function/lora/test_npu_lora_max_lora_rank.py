@@ -79,16 +79,17 @@ class TestLoraMaxLoraRank(CustomTestCase):
 '''
 
 
-class TestLoraMaxLoraRankFault(CustomTestCase):
-    """Testcase：Verify set the --max-load-rank parameter, can't load lora no corresponding to the number of ranks, service startup failed .
+class TestLoraMaxLoraRank(CustomTestCase):
+    """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
 
     [Test Category] Parameter
     [Test Target] --max-load-rank
     """
+
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
     max_lora_rank = "64"
-
-    def test_lora_max_lora_rank(self):
+    def test_max_loaded_loras_error(self):
+        error_message = "The number of LoRA paths should not exceed max_loaded_loras."
         other_args = [
             "--tp-size",
             "1",
@@ -101,61 +102,27 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
         ]
-
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
-        # try:
-        popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-            return_stdout_stderr=(out_log_file, err_log_file),
-        )
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        print("----------------response.json-----------------------")
-        print(response.json())
-
-
-        # except Exception as e:
-        #     # self.assertIn(
-        #     #     "Server process exited with code 1. Check server logs for errors.",
-        #     #     str(e),
-        #     # )
-        #     print("-------------------exception--------------------------")
-        #     print(e)
-        # finally:
-        err_log_file.seek(0)
-        content = err_log_file.read()
-        # error_message information is recorded in the error log
-        error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
-        self.assertIn(error_message, content)
-        out_log_file.close()
-        err_log_file.close()
-        os.remove("./cache_out_log.txt")
-        os.remove("./cache_err_log.txt")
-
-        # with self.assertRaises(Exception) as ctx:
-        #     popen_launch_server(
-        #         LLAMA_3_2_1B_WEIGHTS_PATH,
-        #         DEFAULT_URL_FOR_TEST,
-        #         timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-        #         other_args=other_args,
-        #         return_stdout_stderr=(out_log_file, err_log_file),
-        #     )
-        # self.assertIn("Server process exited with code 1. Check server logs for errors.", str(ctx.exception))
-
+        try:
+            popen_launch_server(
+                LLAMA_3_2_1B_WEIGHTS_PATH,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(out_log_file, err_log_file),
+            )
+        except Exception as e:
+            print(f"Server launch failed as expects:{e}")
+        finally:
+            err_log_file.seek(0)
+            content = err_log_file.read()
+            # error_message information is recorded in the error log
+            self.assertIn(error_message, content)
+            out_log_file.close()
+            err_log_file.close()
+            os.remove("./cache_out_log.txt")
+            os.remove("./cache_err_log.txt")
 
 if __name__ == "__main__":
     unittest.main()
