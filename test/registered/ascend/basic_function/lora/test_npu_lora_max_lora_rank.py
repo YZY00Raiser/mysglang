@@ -128,6 +128,20 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             os.remove("./cache_out_log.txt")
             os.remove("./cache_err_log.txt")
 
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        print("----------------response.json-----------------------")
+        print(response.json())
+
         # with self.assertRaises(Exception) as ctx:
         #     popen_launch_server(
         #         LLAMA_3_2_1B_WEIGHTS_PATH,
