@@ -105,7 +105,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
             "--base-gpu-id",
             "6",
         ]
-        self.process = popen_launch_server(
+        process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -125,8 +125,8 @@ class TestLoraMaxLoraRank(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        if self.process:
-            kill_process_tree(self.process.pid)
+        if process:
+            kill_process_tree(process.pid)
 
 
         '''
