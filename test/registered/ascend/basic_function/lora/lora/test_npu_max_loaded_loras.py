@@ -74,7 +74,7 @@ class TestMaxLoadedLoras(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/get_server_info")
+        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(
