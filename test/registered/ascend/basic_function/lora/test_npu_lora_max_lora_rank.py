@@ -95,7 +95,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--enable-lora",
             "--lora-path",
             f"lora_a={self.lora_a}",
-            f"lora_b={self.lora_b}",
             "--max-lora-rank",
             self.max_lora_rank,
             "--attention-backend",
