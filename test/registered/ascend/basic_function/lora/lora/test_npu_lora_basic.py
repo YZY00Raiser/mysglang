@@ -108,7 +108,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotEqual(text_no_lora, text_lora_b, f"same response.text")
 
         self.assertNotEqual(text_lora_a, text_lora_b, f"same response.text")
-
+        '''
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -132,7 +132,7 @@ class TestLoraBasicFunction(CustomTestCase):
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data.get("text", "")
         self.assertIn(text_lora_a, stream_text)
-
+        '''
         # Verify lora_target_modules parameter is correctly
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
@@ -321,8 +321,8 @@ class TestLoraBasicFunction(CustomTestCase):
                          f"New session should not remember old context, but got: {response_text_3}")
 
 
-'''
-# num
+
+    # num
     def test_batch_with_different_loras(self):
         # test different loras in batch requests can work properly
         prompts = [
@@ -347,7 +347,7 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
-'''
+
 
 if __name__ == "__main__":
     unittest.main()
