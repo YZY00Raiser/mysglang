@@ -1,13 +1,12 @@
 import unittest
-from abc import ABC
 
 import requests
 
 from sglang.srt.utils import kill_process_tree
-# from sglang.test.ascend.test_ascend_utils import (
-#     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
-#     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
-# )
+from sglang.test.ascend.test_ascend_utils import (
+    LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
+    LLAMA_3_2_1B_WEIGHTS_PATH,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -17,36 +16,29 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
-LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
-LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
 
-class TestLoraBackend(ABC):
-    """Testcase: Test configuration of lora-backend parameters, and inference request successful.
+class TestLoraPaths(CustomTestCase):
+    """Testcase：Verify the correctness of --max-loras-per-batch=1 and related APIs availability.
 
     [Test Category] Parameter
-    [Test Target] --lora-backend
+    [Test Target] --max-loras-per-batch
     """
-
-    lora_backend = "triton"
 
     @classmethod
     def setUpClass(cls):
         other_args = [
             "--enable-lora",
-            "--lora-backend",
-            f"{cls.lora_backend}",
+            "--max-loras-per-batch",
+            1,
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--mem-fraction-static",
-            0.8,
             "--lora-path",
             f"tool_calling={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+            LLAMA_3_2_1B_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -56,7 +48,7 @@ class TestLoraBackend(ABC):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_lora_backend(self):
+    def test_max_loras_per_batch(self):
         response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
         self.assertEqual(response.status_code, 200)
 
@@ -72,21 +64,11 @@ class TestLoraBackend(ABC):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
+        # Verify max_loras_per_batch parameter is correctly set in server info
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["lora_backend"], f"{self.lora}")
-
-
-class TestLoraBackendCsgmv(TestLoraBackend, CustomTestCase):
-    lora_backend = "csgmv"
-
-
-class TestLoraBackendAscend(TestLoraBackend, CustomTestCase):
-    lora_backend = "ascend"
-
-
-class TestLoraBackendTorchNative(TestLoraBackend, CustomTestCase):
-    lora_backend = "torch_native"
+        self.assertEqual(response.json()["max_loras_per_batch"], 1)
 
 
 if __name__ == "__main__":

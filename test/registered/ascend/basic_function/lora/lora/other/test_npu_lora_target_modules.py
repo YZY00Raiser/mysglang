@@ -1,13 +1,12 @@
 import unittest
-from abc import ABC
 
 import requests
 
 from sglang.srt.utils import kill_process_tree
-# from sglang.test.ascend.test_ascend_utils import (
-#     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
-#     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
-# )
+from sglang.test.ascend.test_ascend_utils import (
+    LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
+    LLAMA_3_2_1B_WEIGHTS_PATH,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -17,36 +16,29 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
-LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
-LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
-LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
 
-class TestLoraBackend(ABC):
-    """Testcase: Test configuration of lora-backend parameters, and inference request successful.
+class TestLoraTargetModulesAll(CustomTestCase):
+    """Testcase：Verify the functionality and parameter effectiveness when --lora-target-modules=all is set for Llama-3.2-1B
 
     [Test Category] Parameter
-    [Test Target] --lora-backend
+    [Test Target] --lora-target-modules
     """
-
-    lora_backend = "triton"
 
     @classmethod
     def setUpClass(cls):
         other_args = [
             "--enable-lora",
-            "--lora-backend",
-            f"{cls.lora_backend}",
+            "--lora-path",
+            f"tool_calling={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
+            "--lora-target-modules",
+            "all",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--mem-fraction-static",
-            0.8,
-            "--lora-path",
-            f"tool_calling={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+            LLAMA_3_2_1B_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -56,7 +48,14 @@ class TestLoraBackend(ABC):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_lora_backend(self):
+    def test_lora_target_modules(self):
+        """Core Test: Verify the effectiveness of --lora-target-modules=all and normal server functionality
+
+        Three-Step Verification Logic:
+        1. Verify health check API availability (service readiness)
+        2. Verify core generate API functionality (normal inference with correct results)
+        3. Verify LoRA parameter configuration effectiveness via server info API
+        """
         response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
         self.assertEqual(response.status_code, 200)
 
@@ -72,21 +71,27 @@ class TestLoraBackend(ABC):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
+        # Verify lora_target_modules parameter is correctly set in server info
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["lora_backend"], f"{self.lora}")
+        expected_modules = [
+            "k_proj",
+            "down_proj",
+            "gate_up_proj",
+            "o_proj",
+            "qkv_proj",
+            "gate_proj",
+            "v_proj",
+            "q_proj",
+            "up_proj",
+        ]
+        actual_modules = response.json()["lora_target_modules"]
 
+        self.assertEqual(len(actual_modules), len(expected_modules))
 
-class TestLoraBackendCsgmv(TestLoraBackend, CustomTestCase):
-    lora_backend = "csgmv"
-
-
-class TestLoraBackendAscend(TestLoraBackend, CustomTestCase):
-    lora_backend = "ascend"
-
-
-class TestLoraBackendTorchNative(TestLoraBackend, CustomTestCase):
-    lora_backend = "torch_native"
+        for module in expected_modules:
+            self.assertIn(module, actual_modules)
 
 
 if __name__ == "__main__":
