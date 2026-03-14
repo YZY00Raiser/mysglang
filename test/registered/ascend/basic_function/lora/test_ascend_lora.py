@@ -4,7 +4,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import (
+# from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
