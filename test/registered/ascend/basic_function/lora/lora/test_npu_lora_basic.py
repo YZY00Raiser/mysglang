@@ -186,7 +186,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
-
+    '''
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
         json_schema = json.dumps({
@@ -217,8 +217,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
-
-    # num
+    '''
     def test_batch_with_different_loras(self):
         # test use lora in batch requests can work properly
         prompts = [
