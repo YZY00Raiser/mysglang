@@ -63,7 +63,6 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-
     def test_lora_use_different_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -90,6 +89,7 @@ class TestLoraBasicFunction(CustomTestCase):
             },
         )
         text_lora_a = response.text
+        print("--------------------response.text----------------------------------------")
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -109,6 +109,8 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotEqual(text_no_lora, text_lora_b, f"same response.text")
 
         self.assertNotEqual(text_lora_a, text_lora_b, f"same response.text")
+
+
 
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
@@ -133,6 +135,7 @@ class TestLoraBasicFunction(CustomTestCase):
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data.get("text", "")
         self.assertIn(text_lora_a, stream_text)
+
     '''
         # Verify lora_target_modules parameter is correctly
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
@@ -361,6 +364,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotIn("Mimi", response_text_3,
                          f"New session should not remember old context, but got: {response_text_3}")
     '''
+
 
 if __name__ == "__main__":
     unittest.main()
