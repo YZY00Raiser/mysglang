@@ -127,8 +127,10 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                 },
             )
         except Exception as e:
-            print("------------------------exception-------------------------")
-            print(f"Server launch failed as expects:{e}")
+            self.assertIn(
+                "Connection aborted",
+                str(e),
+            )
         finally:
             err_log_file.seek(0)
             content = err_log_file.read()
