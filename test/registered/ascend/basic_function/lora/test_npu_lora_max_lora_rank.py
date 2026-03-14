@@ -156,16 +156,14 @@ class TestLoraMaxLoraRank(CustomTestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertIn("Paris", response.text)
-
-
         except Exception as e:
             print(f"Server launch failed as expects:{e}")
         finally:
             err_log_file.seek(0)
             content = err_log_file.read()
             # error_message information is recorded in the error log
-            # error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
-            error_message = "LoRA buffer shape does not match expected weight shape"
+            error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
+            #error_message = "LoRA buffer shape does not match expected weight shape"
             self.assertIn(error_message, content)
             out_log_file.close()
             err_log_file.close()
