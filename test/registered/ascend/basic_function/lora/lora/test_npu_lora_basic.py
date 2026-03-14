@@ -63,7 +63,7 @@ class TestLoraBasicFunction(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    '''
+
     def test_lora_use_different_lora(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -110,6 +110,30 @@ class TestLoraBasicFunction(CustomTestCase):
 
         self.assertNotEqual(text_lora_a, text_lora_b, f"same response.text")
 
+        # compare the consistency between streaming and non-streaming
+        response_stream = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+                "stream": True,
+            },
+            stream=True,
+        )
+        stream_text = ""
+        for chunk in response_stream.iter_lines(decode_unicode=False):
+            chunk = chunk.decode("utf-8")
+            if chunk and chunk.startswith("data:"):
+                if chunk == "data: [DONE]":
+                    break
+                data = json.loads(chunk[5:].strip("\n"))
+                stream_text += data.get("text", "")
+        self.assertIn(text_lora_a, stream_text)
+    '''
         # Verify lora_target_modules parameter is correctly
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
@@ -218,7 +242,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
- '''
+
 
 
 
@@ -254,40 +278,7 @@ class TestLoraBasicFunction(CustomTestCase):
         results = response.json()
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
-            print("----------------text------------------------")
-            print(result["text"])
 
-        '''
-        # compare the consistency between streaming and non-streaming
-        response_stream = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "stream": True,
-            },
-            stream=True,
-        )
-        stream_text = ""
-        for chunk in response_stream.iter_lines(decode_unicode=False):
-            chunk = chunk.decode("utf-8")
-            if chunk and chunk.startswith("data:"):
-                if chunk == "data: [DONE]":
-                    break
-                data = json.loads(chunk[5:].strip("\n"))
-                stream_text += data.get("text", "")
-        self.assertIn(text_lora_a, stream_text)
-    '''
-
-
-
-
-
-    '''
 
     def test_lora_session(self):
         # test the correct collaboration of lora with session management functionality
