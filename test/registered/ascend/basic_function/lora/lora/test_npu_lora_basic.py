@@ -360,5 +360,6 @@ def test_lora_session(self):
     # Verify new session doesn't have previous context
     self.assertNotIn("Mimi", response_text_3,
                      f"New session should not remember old context, but got: {response_text_3}")
+
 if __name__ == "__main__":
     unittest.main()
