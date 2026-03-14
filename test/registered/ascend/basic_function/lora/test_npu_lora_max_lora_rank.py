@@ -86,6 +86,7 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
     """
 
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
+    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
     max_lora_rank = "32"
 
     def test_max_loaded_loras_error(self):
@@ -95,6 +96,7 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--enable-lora",
             "--lora-path",
             f"lora_a={self.lora_a}",
+            f"lora_b={self.lora_b}",
             "--max-lora-rank",
             self.max_lora_rank,
             "--attention-backend",
@@ -128,7 +130,7 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
         if process:
             kill_process_tree(process.pid)
         '''
-        
+
 
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
