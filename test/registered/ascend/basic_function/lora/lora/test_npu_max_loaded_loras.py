@@ -34,7 +34,7 @@ class TestMaxLoadedLoras(CustomTestCase):
         other_args = [
             "--enable-lora",
             "--max-loaded-loras",
-            3,
+            "3",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
