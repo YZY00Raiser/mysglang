@@ -104,35 +104,35 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
-        try:
-            popen_launch_server(
-                LLAMA_3_2_1B_WEIGHTS_PATH,
-                DEFAULT_URL_FOR_TEST,
-                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-                other_args=other_args,
-                return_stdout_stderr=(out_log_file, err_log_file),
-            )
-            response = requests.post(
-                f"{DEFAULT_URL_FOR_TEST}/generate",
-                json={
-                    "text": "The capital of France is",
-                    "sampling_params": {
-                        "temperature": 0,
-                        "max_new_tokens": 32,
-                    },
-                    "lora_path": "lora_a",
+        # try:
+        popen_launch_server(
+            LLAMA_3_2_1B_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=other_args,
+            return_stdout_stderr=(out_log_file, err_log_file),
+        )
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
                 },
-            )
-            print("----------------response.json-----------------------")
-            print(response.json())
+                "lora_path": "lora_a",
+            },
+        )
+        print("----------------response.json-----------------------")
+        print(response.json())
 
-        except Exception as e:
-            # self.assertIn(
-            #     "Server process exited with code 1. Check server logs for errors.",
-            #     str(e),
-            # )
-            print("-------------------exception--------------------------")
-            print(e)
+        # except Exception as e:
+        #     # self.assertIn(
+        #     #     "Server process exited with code 1. Check server logs for errors.",
+        #     #     str(e),
+        #     # )
+        #     print("-------------------exception--------------------------")
+        #     print(e)
         finally:
             err_log_file.seek(0)
             content = err_log_file.read()
@@ -143,20 +143,6 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             err_log_file.close()
             os.remove("./cache_out_log.txt")
             os.remove("./cache_err_log.txt")
-
-        # response = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/generate",
-        #     json={
-        #         "text": "The capital of France is",
-        #         "sampling_params": {
-        #             "temperature": 0,
-        #             "max_new_tokens": 32,
-        #         },
-        #         "lora_path": "lora_a",
-        #     },
-        # )
-        # print("----------------response.json-----------------------")
-        # print(response.json())
 
         # with self.assertRaises(Exception) as ctx:
         #     popen_launch_server(
