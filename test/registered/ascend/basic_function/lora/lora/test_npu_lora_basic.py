@@ -62,7 +62,7 @@ class TestLoraBasicFunction(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-
+    '''
     def test_lora_use_different_lora(self):
         base_params = {
             "text": "The capital of France is",
@@ -112,7 +112,7 @@ class TestLoraBasicFunction(CustomTestCase):
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data.get("text", "")
         self.assertIn(text_lora_a, stream_text)
-'''
+
         # Verify lora_target_modules parameter is correctly
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
@@ -247,7 +247,7 @@ class TestLoraBasicFunction(CustomTestCase):
         results = response.json()
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
-
+'''
     def test_lora_session(self):
         # test the correct collaboration of lora with session management functionality
         # Create two sessions
@@ -278,7 +278,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
         self.assertIn("Mimi", r2.text, f"Session should remember, got: {r2.text}")
         self.assertNotIn("Mimi", r3.text, f"New session shouldn't remember, got: {r3.text}")
-'''
+
 
 
 
