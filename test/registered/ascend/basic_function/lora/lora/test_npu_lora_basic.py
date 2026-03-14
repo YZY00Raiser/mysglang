@@ -185,7 +185,7 @@ class TestLoraBasicFunction(CustomTestCase):
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
 
-    '''
+
 
 
     def test_lora_with_json_schema(self):
@@ -218,13 +218,13 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
+ '''
 
 
 
 
 
 
-    '''
     # num
     def test_batch_with_different_loras(self):
         # test different loras in batch requests can work properly
@@ -251,8 +251,7 @@ class TestLoraBasicFunction(CustomTestCase):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
 
-
-
+        '''
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -320,7 +319,7 @@ class TestLoraBasicFunction(CustomTestCase):
         )
         self.assertEqual(response1.status_code, 200)
         rid = response1.json()["meta_info"]["id"]
-
+        # Same conversation should remember pet's name
         response2 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -340,7 +339,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertEqual(response2.status_code, 200)
         response_text_2 = response2.text
         self.assertIn("Mimi", response_text_2,
-                      f"Session should remember pet name 'mimi', but got: {response_text_2}")
+                      f"Session should remember pet's name 'Mimi', but got: {response_text_2}")
 
         # Second conversation round use a new session id
         response3 = requests.post(
