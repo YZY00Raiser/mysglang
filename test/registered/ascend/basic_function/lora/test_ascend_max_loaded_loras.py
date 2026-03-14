@@ -140,8 +140,7 @@ class TestMaxLoadedLorasError(CustomTestCase):
             other_args=other_args,
 
         )
-        if self.process:
-            kill_process_tree(self.process.pid)
+
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -155,7 +154,8 @@ class TestMaxLoadedLorasError(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-
+        if self.process:
+            kill_process_tree(self.process.pid)
 
 
 if __name__ == "__main__":
