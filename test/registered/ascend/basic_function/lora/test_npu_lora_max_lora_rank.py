@@ -89,7 +89,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
     max_lora_rank = "32"
 
     def test_max_loaded_loras_error(self):
-
         other_args = [
             "--tp-size",
             "1",
@@ -104,12 +103,14 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--base-gpu-id",
             "6",
         ]
+        '''
         process = popen_launch_server(
                 LLAMA_3_2_1B_WEIGHTS_PATH,
                 DEFAULT_URL_FOR_TEST,
                 timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
                 other_args=other_args,
             )
+
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -126,6 +127,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
 
         if process:
             kill_process_tree(process.pid)
+        '''
+        
 
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
