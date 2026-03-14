@@ -89,8 +89,6 @@ class TestLoraBasicFunction(CustomTestCase):
             },
         )
         text_lora_a = response.json()["text"]
-        print("--------------------response.text----------------------------------------")
-        print(response.text)
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -104,13 +102,11 @@ class TestLoraBasicFunction(CustomTestCase):
         )
         text_lora_b = response.json()["text"]
 
-        self.assertNotEqual(text_no_lora, text_lora_a, f"same response.text")
+        self.assertNotEqual(text_no_lora, text_lora_a, f"same text")
 
-        self.assertNotEqual(text_no_lora, text_lora_b, f"same response.text")
+        self.assertNotEqual(text_no_lora, text_lora_b, f"same text")
 
-        self.assertNotEqual(text_lora_a, text_lora_b, f"same response.text")
-
-
+        self.assertNotEqual(text_lora_a, text_lora_b, f"same text")
 
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
@@ -136,7 +132,6 @@ class TestLoraBasicFunction(CustomTestCase):
                 stream_text += data.get("text", "")
         self.assertIn(text_lora_a, stream_text)
 
-    '''
         # Verify lora_target_modules parameter is correctly
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
@@ -182,7 +177,6 @@ class TestLoraBasicFunction(CustomTestCase):
         for idx, text in enumerate(response_texts[1:], start=2):
             self.assertNotEqual(text, first_text, f"same response_text")
 
-
     def test_lora_kv_cache(self):
         # test kv cache reuse
         input_ids_first = [1] * 200
@@ -211,9 +205,6 @@ class TestLoraBasicFunction(CustomTestCase):
 
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
-
-
-
 
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
@@ -246,12 +237,6 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
 
-
-
-
-
-
-
     # num
     def test_batch_with_different_loras(self):
         # test use lora in batch requests can work properly
@@ -281,7 +266,6 @@ class TestLoraBasicFunction(CustomTestCase):
         results = response.json()
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
-
 
     def test_lora_session(self):
         # test the correct collaboration of lora with session management functionality
@@ -363,7 +347,6 @@ class TestLoraBasicFunction(CustomTestCase):
         # Verify new session doesn't have previous context
         self.assertNotIn("Mimi", response_text_3,
                          f"New session should not remember old context, but got: {response_text_3}")
-    '''
 
 
 if __name__ == "__main__":
