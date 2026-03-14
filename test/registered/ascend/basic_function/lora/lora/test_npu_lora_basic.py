@@ -251,9 +251,9 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertEqual("text", result)
             self.assertGreater(len(result["text"]), 0)
-'''
 
-'''
+
+
         # compare the consistency between streaming and non-streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
