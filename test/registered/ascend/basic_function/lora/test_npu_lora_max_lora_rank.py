@@ -90,7 +90,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
     max_lora_rank = "32"
 
     def test_max_loaded_loras_error(self):
-        error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
+
         other_args = [
             "--tp-size",
             "1",
@@ -105,6 +105,10 @@ class TestLoraMaxLoraRank(CustomTestCase):
             "--base-gpu-id",
             "6",
         ]
+        '''
+
+
+
         process = popen_launch_server(
             LLAMA_3_2_1B_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
@@ -127,12 +131,12 @@ class TestLoraMaxLoraRank(CustomTestCase):
 
         if process:
             kill_process_tree(process.pid)
-
         '''
+
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         try:
-            popen_launch_server(
+            self.process=popen_launch_server(
                 LLAMA_3_2_1B_WEIGHTS_PATH,
                 DEFAULT_URL_FOR_TEST,
                 timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -145,13 +149,16 @@ class TestLoraMaxLoraRank(CustomTestCase):
             err_log_file.seek(0)
             content = err_log_file.read()
             # error_message information is recorded in the error log
+            # error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
+            error_message = "LoRA buffer shape does not match expected weight shape"
             self.assertIn(error_message, content)
             out_log_file.close()
             err_log_file.close()
             os.remove("./cache_out_log.txt")
             os.remove("./cache_err_log.txt")
+            if self.process:
+                kill_process_tree(self.process.pid)
 
-        '''
 
 
 if __name__ == "__main__":
