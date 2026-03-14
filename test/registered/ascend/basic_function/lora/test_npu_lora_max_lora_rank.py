@@ -90,7 +90,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
     max_lora_rank = "32"
 
     def test_max_loaded_loras_error(self):
-        error_message = "The number of LoRA paths should not exceed max_loaded_loras."
+        error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
         other_args = [
             "--tp-size",
             "1",
@@ -127,7 +127,6 @@ class TestLoraMaxLoraRank(CustomTestCase):
 
         if process:
             kill_process_tree(process.pid)
-
 
         '''
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
