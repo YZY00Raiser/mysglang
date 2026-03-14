@@ -85,5 +85,41 @@ class TestMaxLoadedLorasError(CustomTestCase):
 
 
 
+    def test_config(self):
+        process = None
+        for config in self.invalid_config_file_list:
+            try:
+                # with self.assertRaises(Exception) as ctx:
+
+                self.other_args = [
+                    "--config",
+                    config,
+                ]
+
+                process = popen_launch_server(
+                    self.model,
+                    self.base_url,
+                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                    other_args=self.other_args,
+                )
+            except Exception as e:
+                self.assertIn(
+                    "Server process exited with code 1. Check server logs for errors.",
+                    str(e),
+                )
+                print(e)
+            finally:
+                if process:
+                    kill_process_tree(process.pid)
+
+
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     unittest.main()
