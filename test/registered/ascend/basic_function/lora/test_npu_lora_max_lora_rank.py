@@ -123,7 +123,8 @@ class TestLoraMaxLoraRank(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        kill_process_tree(self.process.pid)
+        if self.process:
+            kill_process_tree(self.process.pid)
 
         '''
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
