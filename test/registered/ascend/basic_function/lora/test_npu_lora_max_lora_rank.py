@@ -76,11 +76,9 @@ class TestLoraMaxLoraRank(CustomTestCase):
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["max_lora_rank"], 64)
-
 '''
 
-
-class TestLoraMaxLoraRank(CustomTestCase):
+class TestLoraMaxLoraRankErr(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
 
     [Test Category] Parameter
@@ -106,16 +104,12 @@ class TestLoraMaxLoraRank(CustomTestCase):
             "--base-gpu-id",
             "6",
         ]
-        '''
-
-
-
         process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
+                LLAMA_3_2_1B_WEIGHTS_PATH,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+            )
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -132,7 +126,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
 
         if process:
             kill_process_tree(process.pid)
-        '''
+
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
@@ -162,9 +156,9 @@ class TestLoraMaxLoraRank(CustomTestCase):
         finally:
             err_log_file.seek(0)
             content = err_log_file.read()
-            # error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
+            error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
             #error_message = "LoRA buffer shape does not match expected weight shape"
-            error_message = "not match weight shape"
+            # error_message = "not match weight shape"
             self.assertIn(error_message, content)
             out_log_file.close()
             err_log_file.close()
