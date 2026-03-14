@@ -155,9 +155,39 @@ class TestLoraBasicFunction(CustomTestCase):
         for idx, text in enumerate(response_texts[1:], start=2):
             self.assertNotEqual(text, first_text, f"same response_text")
 
-    '''
+
+    def test_lora_kv_cache(self):
+        # test kv cache reuse
+        input_ids_first = [1] * 200
+        input_ids_second = input_ids_first + [2] * 70
+
+        def make_request(lora_path, input_ids, expected_cached_tokens):
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "input_ids": input_ids,
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 32,
+                    },
+                    "lora_path": lora_path,
+                },
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()["meta_info"]["cached_tokens"], expected_cached_tokens)
+
+        # For the first request, using lora_a, the expected cache size is 0.
+        make_request("lora_a", input_ids_first, 0)
+
+        # The second request uses lora_b, expecting a cache of 0 (different lora types do not share cache).
+        make_request("lora_b", input_ids_first, 0)
+
+        # The third request uses lora_a again, but the input is longer, same lora share cache.
+        make_request("lora_a", input_ids_second, 128)
 
     '''
+
+
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
         json_schema = json.dumps({
@@ -190,36 +220,8 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("city", parsed_json)
 
 
-    '''
 
-    def test_lora_kv_cache(self):
-        # test kv cache reuse
-        input_ids_first = [1] * 200
-        input_ids_second = input_ids_first + [2] * 70
 
-        def make_request(lora_path, input_ids, expected_cached_tokens):
-            response = requests.post(
-                f"{DEFAULT_URL_FOR_TEST}/generate",
-                json={
-                    "input_ids": input_ids,
-                    "sampling_params": {
-                        "temperature": 0,
-                        "max_new_tokens": 32,
-                    },
-                    "lora_path": lora_path,
-                },
-            )
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.json()["meta_info"]["cached_tokens"], expected_cached_tokens)
-
-        # For the first request, using lora_a, the expected cache size is 0.
-        make_request("lora_a", input_ids_first, 0)
-
-        # The second request uses lora_b, expecting a cache of 0 (different lora types do not share cache).
-        make_request("lora_b", input_ids_first, 0)
-
-        # The third request uses lora_a again, but the input is longer, same lora share cache.
-        make_request("lora_a", input_ids_second, 128)
 
 
     '''
