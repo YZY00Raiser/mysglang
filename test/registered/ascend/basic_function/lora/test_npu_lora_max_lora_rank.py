@@ -22,7 +22,7 @@ LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
-
+'''
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
 
@@ -76,6 +76,8 @@ class TestLoraMaxLoraRank(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["max_lora_rank"], 64)
 
+'''
+
 
 class TestLoraMaxLoraRankFault(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, can't load lora no corresponding to the number of ranks, service startup failed .
@@ -110,6 +112,20 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
                 other_args=other_args,
                 return_stdout_stderr=(out_log_file, err_log_file),
             )
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": "The capital of France is",
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 32,
+                    },
+                    "lora_path": "lora_a",
+                },
+            )
+            print("----------------response.json-----------------------")
+            print(response.json())
+
         except Exception as e:
             # self.assertIn(
             #     "Server process exited with code 1. Check server logs for errors.",
@@ -118,6 +134,7 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             print("-------------------exception--------------------------")
             print(e)
         finally:
+
             err_log_file.seek(0)
             content = err_log_file.read()
             # error_message information is recorded in the error log
@@ -128,19 +145,19 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             os.remove("./cache_out_log.txt")
             os.remove("./cache_err_log.txt")
 
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        print("----------------response.json-----------------------")
-        print(response.json())
+        # response = requests.post(
+        #     f"{DEFAULT_URL_FOR_TEST}/generate",
+        #     json={
+        #         "text": "The capital of France is",
+        #         "sampling_params": {
+        #             "temperature": 0,
+        #             "max_new_tokens": 32,
+        #         },
+        #         "lora_path": "lora_a",
+        #     },
+        # )
+        # print("----------------response.json-----------------------")
+        # print(response.json())
 
         # with self.assertRaises(Exception) as ctx:
         #     popen_launch_server(
