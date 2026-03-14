@@ -87,7 +87,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
     """
 
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    max_lora_rank = "64"
+    max_lora_rank = "32"
 
     def test_max_loaded_loras_error(self):
         error_message = "The number of LoRA paths should not exceed max_loaded_loras."
