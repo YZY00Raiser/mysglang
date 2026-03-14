@@ -86,7 +86,7 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
     [Test Target] --max-load-rank
     """
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    max_lora_rank = "32"
+    max_lora_rank = "64"
 
     def test_lora_max_lora_rank(self):
         other_args = [
@@ -112,19 +112,21 @@ class TestLoraMaxLoraRankFault(CustomTestCase):
             other_args=other_args,
             return_stdout_stderr=(out_log_file, err_log_file),
         )
-        # response = requests.post(
-        #     f"{DEFAULT_URL_FOR_TEST}/generate",
-        #     json={
-        #         "text": "The capital of France is",
-        #         "sampling_params": {
-        #             "temperature": 0,
-        #             "max_new_tokens": 32,
-        #         },
-        #         "lora_path": "lora_a",
-        #     },
-        # )
-        # print("----------------response.json-----------------------")
-        # print(response.json())
+
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        print("----------------response.json-----------------------")
+        print(response.json())
+        
 
         # except Exception as e:
         #     # self.assertIn(
