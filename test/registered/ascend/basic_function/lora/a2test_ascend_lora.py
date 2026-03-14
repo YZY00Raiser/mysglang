@@ -7,7 +7,7 @@ from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
-#     LLAMA_3_2_1B_WEIGHTS_PATH,
+#     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -19,7 +19,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
-LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
+LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 
 
 class TestLoraBasicFunction(CustomTestCase):
@@ -50,7 +50,7 @@ class TestLoraBasicFunction(CustomTestCase):
             "6",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
+            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -258,7 +258,7 @@ class TestLoraKVCache(CustomTestCase):
             "--disable-cuda-graph",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
+            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -328,7 +328,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
             "--disable-cuda-graph",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
+            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -411,7 +411,7 @@ class TestLoraSessionManagement(CustomTestCase):
             "--disable-cuda-graph",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
+            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
@@ -469,7 +469,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
             "--disable-cuda-graph",
         ]
         cls.process = popen_launch_server(
-            LLAMA_3_2_1B_WEIGHTS_PATH,
+            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
