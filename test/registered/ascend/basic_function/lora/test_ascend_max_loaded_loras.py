@@ -133,6 +133,13 @@ class TestMaxLoadedLorasError(CustomTestCase):
             os.remove("./cache_out_log.txt")
             os.remove("./cache_err_log.txt")
         '''
+        popen_launch_server(
+            LLAMA_3_2_1B_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=other_args,
+
+        )
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
