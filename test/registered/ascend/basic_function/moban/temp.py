@@ -290,3 +290,4 @@ register_npu_ci(
     nightly=True,
     disabled="run failed",
 )
+error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
