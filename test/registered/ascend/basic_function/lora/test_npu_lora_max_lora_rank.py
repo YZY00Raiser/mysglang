@@ -31,6 +31,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
     """
 
     lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
+    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
     max_lora_rank = "64"
 
     @classmethod
@@ -163,7 +164,7 @@ class TestLoraMaxLoraRank(CustomTestCase):
             content = err_log_file.read()
             # error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
             #error_message = "LoRA buffer shape does not match expected weight shape"
-            error_message = "not match expected weight shape"
+            error_message = "not match weight shape"
             self.assertIn(error_message, content)
             out_log_file.close()
             err_log_file.close()
