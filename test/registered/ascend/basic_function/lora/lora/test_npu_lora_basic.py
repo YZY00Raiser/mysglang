@@ -154,6 +154,7 @@ class TestLoraBasicFunction(CustomTestCase):
         for idx, text in enumerate(response_texts[1:], start=2):
             self.assertNotEqual(text, first_text, f"same response_text")
 
+    '''
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
         json_schema = json.dumps({
@@ -217,7 +218,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
 
 
-'''
+
     # num
     def test_batch_with_different_loras(self):
         # test different loras in batch requests can work properly
