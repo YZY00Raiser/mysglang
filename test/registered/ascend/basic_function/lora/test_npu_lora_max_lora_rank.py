@@ -22,7 +22,7 @@ LLAMA_3_2_1B_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
-'''
+
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
 
@@ -76,7 +76,6 @@ class TestLoraMaxLoraRank(CustomTestCase):
         response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["max_lora_rank"], 64)
-'''
 
 class TestLoraMaxLoraRankErr(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, can load lora corresponding to the number of ranks, inference request succeeded.
@@ -106,9 +105,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "6",
         ]
 
-
-
-
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         self.process = popen_launch_server(
@@ -120,7 +116,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
         )
         try:
             response = requests.post(
-
                 f"{DEFAULT_URL_FOR_TEST}/generate",
                 json={
                     "text": "The capital of France is",
@@ -131,8 +126,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                     "lora_path": "lora_a",
                 },
             )
-            # self.assertEqual(response.status_code, 200)
-            # self.assertIn("Paris", response.text)
         except Exception as e:
             print(f"Server launch failed as expects:{e}")
         finally:
@@ -148,7 +141,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             os.remove("./cache_err_log.txt")
             if self.process:
                 kill_process_tree(self.process.pid)
-
 
 
 if __name__ == "__main__":
