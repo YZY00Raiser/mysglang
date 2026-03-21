@@ -1,4 +1,5 @@
-docker run -itd --ipc=host \
+docker run -itd --privileged --network=host --shm-size=16g \
+--name sglang-B025 \
 --device=/dev/davinci0 \
 --device=/dev/davinci1 \
 --device=/dev/davinci2 \
