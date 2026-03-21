@@ -1,5 +1,14 @@
+#docker rm -f sglsng-B035
 docker run -itd --privileged --network=host --shm-size=16g \
 --name sglang-B025 \
+-v /mnt:/mnt \
+-v /home:/home \
+-v /data:/data \
+-v /usr/local/sbin:/usr/local/sbin \
+-v /usr/local/Ascend/driver:/usr/local/Ascend/driver \
+-v /usr/local/Ascend/firmware:/usr/local/Ascend/firmware \
+-v /etc/ascend_install.info:etc/ascend_install.info \
+-v /var/queue_scheduler:/var/queue_scheduler \
 --device=/dev/davinci0 \
 --device=/dev/davinci1 \
 --device=/dev/davinci2 \
@@ -17,17 +26,7 @@ docker run -itd --privileged --network=host --shm-size=16g \
 --device=/dev/davinci14 \
 --device=/dev/davinci15 \
 --device=/dev/davinci_manager \
---device=/dev/devmm_svm \
 --device=/dev/hisi_hdc \
--v /usr/local/Ascend/driver:/usr/local/Ascend/driver \
--v /usr/local/Ascend/add-ons/:/usr/local/Ascend/add-ons/ \
--v /usr/local/sbin/npu-smi:/usr/local/sbin/npu-smi \
--v /usr/local/sbin/:/usr/local/sbin/ \
--v /var/log/npu/conf/slog/slog.conf:/var/log/npu/conf/slog/slog.conf \
--v /var/log/npu/slog/:/var/log/npu/slog \
--v /var/log/npu/profiling/:/var/log/npu/profiling \
--v /var/log/npu/dump/:/var/log/npu/dump \
--v /var/log/npu/:/usr/slog \
--v /var/queue_schedule:/var/queue_schedule \
-ascend-cann:8.1.RC1-ubuntu-pt \
-/bin/bash
+--entrypoint=bash \
+--env HF_ENDPOINT=https://hf-mirror.com \
+ascend-cann:8.1.RC1-ubuntu-pt
