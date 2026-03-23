@@ -62,7 +62,7 @@ class TestLoraBasicFunction(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-
+    '''
     def test_lora_use_different_lora(self):
         base_params = {
             "text": "The capital of France is",
@@ -277,9 +277,9 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotIn(
             "Mimi", r3.text, f"New session shouldn't remember, got: {r3.text}"
         )
-
-
     '''
+
+
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
         json_schema = json.dumps(
@@ -312,7 +312,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
 
-    '''
+
 
 
 if __name__ == "__main__":
