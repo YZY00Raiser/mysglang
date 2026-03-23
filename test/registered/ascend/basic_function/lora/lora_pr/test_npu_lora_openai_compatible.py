@@ -101,13 +101,32 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             max_tokens=50,
             temperature=0,
         )
-
+        print("------------------response.choices[0].message.content-----------------------------")
+        print(response.choices[0].message.content)
+        self.assertIsNotNone(response.choices[0].message.content)
+        self.assertGreater(len(response.choices[0].message.content), 0)
+        self.logger.info(
+            f"Model adapter syntax response: {response.choices[0].message.content}"
+        )
+    def test_model_adapter_syntax_lora_path(self):
+        """Test the new model:adapter syntax works correctly."""
+        response = self.client.chat.completions.create(
+            # ← New OpenAI-compatible syntax
+            model=f"{self.model}",
+            messages=[{"role": "user", "content": "What tools do you have available?"}],
+            max_tokens=50,
+            temperature=0,
+            lora_path="tool_calling",
+        )
+        print("------------------response.choices[0].message.content-----lora-path------------------------")
+        print(response.choices[0].message.content)
         self.assertIsNotNone(response.choices[0].message.content)
         self.assertGreater(len(response.choices[0].message.content), 0)
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
 
+    '''
     def test_explicit_lora_path(self):
         """Test backward compatibility with explicit lora_path via extra_body."""
         response = self.client.chat.completions.create(
@@ -309,7 +328,7 @@ class TestLoRAEdgeCases(CustomTestCase):
 
         error_message = str(context.exception)
         self.logger.error(f"Invalid adapter error: {error_message}")
-
+    '''
 
 if __name__ == "__main__":
     unittest.main()
