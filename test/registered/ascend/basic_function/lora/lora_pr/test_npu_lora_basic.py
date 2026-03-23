@@ -224,7 +224,7 @@ class TestLoraBasicFunction(CustomTestCase):
         results = response.json()
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
-
+    '''
     def test_lora_session(self):
         # test the correct collaboration of lora with session management functionality
         # Create two sessions
@@ -277,7 +277,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotIn(
             "Mimi", r3.text, f"New session shouldn't remember, got: {r3.text}"
         )
-    '''
+
 
 
     def test_lora_with_json_schema(self):
@@ -309,6 +309,7 @@ class TestLoraBasicFunction(CustomTestCase):
         result = response.json()
         parsed_json = json.loads(result["text"])
         print("--------------------------------------parsed_json-----------------------------")
+        print(parsed_json)
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
