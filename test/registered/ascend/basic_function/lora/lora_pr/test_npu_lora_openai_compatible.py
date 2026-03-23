@@ -204,7 +204,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             temperature=0,
             lora_path="tool_calling",
         )
-        print("------------------response.choices[0].message.content----------- lora_path-----------------")
+        print("------------------response.choices[0].message.content-----------completions lora_path-----------------")
         print(response.choices[0].message.content)
         self.assertIsNotNone(response.choices[0].text)
         self.assertGreater(len(response.choices[0].text), 0)
