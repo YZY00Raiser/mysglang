@@ -51,6 +51,8 @@ class TestLoraBasicFunction(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
+            "--max-running-requests",
+            "30",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -225,9 +227,6 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
     '''
-
-
-
 
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
