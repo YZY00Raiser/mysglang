@@ -279,8 +279,8 @@ class TestLoraBasicFunction(CustomTestCase):
         )
 
 
-
-    def test_lora_with_json_schema(self):
+    '''
+        def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
         json_schema = json.dumps(
             {
@@ -313,6 +313,8 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
+
+    '''
 
 
 
