@@ -1,4 +1,5 @@
 import logging
+import os
 import unittest
 
 import openai
@@ -89,6 +90,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+        os.remove("lora_openai_test_logs.log")
 
     def test_model_adapter_syntax(self):
         """Test the new model:adapter syntax works correctly."""
