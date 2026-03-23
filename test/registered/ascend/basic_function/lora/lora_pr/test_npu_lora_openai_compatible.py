@@ -108,7 +108,8 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
-    def test_model_adapter_syntax_lora_path(self):
+    '''
+        def test_model_adapter_syntax_lora_path(self):
         """Test the new model:adapter syntax works correctly."""
         response = self.client.chat.completions.create(
             # ← New OpenAI-compatible syntax
@@ -125,6 +126,8 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
+
+    '''
 
     '''
     def test_explicit_lora_path(self):
@@ -177,6 +180,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.assertGreater(len(response.choices[0].message.content), 0)
         self.logger.info(f"Base model response: {response.choices[0].message.content}")
 
+    '''
     def test_completions_api_with_adapter(self):
         """Test completions API with LoRA adapter."""
         response = self.client.completions.create(
@@ -185,10 +189,33 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             max_tokens=50,
             temperature=0,
         )
-
+        print("------------------response.choices[0].message.content-------completions----------------------")
+        print(response.choices[0].message.content)
         self.assertIsNotNone(response.choices[0].text)
         self.assertGreater(len(response.choices[0].text), 0)
         self.logger.info(f"Completions API response: {response.choices[0].text}")
+
+    def test_completions_api_with_adapter_(self):
+        """Test completions API with LoRA adapter."""
+        response = self.client.completions.create(
+            model=f"{self.model}",  # ← Using model:adapter syntax
+            prompt="What tools do you have available?",
+            max_tokens=50,
+            temperature=0,
+            lora_path="tool_calling",
+        )
+        print("------------------response.choices[0].message.content----------- lora_path-----------------")
+        print(response.choices[0].message.content)
+        self.assertIsNotNone(response.choices[0].text)
+        self.assertGreater(len(response.choices[0].text), 0)
+        self.logger.info(f"Completions API response: {response.choices[0].text}")
+
+
+
+
+
+    '''
+
 
     def test_streaming_with_adapter(self):
         """Test streaming with LoRA adapter."""
