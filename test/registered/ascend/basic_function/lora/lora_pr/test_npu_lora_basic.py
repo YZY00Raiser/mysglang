@@ -51,8 +51,6 @@ class TestLoraBasicFunction(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            # "--max-running-requests",
-            # "30",
             "--mem-fraction-static",
             "0.3",
         ]
