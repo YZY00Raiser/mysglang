@@ -308,7 +308,7 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         result = response.json()
         parsed_json = json.loads(result["text"])
-        prin("--------------------------------------parsed_json-----------------------------")
+        print("--------------------------------------parsed_json-----------------------------")
         self.assertIn("name", parsed_json)
         self.assertIn("age", parsed_json)
         self.assertIn("city", parsed_json)
