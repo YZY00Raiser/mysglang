@@ -41,7 +41,7 @@ class TestEnableThinking(CustomTestCase):
             0.8,
             "--tp-size",
             2,
-            "--enable-return-hidden-states",
+            # "--enable-return-hidden-states",
             "--base-gpu-id",
             "4",
         ]
