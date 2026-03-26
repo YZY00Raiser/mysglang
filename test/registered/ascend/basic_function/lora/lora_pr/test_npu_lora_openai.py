@@ -20,7 +20,7 @@ register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 
 class TestLoRAOpenAI(CustomTestCase):
-    """Testcase：Verify the use different lora, use openai api inference request succeeded.
+    """Testcase：Verify the correctness of OpenAI-compatible LoRA adapter usage, inference request succeeded.
 
     [Test Category] Parameter
     [Test Target] --enable-lora, --lora-path,
