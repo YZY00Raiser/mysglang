@@ -127,8 +127,8 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
-
     '''
+
 
     '''
     def test_explicit_lora_path(self):
@@ -182,6 +182,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(f"Base model response: {response.choices[0].message.content}")
 
     '''
+
     def test_completions_api_with_adapter(self):
         """Test completions API with LoRA adapter."""
         response = self.client.completions.create(
@@ -212,12 +213,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(f"Completions API response: {response.choices[0].text}")
 
 
-
-
-
     '''
-
-
     def test_streaming_with_adapter(self):
         """Test streaming with LoRA adapter."""
         stream = self.client.chat.completions.create(
