@@ -6,6 +6,9 @@ from sglang.test.test_utils import CustomTestCase
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
+
+# model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
+# accuracy = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.gsm8k_accuracy
 class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
     """Testcase：Verify the MambaCache
 
@@ -13,8 +16,6 @@ class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
     [Test Target] --lora-target-modules
     """
 
-    # model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
-    # accuracy = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.gsm8k_accuracy
     model = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
     accuracy = 0.92
     other_args = [
@@ -24,8 +25,8 @@ class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
         "--attention-backend",
         "ascend",
         "--disable-cuda-graph",
-        # "--max-mamba-cache-size",
-        # "None",
+        "--max-mamba-cache-size",
+        "None",
         "--mamba-ssm-dtype",
         "float32",
         "--mamba-full-memory-ratio",
