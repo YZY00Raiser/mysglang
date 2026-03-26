@@ -36,8 +36,6 @@ class TestLoRAOpenAI(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         other_args = [
-            "--tp-size",
-            "2",
             "--enable-lora",
             "--lora-path",
             f"lora_a={cls.lora_a}",
@@ -53,6 +51,8 @@ class TestLoRAOpenAI(CustomTestCase):
             "--disable-cuda-graph",
             "--mem-fraction-static",
             "0.3",
+            "--base-gpu-id",
+            "4",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -72,14 +72,14 @@ class TestLoRAOpenAI(CustomTestCase):
             json={"prompt": "who are you?", "temperature": 0, "lora_path": "lora_a"},
         )
 
-        self.assertEqual(response.status_code, 200, f"Failed with: {response1.text}")
+        self.assertEqual(response1.status_code, 200, f"Failed with: {response1.text}")
 
         response2 = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/v1/completions",
             json={"prompt": "who are you?", "temperature": 0, "lora_path": "lora_b"},
         )
 
-        self.assertEqual(response1.status_code, 200, f"Failed with: {response2.text}")
+        self.assertEqual(response2.status_code, 200, f"Failed with: {response2.text}")
         # Asser that the configuration temperature is the same and the output response is the same
         print("------------------111111111111------------------------")
         print(response1.json())
