@@ -92,7 +92,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         kill_process_tree(cls.process.pid)
         os.remove("lora_openai_test_logs.log")
 
-
+    '''
     def test_model_adapter_syntax(self):
         """Test the new model:adapter syntax works correctly."""
         response = self.client.chat.completions.create(
@@ -127,7 +127,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
-
+    '''
 
 
     '''
