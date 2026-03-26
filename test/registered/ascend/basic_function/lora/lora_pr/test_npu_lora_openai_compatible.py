@@ -92,7 +92,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         kill_process_tree(cls.process.pid)
         os.remove("lora_openai_test_logs.log")
 
-    '''
+
     def test_model_adapter_syntax(self):
         """Test the new model:adapter syntax works correctly."""
         response = self.client.chat.completions.create(
@@ -110,7 +110,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
 
-        def test_model_adapter_syntax_lora_path(self):
+    def test_model_adapter_syntax_lora_path(self):
         """Test the new model:adapter syntax works correctly."""
         response = self.client.chat.completions.create(
             # ← New OpenAI-compatible syntax
@@ -127,7 +127,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
-    '''
+
 
 
     '''
@@ -192,7 +192,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             temperature=0,
         )
         print("------------------response.choices[0].message.content-------completions----------------------")
-        print(response.choices[0].message.content)
+        print(response.choices[0].text)
         self.assertIsNotNone(response.choices[0].text)
         self.assertGreater(len(response.choices[0].text), 0)
         self.logger.info(f"Completions API response: {response.choices[0].text}")
