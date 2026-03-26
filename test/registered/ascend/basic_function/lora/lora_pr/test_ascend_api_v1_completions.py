@@ -32,8 +32,8 @@ class TestEnableThinking(CustomTestCase):
         cls.model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.other_args = [
-            "--reasoning-parser",
-            "qwen3",
+            # "--reasoning-parser",
+            # "qwen3",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
@@ -42,6 +42,8 @@ class TestEnableThinking(CustomTestCase):
             "--tp-size",
             2,
             "--enable-return-hidden-states",
+            "--base-gpu-id",
+            "4",
         ]
 
         cls.process = popen_launch_server(
@@ -161,6 +163,10 @@ class TestEnableThinking(CustomTestCase):
         logging.info(f"response1.json:{response1.json()}")
         self.assertEqual(response1.status_code, 200, f"Failed with: {response1.text}")
         # Asser that the configuration temperature is the same and the output response is the same
+        print("------------------111111111111------------------------")
+        print(response.json())
+        print("--------------------2222222222----------------------")
+        print(response1.json())
         self.assertEqual(
             response.json()["choices"][0]["text"],
             response1.json()["choices"][0]["text"],
