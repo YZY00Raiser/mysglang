@@ -4,11 +4,11 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-# from sglang.test.ascend.test_ascend_utils import (
-#     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
-#     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
-#     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
-# )
+from sglang.test.ascend.test_ascend_utils import (
+    LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
+    LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
+    LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -186,7 +186,7 @@ class TestLoraBasicFunction(CustomTestCase):
 
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
-    '''
+
     def test_batch_with_different_loras(self):
         # test use lora in batch requests can work properly
         prompts = [
@@ -247,7 +247,6 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertIn("Mimi", r2.text, f"Session should remember, got: {r2.text}")
         self.assertNotIn("Mimi", r3.text, f"New session shouldn't remember, got: {r3.text}")
 
-    '''
     def test_lora_with_json_schema(self):
         # test lora and json schema can work properly
         json_schema = json.dumps({
