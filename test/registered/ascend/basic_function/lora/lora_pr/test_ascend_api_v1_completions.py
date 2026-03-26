@@ -15,7 +15,7 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
-# QWEN3_30B_A3B_WEIGHTS_PATH=
+QWEN3_30B_A3B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-30B-A3B"
 LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-Instruct"
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
@@ -32,8 +32,8 @@ class TestEnableThinking(CustomTestCase):
         cls.model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.other_args = [
-            "--reasoning-parser",
-            "qwen3",
+            # "--reasoning-parser",
+            # "qwen3",
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
@@ -41,7 +41,9 @@ class TestEnableThinking(CustomTestCase):
             0.8,
             "--tp-size",
             2,
-            "--enable-return-hidden-states",
+            # "--enable-return-hidden-states",
+            "--base-gpu-id",
+            "4",
         ]
 
         cls.process = popen_launch_server(
@@ -161,6 +163,10 @@ class TestEnableThinking(CustomTestCase):
         logging.info(f"response1.json:{response1.json()}")
         self.assertEqual(response1.status_code, 200, f"Failed with: {response1.text}")
         # Asser that the configuration temperature is the same and the output response is the same
+        print("------------------111111111111------------------------")
+        print(response.json())
+        print("--------------------2222222222----------------------")
+        print(response1.json())
         self.assertEqual(
             response.json()["choices"][0]["text"],
             response1.json()["choices"][0]["text"],
