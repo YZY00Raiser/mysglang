@@ -50,7 +50,9 @@ class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=self.gsm8k_num_shots,
-            data_path="test.jsonl",
+            data_path="/test.jsonl",
+            # data_path="test.jsonl",
+
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
