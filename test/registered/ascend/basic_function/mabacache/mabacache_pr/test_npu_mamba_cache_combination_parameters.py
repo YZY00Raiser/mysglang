@@ -1,6 +1,8 @@
 import unittest
 
 import requests
+from jinja2.lexer import TOKEN_DOT
+
 from sglang.test.ascend.test_ascend_utils import QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
 from sglang.srt.utils import kill_process_tree
 from sglang.test.test_utils import (
@@ -13,7 +15,7 @@ from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
 
-
+#长序列,数据类型，缓存大小，内存比例，调度策略，跟踪间隔，并发
 class TestMambaCache(CustomTestCase):
     """Testcase：Verify the MambaCache
 
