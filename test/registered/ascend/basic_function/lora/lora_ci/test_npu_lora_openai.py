@@ -65,7 +65,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
-        cls.client = openai.Client(api_key="EMPTY", base_url=f"{cls.base_url}/v1")
+        cls.client = openai.Client(api_key="EMPTY", base_url=f"{DEFAULT_URL_FOR_TEST}/v1")
         cls.logger = logging.getLogger(cls.__name__)
 
     @classmethod
