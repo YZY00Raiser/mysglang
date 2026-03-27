@@ -74,6 +74,8 @@ class TestMambaCache(CustomTestCase):
                 },
             )
             self.assertEqual(response.status_code, 200)
+            print("=--------------response.json()--------------------------")
+            print(response.json())
             self.assertEqual(
                 response.json()["meta_info"]["cached_tokens"], expected_cached_tokens
             )
