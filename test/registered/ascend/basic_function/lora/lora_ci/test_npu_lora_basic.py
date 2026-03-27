@@ -94,43 +94,31 @@ class TestLoraBasicFunction(CustomTestCase):
             text_lora_a, text_lora_b, "LoRA A and LoRA B produced same text"
         )
 
-    # TODO
     def test_lora_with_stream(self):
-        # compare the consistency between streaming and non-streaming
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        disable_stream_text = response.json()["text"]
+        """Compare streaming and non-streaming consistency"""
+        base_request = {
+            "text": "The capital of France is",
+            "sampling_params": {"temperature": 0, "max_new_tokens": 32},
+            "lora_path": "lora_a",
+        }
 
+        # Non-streaming
+        disable_stream_text = requests.post(f"{DEFAULT_URL_FOR_TEST}/generate", json=base_request).json()["text"]
+
+        # Streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-                "lora_path": "lora_a",
-                "stream": True,
-            },
-            stream=True,
+            json={**base_request, "stream": True},
+            stream=True
         )
+
         stream_text = ""
         for chunk in response_stream.iter_lines(decode_unicode=False):
             chunk = chunk.decode("utf-8")
-            if chunk and chunk.startswith("data:"):
-                if chunk == "data: [DONE]":
-                    break
+            if chunk and chunk.startswith("data:") and chunk != "data: [DONE]":
                 data = json.loads(chunk[5:].strip("\n"))
                 stream_text += data.get("text", "")
+
         self.assertIn(disable_stream_text, stream_text)
 
     def test_lora_lora_target_modules(self):
