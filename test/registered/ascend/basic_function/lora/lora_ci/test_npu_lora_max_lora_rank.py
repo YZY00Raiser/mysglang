@@ -93,8 +93,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--disable-cuda-graph",
         ]
 
-        # out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
-        # err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         with tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as out_log_file, \
             tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as err_log_file:
             self.process = popen_launch_server(
@@ -127,10 +125,6 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                 content = err_log_file.read()
                 error_message = "not match weight shape"
                 self.assertIn(error_message, content)
-                # out_log_file.close()
-                # err_log_file.close()
-                # os.remove("./cache_out_log.txt")
-                # os.remove("./cache_err_log.txt")
                 if self.process:
                     kill_process_tree(self.process.pid)
 
