@@ -62,7 +62,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             f"lora_b={cls.lora_b}",
             "--disable-radix-cache",
             "--base-gpu-id",
-            "15"
+            "15",
         ]
 
         cls.process = popen_launch_server(
