@@ -115,7 +115,7 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                     },
                 )
             except Exception as e:
-                # When sending a request, use a LoRa instance with a mismatched max_lora_rank, the connection will be dropped.
+                # When sending a request, use a LoRa instance with a mismatched max_lora_rank, the connection will be aborted.
                 self.assertIn(
                     "Connection aborted",
                     str(e),
