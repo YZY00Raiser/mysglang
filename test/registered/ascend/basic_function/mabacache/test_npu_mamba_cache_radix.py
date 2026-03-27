@@ -9,7 +9,8 @@ from sglang.test.test_utils import CustomTestCase, DEFAULT_URL_FOR_TEST, popen_l
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
 
 register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
-QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST="/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+
 
 class TestMambaCache(CustomTestCase):
     """Testcase：Verify the MambaCache
@@ -19,6 +20,7 @@ class TestMambaCache(CustomTestCase):
     """
 
     model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
+
     @classmethod
     def setUpClass(cls):
         other_args = [
@@ -55,47 +57,30 @@ class TestMambaCache(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_ascend_mamba_cache(self):
-        # Verify that the inference API functions properly.
-        response1 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        print("---------------------------------response1.json()---------------------------------------------------")
-        print(response1.json())
-        # self.assertEqual(response.status_code, 200)
-        # self.assertIn("Paris", response.text)
-        response2 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is Paris",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        print("---------------------------------response2.json()---------------------------------------------------")
-        print(response2.json())
+    def test_mamba_cache_kv_cache(self):
+        # test kv cache reuse
+        input_ids_first = [1] * 200
+        input_ids_second = input_ids_first + [2] * 70
 
-        response3 = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is Paris",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
+        def make_request(input_ids, expected_cached_tokens):
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "input_ids": input_ids,
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 32,
+                    },
                 },
-            },
-        )
-        print("---------------------------------response3.json()---------------------------------------------------")
-        print(response3.json())
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response.json()["meta_info"]["cached_tokens"], expected_cached_tokens
+            )
+
+        make_request(input_ids_first, 0)
+
+        make_request(input_ids_second, 128)
 
 
 if __name__ == "__main__":
