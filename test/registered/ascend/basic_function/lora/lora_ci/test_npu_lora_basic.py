@@ -48,8 +48,6 @@ class TestLoraBasicFunction(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
-            "--mem-fraction-static",
-            "0.3",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -224,40 +222,6 @@ class TestLoraBasicFunction(CustomTestCase):
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
 
-    def test_lora_with_json_schema(self):
-        # test lora and json schema can work properly
-        json_schema = json.dumps(
-            {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "age": {"type": "integer"},
-                    "city": {"type": "string"},
-                },
-                "required": ["name", "age", "city"],
-            }
-        )
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "Generate person information",
-                "sampling_params": {
-                    "temperature": 0.3,
-                    "max_new_tokens": 128,
-                    "json_schema": json_schema,
-                },
-                "lora_path": "lora_a",
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        result = response.json()
-        parsed_json = json.loads(result["text"])
-        print("--------------------------------------parsed_json-----------------------------")
-        print(parsed_json)
-        self.assertIn("name", parsed_json)
-        self.assertIn("age", parsed_json)
-        self.assertIn("city", parsed_json)
-
     def test_lora_session(self):
         # test the correct collaboration of lora with session management functionality
         # Create two sessions
@@ -310,6 +274,38 @@ class TestLoraBasicFunction(CustomTestCase):
         self.assertNotIn(
             "Mimi", r3.text, f"New session shouldn't remember, got: {r3.text}"
         )
+
+    def test_lora_with_json_schema(self):
+        # test lora and json schema can work properly
+        json_schema = json.dumps(
+            {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "age": {"type": "integer"},
+                    "city": {"type": "string"},
+                },
+                "required": ["name", "age", "city"],
+            }
+        )
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "Generate person information",
+                "sampling_params": {
+                    "temperature": 0.3,
+                    "max_new_tokens": 128,
+                    "json_schema": json_schema,
+                },
+                "lora_path": "lora_a",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        parsed_json = json.loads(result["text"])
+        self.assertIn("name", parsed_json)
+        self.assertIn("age", parsed_json)
+        self.assertIn("city", parsed_json)
 
 
 if __name__ == "__main__":
