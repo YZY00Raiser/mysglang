@@ -34,7 +34,7 @@ class TestMambaCache(CustomTestCase):
             "npu",
             "--tp-size",
             "8",
-            "--disable-radix-cache",
+            # "--disable-radix-cache",
             # "--max-mamba-cache-size",
             # "None",
             # "--mamba-ssm-dtype",
