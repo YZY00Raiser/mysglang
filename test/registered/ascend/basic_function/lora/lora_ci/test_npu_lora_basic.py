@@ -49,7 +49,7 @@ class TestLoraBasicFunction(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--mem-fraction-static",
-            "0.3",
+            "0.2",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
