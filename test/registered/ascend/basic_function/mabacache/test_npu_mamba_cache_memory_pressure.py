@@ -58,7 +58,7 @@ class TestEnableTokenizerBatchEncode(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_enable_tokenizer_batch_encode(self):
-        for i in range(50) :
+        for i in range(50):
             response = requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",
                 json={

@@ -40,8 +40,10 @@ class TestMambaCache(GSM8KAscendMixin, CustomTestCase):
         "--mamba-track-interval",
         "256",
         "--tp-size",
-        8,
-        "--disable-radix-cache"
+        "8",
+        "--disable-radix-cache",
+        "--base-gpu-id",
+        "8",
     ]
 
 
