@@ -28,7 +28,7 @@ class TestMaxLoadedLorasError(CustomTestCase):
     """
 
     def test_max_loaded_loras_error(self):
-        error_message = "The number of LoRA paths should not exceed max_loaded_loras"
+        error_message = "The number of LoRA paths should not exceed max_loaded_loras."
         other_args = [
             "--enable-lora",
             "--max-loaded-loras",
