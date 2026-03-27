@@ -4,8 +4,8 @@ import openai
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
-    LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+    LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
 )
 from sglang.test.ci.ci_register import register_npu_ci
@@ -58,8 +58,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_priority_model_over_explicit_with_chat_completions_api(self):
-        """Test that model:adapter syntax takes precedence over explicit lora_path."""
-        # This test verifies the priority logic in _resolve_lora_path
+        # Use the api of completions/chat, the response of lora_a as base
         response1 = self.client.chat.completions.create(
             model=f"{self.model}:lora_a",
             messages=[{"role": "user", "content": "What tools do you have available?"}],
@@ -74,35 +73,27 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             max_tokens=32,
             temperature=0,
         )
-        # Should use lora_a adapter (model parameter takes precedence)
+        # Should use lora_a adapter, same as base
         self.assertEqual(response1.choices[0].message.content, response2.choices[0].message.content)
 
-        print("--------------------lora_a---------------------------")
-        print(response1.choices[0].message.content)
-
     def test_priority_model_over_explicit_with_completions_api(self):
-        """Test that model:adapter syntax takes precedence over explicit lora_path."""
+        # Use the api of completions, response of lora_b as base
         response1 = self.client.completions.create(
-            model=f"{self.model}:lora_b",  # ← Using model:adapter syntax
+            model=f"{self.model}:lora_b",
             prompt="What tools do you have available?",
             max_tokens=32,
             temperature=0,
         )
 
         response2 = self.client.completions.create(
-            model=f"{self.model}:lora_b",  # ← Using model:adapter syntax
+            model=f"{self.model}:lora_b",
             prompt="What tools do you have available?",
             extra_body={"lora_path": "lora_a"},
             max_tokens=32,
             temperature=0,
         )
-        # Should use lora_a adapter (model parameter takes precedence)
+        # Should use lora_b adapter, same as base
         self.assertEqual(response1.choices[0].text, response2.choices[0].text)
-        # Should use lora_b adapter (model parameter takes precedence)
-
-        print("--------------------lora_b---------------------------")
-
-        print(response1.choices[0].text)
 
 
 if __name__ == "__main__":
