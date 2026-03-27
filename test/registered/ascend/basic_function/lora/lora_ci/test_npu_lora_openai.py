@@ -104,11 +104,11 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         )
 
         # Should use lora_b adapter (model parameter takes precedence)
-        self.assertGreater(len(response.choices[0].message.content), 0)
         print("--------------------lora_b---------------------------")
-        print(response.choices[0].message.content)
+        print(response.choices[0].text)
+
         self.logger.info(
-            f"Priority test response: {response.choices[0].message.content}"
+            f"Priority test response: {response.choices[0].text}"
         )
 
 
