@@ -49,7 +49,7 @@ class TestMaxLoadedLorasError(CustomTestCase):
         with tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as out_log_file, \
             tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as err_log_file:
             try:
-                self.process = popen_launch_server(
+                popen_launch_server(
                     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
                     DEFAULT_URL_FOR_TEST,
                     timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -66,8 +66,6 @@ class TestMaxLoadedLorasError(CustomTestCase):
                 content = err_log_file.read()
                 # error_message information is recorded in the error log
                 self.assertIn(error_message, content)
-                if self.process:
-                    kill_process_tree(self.process.pid)
 
 
 if __name__ == "__main__":
