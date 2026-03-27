@@ -1,4 +1,5 @@
 import tempfile
+import os
 import unittest
 
 import requests
@@ -17,7 +18,7 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
-
+# 使用 tempfile 代替
 
 class TestLoraMaxLoraRank(CustomTestCase):
     """Testcase：Verify set the --max-load-rank parameter, load lora that match the number of ranks, inference request successful.
@@ -93,6 +94,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--disable-cuda-graph",
         ]
 
+        # out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
+        # err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         with tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as out_log_file, \
             tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as err_log_file:
             self.process = popen_launch_server(
@@ -115,7 +118,7 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                     },
                 )
             except Exception as e:
-                # When sending a request, use a LoRa instance with a mismatched max_lora_rank, the connection will be aborted.
+                # When sending a request, use a LoRa instance with a mismatched max_lora_rank, the connection will be dropped.
                 self.assertIn(
                     "Connection aborted",
                     str(e),
@@ -125,6 +128,10 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                 content = err_log_file.read()
                 error_message = "not match weight shape"
                 self.assertIn(error_message, content)
+                # out_log_file.close()
+                # err_log_file.close()
+                # os.remove("./cache_out_log.txt")
+                # os.remove("./cache_err_log.txt")
                 if self.process:
                     kill_process_tree(self.process.pid)
 
