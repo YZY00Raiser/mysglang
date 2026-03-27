@@ -8,6 +8,7 @@ from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import (
 #     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
 #     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+#     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -59,7 +60,9 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             "--lora-paths",
             f"lora_a={cls.lora_a}",
             f"lora_b={cls.lora_b}",
-            "--disable-radix-cache",  # Disable cache for cleaner tests
+            "--disable-radix-cache",
+            "--base-gpu-id",
+            "15"
         ]
 
         cls.process = popen_launch_server(
