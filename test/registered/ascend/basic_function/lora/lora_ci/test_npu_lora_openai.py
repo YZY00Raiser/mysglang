@@ -1,5 +1,3 @@
-import logging
-import os
 import unittest
 
 import openai
@@ -17,18 +15,6 @@ from sglang.test.test_utils import (
     CustomTestCase,
     popen_launch_server,
 )
-
-log_format = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
-logging.basicConfig(
-    level=logging.INFO,
-    format=log_format,
-    datefmt="%Y-%m-%d %H:%M:%S",
-    handlers=[
-        logging.FileHandler("lora_openai_test_logs.log", encoding="utf-8"),
-        logging.StreamHandler(),
-    ],
-)
-logger = logging.getLogger("TestLoRAOpenAICompatible")
 
 register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
@@ -66,50 +52,57 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             other_args=other_args,
         )
         cls.client = openai.Client(api_key="EMPTY", base_url=f"{DEFAULT_URL_FOR_TEST}/v1")
-        cls.logger = logging.getLogger(cls.__name__)
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        os.remove("lora_openai_test_logs.log")
 
     def test_priority_model_over_explicit_with_chat_completions_api(self):
         """Test that model:adapter syntax takes precedence over explicit lora_path."""
         # This test verifies the priority logic in _resolve_lora_path
-        response = self.client.chat.completions.create(
+        response1 = self.client.chat.completions.create(
+            model=f"{self.model}:lora_a",
+            messages=[{"role": "user", "content": "What tools do you have available?"}],
+            max_tokens=32,
+            temperature=0,
+        )
+
+        response2 = self.client.chat.completions.create(
             model=f"{self.model}:lora_a",
             messages=[{"role": "user", "content": "What tools do you have available?"}],
             extra_body={"lora_path": "lora_b"},
-            max_tokens=50,
+            max_tokens=32,
             temperature=0,
         )
-
         # Should use lora_a adapter (model parameter takes precedence)
-        self.assertIsNotNone(response.choices[0].message.content)
-        self.assertGreater(len(response.choices[0].message.content), 0)
+        self.assertEqual(response1.choices[0].message.content, response2.choices[0].message.content)
+
         print("--------------------lora_a---------------------------")
-        print(response.choices[0].message.content)
-        self.logger.info(
-            f"Priority test response: {response.choices[0].message.content}"
-        )
+        print(response1.choices[0].message.content)
 
     def test_priority_model_over_explicit_with_completions_api(self):
         """Test that model:adapter syntax takes precedence over explicit lora_path."""
-        response = self.client.completions.create(
+        response1 = self.client.completions.create(
             model=f"{self.model}:lora_b",  # ← Using model:adapter syntax
             prompt="What tools do you have available?",
-            extra_body={"lora_path": "lora_a"},
-            max_tokens=50,
+            max_tokens=32,
             temperature=0,
         )
 
-        # Should use lora_b adapter (model parameter takes precedence)
-        print("--------------------lora_b---------------------------")
-        print(response.choices[0].text)
-
-        self.logger.info(
-            f"Priority test response: {response.choices[0].text}"
+        response2 = self.client.completions.create(
+            model=f"{self.model}:lora_b",  # ← Using model:adapter syntax
+            prompt="What tools do you have available?",
+            extra_body={"lora_path": "lora_a"},
+            max_tokens=32,
+            temperature=0,
         )
+        # Should use lora_a adapter (model parameter takes precedence)
+        self.assertEqual(response1.choices[0].text, response2.choices[0].text)
+        # Should use lora_b adapter (model parameter takes precedence)
+
+        print("--------------------lora_b---------------------------")
+
+        print(response1.choices[0].text)
 
 
 if __name__ == "__main__":
