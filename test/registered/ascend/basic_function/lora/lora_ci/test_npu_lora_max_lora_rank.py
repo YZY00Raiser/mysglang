@@ -1,3 +1,4 @@
+import tempfile
 import os
 import unittest
 
@@ -93,43 +94,46 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--disable-cuda-graph",
         ]
 
-        out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
-        err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
-        self.process = popen_launch_server(
-            LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-            return_stdout_stderr=(out_log_file, err_log_file),
-        )
-        try:
-            requests.post(
-                f"{DEFAULT_URL_FOR_TEST}/generate",
-                json={
-                    "text": "The capital of France is",
-                    "sampling_params": {
-                        "temperature": 0,
-                        "max_new_tokens": 32,
+        # out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
+        # err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as out_log_file, \
+            tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as err_log_file:
+            self.process = popen_launch_server(
+                LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+                return_stdout_stderr=(out_log_file, err_log_file),
+            )
+            try:
+                requests.post(
+                    f"{DEFAULT_URL_FOR_TEST}/generate",
+                    json={
+                        "text": "The capital of France is",
+                        "sampling_params": {
+                            "temperature": 0,
+                            "max_new_tokens": 32,
+                        },
+                        "lora_path": "lora_a",
                     },
-                    "lora_path": "lora_a",
-                },
-            )
-        except Exception as e:
-            self.assertIn(
-                "Connection aborted",
-                str(e),
-            )
-        finally:
-            err_log_file.seek(0)
-            content = err_log_file.read()
-            error_message = "not match weight shape"
-            self.assertIn(error_message, content)
-            out_log_file.close()
-            err_log_file.close()
-            os.remove("./cache_out_log.txt")
-            os.remove("./cache_err_log.txt")
-            if self.process:
-                kill_process_tree(self.process.pid)
+                )
+            except Exception as e:
+                # When sending a request, use a LoRa instance with a mismatched max_lora_rank, the connection will be dropped.
+                self.assertIn(
+                    "Connection aborted",
+                    str(e),
+                )
+            finally:
+                err_log_file.seek(0)
+                content = err_log_file.read()
+                error_message = "not match weight shape"
+                self.assertIn(error_message, content)
+                # out_log_file.close()
+                # err_log_file.close()
+                # os.remove("./cache_out_log.txt")
+                # os.remove("./cache_err_log.txt")
+                if self.process:
+                    kill_process_tree(self.process.pid)
 
 
 if __name__ == "__main__":
