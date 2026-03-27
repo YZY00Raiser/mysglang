@@ -17,7 +17,6 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-
 log_format = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 logging.basicConfig(
     level=logging.INFO,
@@ -90,7 +89,6 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         kill_process_tree(cls.process.pid)
         os.remove("lora_openai_test_logs.log")
 
-    '''
     def test_model_adapter_syntax(self):
         """Test the new model:adapter syntax works correctly."""
         response = self.client.chat.completions.create(
@@ -100,35 +98,13 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             max_tokens=50,
             temperature=0,
         )
-        print("------------------response.choices[0].message.content-----------------------------")
-        print(response.choices[0].message.content)
+
         self.assertIsNotNone(response.choices[0].message.content)
         self.assertGreater(len(response.choices[0].message.content), 0)
         self.logger.info(
             f"Model adapter syntax response: {response.choices[0].message.content}"
         )
 
-    def test_model_adapter_syntax_lora_path(self):
-        """Test the new model:adapter syntax works correctly."""
-        response = self.client.chat.completions.create(
-            # ← New OpenAI-compatible syntax
-            model=f"{self.model}",
-            messages=[{"role": "user", "content": "What tools do you have available?"}],
-            max_tokens=50,
-            temperature=0,
-            lora_path="tool_calling",
-        )
-        print("------------------response.choices[0].message.content-----lora-path------------------------")
-        print(response.choices[0].message.content)
-        self.assertIsNotNone(response.choices[0].message.content)
-        self.assertGreater(len(response.choices[0].message.content), 0)
-        self.logger.info(
-            f"Model adapter syntax response: {response.choices[0].message.content}"
-        )
-    '''
-
-
-    '''
     def test_explicit_lora_path(self):
         """Test backward compatibility with explicit lora_path via extra_body."""
         response = self.client.chat.completions.create(
@@ -179,8 +155,6 @@ class TestLoRAOpenAICompatible(CustomTestCase):
         self.assertGreater(len(response.choices[0].message.content), 0)
         self.logger.info(f"Base model response: {response.choices[0].message.content}")
 
-    '''
-
     def test_completions_api_with_adapter(self):
         """Test completions API with LoRA adapter."""
         response = self.client.completions.create(
@@ -189,29 +163,11 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             max_tokens=50,
             temperature=0,
         )
-        print("------------------response.choices[0].message.content-------completions----------------------")
-        print(response.choices[0].text)
+
         self.assertIsNotNone(response.choices[0].text)
         self.assertGreater(len(response.choices[0].text), 0)
         self.logger.info(f"Completions API response: {response.choices[0].text}")
 
-    def test_completions_api_with_adapter_(self):
-        """Test completions API with LoRA adapter."""
-        response = self.client.completions.create(
-            model=f"{self.model}",  # ← Using model:adapter syntax
-            prompt="What tools do you have available?",
-            max_tokens=50,
-            temperature=0,
-            lora_path="tool_calling",
-        )
-        print("------------------response.choices[0].message.content-----------completions lora_path-----------------")
-        print(response.choices[0].message.content)
-        self.assertIsNotNone(response.choices[0].text)
-        self.assertGreater(len(response.choices[0].text), 0)
-        self.logger.info(f"Completions API response: {response.choices[0].text}")
-
-
-    '''
     def test_streaming_with_adapter(self):
         """Test streaming with LoRA adapter."""
         stream = self.client.chat.completions.create(
@@ -350,7 +306,7 @@ class TestLoRAEdgeCases(CustomTestCase):
 
         error_message = str(context.exception)
         self.logger.error(f"Invalid adapter error: {error_message}")
-    '''
+
 
 if __name__ == "__main__":
     unittest.main()
