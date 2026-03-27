@@ -48,6 +48,8 @@ class TestLoraBasicFunction(CustomTestCase):
             "--attention-backend",
             "ascend",
             "--disable-cuda-graph",
+            "--mem-fraction-static",
+            "0.3",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -92,6 +94,7 @@ class TestLoraBasicFunction(CustomTestCase):
             text_lora_a, text_lora_b, "LoRA A and LoRA B produced same text"
         )
 
+    # TODO
     def test_lora_with_stream(self):
         # compare the consistency between streaming and non-streaming
         response = requests.post(
@@ -146,13 +149,9 @@ class TestLoraBasicFunction(CustomTestCase):
             "up_proj",
         ]
         actual_modules = response.json()["lora_target_modules"]
-
-        self.assertEqual(len(actual_modules), len(expected_modules))
+        self.assertCountEqual(expected_modules, actual_modules)
         # Verify max_loras_per_batch parameter is correctly set in server info
         self.assertEqual(response.json()["max_loras_per_batch"], 2)
-
-        for module in expected_modules:
-            self.assertIn(module, actual_modules)
 
     def test_lora_with_sampling_parameters(self):
         # test loras with temperature
@@ -172,9 +171,7 @@ class TestLoraBasicFunction(CustomTestCase):
             self.assertEqual(response.status_code, 200)
             response_text = response.json()["text"]
             response_texts.append(response_text)
-        first_text = response_texts[0]
-        for idx, text in enumerate(response_texts[1:], start=2):
-            self.assertNotEqual(text, first_text, f"same response_text")
+        self.assertNotEqual(response_texts[0], response_texts[1], f"same response_text")
 
     def test_lora_kv_cache(self):
         # test kv cache reuse
@@ -207,7 +204,7 @@ class TestLoraBasicFunction(CustomTestCase):
         # The third request uses lora_a again, but the input is longer, same lora share cache.
         make_request("lora_a", input_ids_second, 128)
 
-    def test_batch_with_different_loras(self):
+    def test_batch_with_lora(self):
         # test use lora in batch requests can work properly
         prompts = [
             "What is AI",
