@@ -63,6 +63,7 @@ class TestMambaCache(CustomTestCase):
             mamba_track_interval,
             "--tp-size",
             8,
+            "--disable-radix-cache",
         ]
         if max_mamba_cache_size is not None:
             other_args.extend(["--max-mamba-cache-size", max_mamba_cache_size])
