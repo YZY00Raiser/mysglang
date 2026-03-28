@@ -1,16 +1,19 @@
-import unittest
-import requests
 import time
+import unittest
 
-from sglang.test.ascend.test_ascend_utils import QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
+import requests
+
 from sglang.srt.utils import kill_process_tree
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
+)
+from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
-from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=500, suite="nightly-8-npu-a3", nightly=True)
 
@@ -39,12 +42,12 @@ class TestMambaCache(CustomTestCase):
             kill_process_tree(cls.process.pid)
 
     def _launch_server_with_mamba_params(
-        self,
-        max_mamba_cache_size=None,
-        mamba_ssm_dtye=None,
-        mamba_full_memory_ratio=0.9,
-        mamba_scheduler_strategy="auto",
-        mamba_track_interval=256,
+            self,
+            max_mamba_cache_size=None,
+            mamba_ssm_dtype=None,
+            mamba_full_memory_ratio=0.9,
+            mamba_scheduler_strategy="auto",
+            mamba_track_interval=256,
     ):
         other_args = [
             "--trust-remote-code",
@@ -69,8 +72,8 @@ class TestMambaCache(CustomTestCase):
         ]
         if max_mamba_cache_size is not None:
             other_args.extend(["--max-mamba-cache-size", max_mamba_cache_size])
-        if mamba_ssm_dtye is not None:
-            other_args.extend(["--mamba-ssm-dtype", mamba_ssm_dtye])
+        if mamba_ssm_dtype is not None:
+            other_args.extend(["--mamba-ssm-dtype", mamba_ssm_dtype])
         process = popen_launch_server(
             self.model,
             DEFAULT_URL_FOR_TEST,
@@ -79,7 +82,7 @@ class TestMambaCache(CustomTestCase):
         )
         return process
 
-    def _tes_basic_inference(self):
+    def _test_basic_inference(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -95,11 +98,8 @@ class TestMambaCache(CustomTestCase):
         return response.text
 
     def test_mamba_long_sequence(self):
-        self.process = self._launch_server_with_mamba_params(
-            max_mamba_cache_size=1024
-        )
+        self.process = self._launch_server_with_mamba_params(max_mamba_cache_size=1024)
         try:
-            time.sleep(5)
             long_prompt = "Explain the concept of machine learning in detail." * 10
             response = requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -118,12 +118,9 @@ class TestMambaCache(CustomTestCase):
             kill_process_tree(self.process.pid)
 
     def test_mamba_track_interval(self):
-        self.process = self._launch_server_with_mamba_params(
-            mamba_track_interval=128
-        )
+        self.process = self._launch_server_with_mamba_params(mamba_track_interval=128)
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
@@ -132,70 +129,69 @@ class TestMambaCache(CustomTestCase):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=512,
         )
-        prompts = [
-            "What is AI",
-            "Explain neural network",
-            "How does deep learning differ from machine learning",
-            "What is reinforcement learning",
-            "Explain natural language processing",
-            "What are neural network layers",
-            "How do activation functions work",
-            "Explain backpropagation",
-            "What is computer vision",
-            "How do LLMs work",
-        ]
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": prompts,
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 64,
+        try:
+            prompts = [
+                "What is AI",
+                "Explain neural network",
+                "How does deep learning differ from machine learning",
+                "What is reinforcement learning",
+                "Explain natural language processing",
+                "What are neural network layers",
+                "How do activation functions work",
+                "Explain backpropagation",
+                "What is computer vision",
+                "How do LLMs work",
+            ]
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": prompts,
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 64,
+                    },
                 },
-            },
-        )
-        results = response.json()
-        for i, result in enumerate(results):
-            self.assertGreater(len(result["text"]), 0)
+            )
+            results = response.json()
+            for i, result in enumerate(results):
+                self.assertGreater(len(result["text"]), 0)
+        finally:
+            kill_process_tree(self.process.pid)
 
     def test_mamba_scheduler_no_buffer(self):
         self.process = self._launch_server_with_mamba_params(
             mamba_scheduler_strategy="no_buffer",
         )
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
     def test_mamba_ssm_dtype_float32(self):
         self.process = self._launch_server_with_mamba_params(
-            mamba_ssm_dtye="float32",
+            mamba_ssm_dtype="float32",
         )
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
 
         finally:
             kill_process_tree(self.process.pid)
 
     def test_mamba_ssm_dtype_bfloat16(self):
         self.process = self._launch_server_with_mamba_params(
-            mamba_ssm_dtye="bfloat16",
+            mamba_ssm_dtype="bfloat16",
         )
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
     def test_mamba_ssm_dtype_float16(self):
         self.process = self._launch_server_with_mamba_params(
-            mamba_ssm_dtye="float16",
+            mamba_ssm_dtype="float16",
         )
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
@@ -204,8 +200,7 @@ class TestMambaCache(CustomTestCase):
             mamba_full_memory_ratio=0.5,
         )
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
@@ -214,8 +209,7 @@ class TestMambaCache(CustomTestCase):
             max_mamba_cache_size=2048,
         )
         try:
-            time.sleep(5)
-            self._tes_basic_inference()
+            self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 

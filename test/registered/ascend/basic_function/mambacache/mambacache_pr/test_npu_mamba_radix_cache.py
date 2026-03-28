@@ -3,7 +3,9 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -16,13 +18,13 @@ register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
 
 
 class TestMambaCache(CustomTestCase):
-    """Testcase：Verify the test kv cache reuse, when use mamba cache.
+    """Testcase：Verify the test Radix Cache reuse, when use mamba cache.
 
     [Test Category] Parameter
     [Test Target] --disable-radix-cache
     """
 
-    model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
+    model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path
 
     @classmethod
     def setUpClass(cls):
