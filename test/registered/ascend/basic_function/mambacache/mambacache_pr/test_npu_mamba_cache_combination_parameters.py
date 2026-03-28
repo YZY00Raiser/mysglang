@@ -94,7 +94,8 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         return response.text
 
-    def _send_concurrent_requests(self, num_requests=10):
+    '''
+        def _send_concurrent_requests(self, num_requests=10):
         results = []
         threads = []
 
@@ -124,6 +125,8 @@ class TestMambaCache(CustomTestCase):
             thread.join()
 
         return results
+    '''
+
 
     '''
     def test_mamba_size_large(self):
