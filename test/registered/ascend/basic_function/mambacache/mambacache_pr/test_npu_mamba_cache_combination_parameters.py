@@ -123,8 +123,7 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
