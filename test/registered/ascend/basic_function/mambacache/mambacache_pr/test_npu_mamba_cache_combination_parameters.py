@@ -98,36 +98,36 @@ class TestMambaCache(CustomTestCase):
         return response.text
 
     '''
-        def _send_concurrent_requests(self, num_requests=10):
-        results = []
-        threads = []
+    def _send_concurrent_requests(self, num_requests=10):
+    results = []
+    threads = []
 
-        def send_request(rid):
-            try:
-                response = requests.post(
-                    f"{DEFAULT_URL_FOR_TEST}/generate",
-                    json={
-                        "text": f"Test request{rid}: What is AI?",
-                        "sampling_params": {
-                            "temperature": 0,
-                            "max_new_tokens": 32,
-                        },
+    def send_request(rid):
+        try:
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": f"Test request{rid}: What is AI?",
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 16,
                     },
-                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-                )
-                results.append(rid, response.status_code, response.text)
-            except Exception as e:
-                results.append(rid, -1, str(e))
+                },
+                timeout=60,
+            )
+            results.append(rid, response.status_code, response.text)
+        except Exception as e:
+            results.append(rid, -1, str(e))
 
-        for i in range(num_requests):
-            thread = threading.Thread(target=send_request, args=(i,))
-            threads.append(thread)
-            thread.start()
+    for i in range(num_requests):
+        thread = threading.Thread(target=send_request, args=(i,))
+        threads.append(thread)
+        thread.start()
 
-        for thread in threads:
-            thread.join()
+    for thread in threads:
+        thread.join()
 
-        return results
+    return results
     '''
 
     '''
