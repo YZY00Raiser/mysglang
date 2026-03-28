@@ -134,8 +134,7 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-
-    def test_mamba_scheduler_auto(self):
+    def test_mamba_scheduler_no_buffer(self):
         self.process = self._launch_server_with_mamba_params(
             mamba_scheduler_strategy="no_buffer",
         )
@@ -146,7 +145,62 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-    def test_mamba_size_large(self):
+    def test_mamba_ssm_dtype_float32(self):
+        self.process = self._launch_server_with_mamba_params(
+            mamba_ssm_dtye="float32",
+        )
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
+
+    def test_mamba_ssm_dtype_bfloat16(self):
+        self.process = self._launch_server_with_mamba_params(
+            mamba_ssm_dtye="bfloat16",
+        )
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
+
+    def test_mamba_ssm_dtype_float16(self):
+        self.process = self._launch_server_with_mamba_params(
+            mamba_ssm_dtye="float16",
+        )
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
+
+    def test_mamba_max_mamba_cache_size_512(self):
+        self.process = self._launch_server_with_mamba_params(
+            max_mamba_cache_size=512,
+        )
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
+
+    def test_mamba_max_mamba_cache_size_1024(self):
+        self.process = self._launch_server_with_mamba_params(
+            max_mamba_cache_size=1024,
+        )
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
+
+    def test_mamba_max_mamba_cache_size_2048(self):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=2048,
         )
@@ -157,56 +211,18 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-
-
-    '''
-    def test_batch_with_mamba_cache(self):
-        # test use lora in batch requests can work properly
-        prompts = [
-            "What is AI",
-            "Explain neural network",
-            "How does deep learning differ from machine learning",
-            "What is reinforcement learning",
-            "Explain natural language processing",
-            "What are neural network layers",
-            "How do activation functions work",
-            "Explain backpropagation",
-            "What is computer vision",
-            "How do LLMs work",
-        ]
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": prompts,
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 64,
-                },
-            },
+    def test_mamba_full_memory_ratio(self):
+        self.process = self._launch_server_with_mamba_params(
+            mamba_full_memory_ratio=0.5,
         )
-        results = response.json()
-        for i, result in enumerate(results):
-            self.assertGreater(len(result["text"]), 0)
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
 
-    def test_enable_tokenizer_batch_encode(self):
-        for i in range(50):
-            response = requests.post(
-                f"{DEFAULT_URL_FOR_TEST}/generate",
-                json={
-                    "text": "The capital of France is",
-                    "sampling_params": {
-                        "temperature": 0,
-                        "max_new_tokens": 32,
-                    },
-                },
-            )
-            self.assertEqual(
-                response.status_code, 200, "The request status code is not 200."
-            )
-            self.assertIn(
-                "Paris", response.text, "The inference result does not include Paris."
-            )
-    '''
+
 
 
 if __name__ == "__main__":

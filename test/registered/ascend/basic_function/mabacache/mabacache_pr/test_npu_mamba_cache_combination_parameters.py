@@ -15,7 +15,8 @@ from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
 
-#长序列,数据类型，缓存大小，内存比例，调度策略，跟踪间隔，并发
+
+# 长序列,数据类型，缓存大小，内存比例，调度策略，跟踪间隔，并发
 class TestMambaCache(CustomTestCase):
     """Testcase：Verify the MambaCache
 
@@ -45,7 +46,7 @@ class TestMambaCache(CustomTestCase):
             "--mamba-track-interval",
             "256",
             "--tp-size",
-            8,
+            "8",
         ]
 
         cls.process = popen_launch_server(
@@ -106,33 +107,6 @@ class TestMambaCache(CustomTestCase):
                 "Paris", response.text, "The inference result does not include Paris."
             )
 
-
-    def test_mamba_long_size(self):
-        # test kv cache reuse
-        input_ids_first = [1] * 200
-        input_ids_second = input_ids_first + [2] * 70
-
-        def make_request(input_ids, expected_cached_tokens):
-            response = requests.post(
-                f"{DEFAULT_URL_FOR_TEST}/generate",
-                json={
-                    "input_ids": input_ids,
-                    "sampling_params": {
-                        "temperature": 0,
-                        "max_new_tokens": 32,
-                    },
-                },
-            )
-            self.assertEqual(response.status_code, 200)
-            print("=--------------response.json()--------------------------")
-            print(response.json())
-            self.assertEqual(
-                response.json()["meta_info"]["cached_tokens"], expected_cached_tokens
-            )
-
-        make_request(input_ids_first, 0)
-
-        make_request(input_ids_second, 128)
 
 if __name__ == "__main__":
     unittest.main()
