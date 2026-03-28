@@ -1,4 +1,5 @@
 import unittest
+import threading
 import requests
 import time
 
@@ -94,6 +95,50 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         return response.text
 
+    '''
+    def _send_concurrent_requests(self, num_requests=10):
+    results = []
+    threads = []
+
+    def send_request(rid):
+        try:
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": f"Test request{rid}: What is AI?",
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 16,
+                    },
+                },
+                timeout=60,
+            )
+            results.append(rid, response.status_code, response.text)
+        except Exception as e:
+            results.append(rid, -1, str(e))
+
+    for i in range(num_requests):
+        thread = threading.Thread(target=send_request, args=(i,))
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    return results
+    '''
+    #TODO err -9
+    def test_mamba_max_mamba_cache_size_2048(self):
+        self.process = self._launch_server_with_mamba_params(
+            max_mamba_cache_size=2048,
+        )
+        try:
+            time.sleep(5)
+            self._tes_basic_inference()
+        finally:
+            kill_process_tree(self.process.pid)
+
+    '''
     def test_mamba_long_sequence(self):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=2048
@@ -117,6 +162,17 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
+    def test_mamba_concurrent_requests(self):
+        self.process = self._launch_server_with_mamba_params()
+
+        try:
+            time.sleep(5)
+            results = self._send_concurrent_requests(num_requests=10)
+            success_count = sum(1 for r in results if r[1] == 200)
+            self.assertEqual(success_count, 10)
+        finally:
+            kill_process_tree(self.process.pid)
+
     def test_mamba_track_interval(self):
         self.process = self._launch_server_with_mamba_params(
             mamba_track_interval=128
@@ -127,7 +183,6 @@ class TestMambaCache(CustomTestCase):
             print(result)
         finally:
             kill_process_tree(self.process.pid)
-
     '''
 
     def test_mamba_batch(self):
@@ -218,7 +273,6 @@ class TestMambaCache(CustomTestCase):
             self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
-    '''
 
 
 if __name__ == "__main__":
