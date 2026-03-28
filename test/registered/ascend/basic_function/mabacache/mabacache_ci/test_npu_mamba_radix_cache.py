@@ -45,6 +45,8 @@ class TestMambaCache(CustomTestCase):
             "auto",
             "--mamba-track-interval",
             "256",
+            "--base-gpu-id",
+            "8",
         ]
         cls.process = popen_launch_server(
             cls.model,
@@ -74,8 +76,6 @@ class TestMambaCache(CustomTestCase):
                 },
             )
             self.assertEqual(response.status_code, 200)
-            print("=--------------response.json()--------------------------")
-            print(response.json())
             self.assertEqual(
                 response.json()["meta_info"]["cached_tokens"], expected_cached_tokens
             )
