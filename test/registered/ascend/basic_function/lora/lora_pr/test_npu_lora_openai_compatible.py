@@ -76,7 +76,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
     """Testcase：Verify the correctness of OpenAI-compatible LoRA adapter usage for Llama-3.2-1B-Instruct
 
     [Test Category] Parameter
-    [Test Target] --enable-lora;--lora-paths
+    [Test Target] --enable-lora, --lora-paths
     """
 
     @classmethod

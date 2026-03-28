@@ -128,7 +128,7 @@ class TestMambaCache(CustomTestCase):
     return results
     '''
 
-    def test_mamba_size_large(self):
+    def test_mamba_size_2048(self):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=2048,
         )
@@ -223,7 +223,6 @@ class TestMambaCache(CustomTestCase):
         try:
             time.sleep(5)
             self._tes_basic_inference()
-
         finally:
             kill_process_tree(self.process.pid)
 

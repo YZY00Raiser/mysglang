@@ -4,9 +4,9 @@ import openai
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
-    LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
     LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH,
+    LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -23,7 +23,7 @@ class TestLoRAOpenAICompatible(CustomTestCase):
     """Testcase：Test that model:adapter syntax takes precedence over explicit lora_path.
 
     [Test Category] Parameter
-    [Test Target] --enable-lora;--lora-paths
+    [Test Target] --enable-lora, --lora-paths
     """
 
     model = LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH
@@ -51,7 +51,9 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
         )
-        cls.client = openai.Client(api_key="EMPTY", base_url=f"{DEFAULT_URL_FOR_TEST}/v1")
+        cls.client = openai.Client(
+            api_key="EMPTY", base_url=f"{DEFAULT_URL_FOR_TEST}/v1"
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -74,7 +76,9 @@ class TestLoRAOpenAICompatible(CustomTestCase):
             temperature=0,
         )
         # Should use lora_a adapter, same as base
-        self.assertEqual(response1.choices[0].message.content, response2.choices[0].message.content)
+        self.assertEqual(
+            response1.choices[0].message.content, response2.choices[0].message.content
+        )
 
     def test_priority_model_over_explicit_with_completions_api(self):
         # Use the api of completions, response of lora_b as base

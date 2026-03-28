@@ -49,7 +49,7 @@ class TestLoraBasicFunction(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--mem-fraction-static",
-            "0.2",
+            "0.3",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -103,13 +103,15 @@ class TestLoraBasicFunction(CustomTestCase):
         }
 
         # Non-streaming
-        disable_stream_text = requests.post(f"{DEFAULT_URL_FOR_TEST}/generate", json=base_request).json()["text"]
+        disable_stream_text = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate", json=base_request
+        ).json()["text"]
 
         # Streaming
         response_stream = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={**base_request, "stream": True},
-            stream=True
+            stream=True,
         )
 
         stream_text = ""

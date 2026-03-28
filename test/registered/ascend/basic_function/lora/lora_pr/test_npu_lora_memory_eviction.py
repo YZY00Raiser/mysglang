@@ -102,7 +102,7 @@ class TestLoraMemoryEvictionFifo(CustomTestCase):
         )
 
 
-class TestLoraMemoryEvictionLru(CustomTestCase):
+class TestLoraMemoryEvictionLru(TestLoraMemoryEvictionFifo):
     lora_eviction_policy = "lru"
 
 

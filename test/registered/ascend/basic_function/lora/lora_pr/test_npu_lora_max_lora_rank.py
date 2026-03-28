@@ -93,8 +93,11 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             "--disable-cuda-graph",
         ]
 
-        with tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as out_log_file, \
-            tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as err_log_file:
+        with tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as out_log_file, tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as err_log_file:
             self.process = popen_launch_server(
                 LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
                 DEFAULT_URL_FOR_TEST,

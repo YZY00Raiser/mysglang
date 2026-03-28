@@ -1,10 +1,6 @@
-import os
 import tempfile
 import unittest
 
-import requests
-
-from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH,
     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -46,8 +42,11 @@ class TestMaxLoadedLorasError(CustomTestCase):
             f"lora_3={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
             f"lora_4={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
         ]
-        with tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as out_log_file, \
-            tempfile.NamedTemporaryFile(mode='w+', delete=True, suffix='out.log') as err_log_file:
+        with tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as out_log_file, tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as err_log_file:
             try:
                 popen_launch_server(
                     LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
