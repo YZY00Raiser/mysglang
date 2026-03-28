@@ -159,7 +159,6 @@ class TestMambaCache(CustomTestCase):
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
 
-    '''
     def test_mamba_scheduler_no_buffer(self):
         self.process = self._launch_server_with_mamba_params(
             mamba_scheduler_strategy="no_buffer",
@@ -220,7 +219,6 @@ class TestMambaCache(CustomTestCase):
             self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
-    '''
 
 
 if __name__ == "__main__":
