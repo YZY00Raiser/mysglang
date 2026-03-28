@@ -7,7 +7,9 @@ from types import SimpleNamespace
 import sglang as sgl
 from sglang.srt.utils import kill_process_tree
 from sglang.test.run_eval import run_eval
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
+# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -35,7 +37,8 @@ class _BaseTestDynamicEPLB(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
+        # cls.model = DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
+        cls.model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
