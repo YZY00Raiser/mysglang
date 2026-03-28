@@ -92,8 +92,6 @@ class TestMambaCache(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        print("=--------------response.json()--------------------------")
-        print(response.json())
         self.assertIn(self.expected_output, response.text)
         return response.text
 
@@ -196,8 +194,7 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
@@ -207,8 +204,8 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
+
         finally:
             kill_process_tree(self.process.pid)
 
@@ -218,8 +215,7 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
@@ -229,8 +225,8 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
+
         finally:
             kill_process_tree(self.process.pid)
 
@@ -240,8 +236,7 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
@@ -251,8 +246,7 @@ class TestMambaCache(CustomTestCase):
         )
         try:
             time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
+            self._tes_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
 
