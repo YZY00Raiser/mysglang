@@ -96,7 +96,7 @@ class TestMambaCache(CustomTestCase):
 
     def test_mamba_long_sequence(self):
         self.process = self._launch_server_with_mamba_params(
-            max_mamba_cache_size=2048
+            max_mamba_cache_size=1024
         )
         try:
             time.sleep(5)
@@ -128,8 +128,6 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-    '''
-
     def test_mamba_batch(self):
         # test use mamba in batch requests can work properly
         prompts = [
@@ -158,6 +156,7 @@ class TestMambaCache(CustomTestCase):
         for i, result in enumerate(results):
             self.assertGreater(len(result["text"]), 0)
 
+    '''
     def test_mamba_scheduler_no_buffer(self):
         self.process = self._launch_server_with_mamba_params(
             mamba_scheduler_strategy="no_buffer",
