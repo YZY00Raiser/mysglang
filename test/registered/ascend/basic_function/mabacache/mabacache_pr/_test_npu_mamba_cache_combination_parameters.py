@@ -2,6 +2,7 @@ import unittest
 import threading
 import requests
 import time
+
 from sglang.test.ascend.test_ascend_utils import QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
 from sglang.srt.utils import kill_process_tree
 from sglang.test.test_utils import (
@@ -189,28 +190,6 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-    def test_mamba_max_mamba_cache_size_1024(self):
-        self.process = self._launch_server_with_mamba_params(
-            max_mamba_cache_size=1024,
-        )
-        try:
-            time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
-        finally:
-            kill_process_tree(self.process.pid)
-
-    def test_mamba_max_mamba_cache_size_2048(self):
-        self.process = self._launch_server_with_mamba_params(
-            max_mamba_cache_size=2048,
-        )
-        try:
-            time.sleep(5)
-            result = self._tes_basic_inference()
-            print(result)
-        finally:
-            kill_process_tree(self.process.pid)
-
     def test_mamba_full_memory_ratio(self):
         self.process = self._launch_server_with_mamba_params(
             mamba_full_memory_ratio=0.5,
@@ -222,7 +201,50 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
+    def test_mamba_track_interval(self):
+        self.process = self._launch_server_with_mamba_params(
+            mamba_track_interval=128
+        )
+        try:
+            time.sleep(5)
+            result = self._tes_basic_inference()
+            print(result)
+        finally:
+            kill_process_tree(self.process.pid)
 
+    def test_mamba_long_sequence(self):
+        self.process = self._launch_server_with_mamba_params(
+            max_mamba_cache_size=2048
+        )
+        try:
+            time.sleep(5)
+            long_prompt = "Explain the concept of machine learning in detail." * 10
+            response = requests.post(
+                f"{DEFAULT_URL_FOR_TEST}/generate",
+                json={
+                    "text": long_prompt,
+                    "sampling_params": {
+                        "temperature": 0,
+                        "max_new_tokens": 128,
+                    },
+                },
+                timeout=120,
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertGreater(len(response.text), 0)
+        finally:
+            kill_process_tree(self.process.pid)
+
+    def test_mamba_concurrent_requests(self):
+        self.process = self._launch_server_with_mamba_params()
+
+        try:
+            time.sleep(5)
+            results = self._send_concurrent_requests(num_requests=10)
+            success_count = sum(1 for r in results if r[1] == 200)
+            self.assertEqual(success_count, 10)
+        finally:
+            kill_process_tree(self.process.pid)
 
 
 if __name__ == "__main__":
