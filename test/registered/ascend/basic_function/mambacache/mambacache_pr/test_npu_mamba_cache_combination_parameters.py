@@ -130,6 +130,9 @@ class TestMambaCache(CustomTestCase):
 
     def test_mamba_batch(self):
         # test use mamba in batch requests can work properly
+        self.process = self._launch_server_with_mamba_params(
+            max_mamba_cache_size=512,
+        )
         prompts = [
             "What is AI",
             "Explain neural network",
@@ -198,9 +201,9 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-    def test_mamba_max_mamba_cache_size_512(self):
+    def test_mamba_full_memory_ratio(self):
         self.process = self._launch_server_with_mamba_params(
-            max_mamba_cache_size=512,
+            mamba_full_memory_ratio=0.5,
         )
         try:
             time.sleep(5)
@@ -208,9 +211,9 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-    def test_mamba_full_memory_ratio(self):
+    def test_mamba_max_mamba_cache_size_2048(self):
         self.process = self._launch_server_with_mamba_params(
-            mamba_full_memory_ratio=0.5,
+            max_mamba_cache_size=2048,
         )
         try:
             time.sleep(5)
