@@ -18,8 +18,8 @@ register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
 class TestMambaCache(CustomTestCase):
     """Testcase：Verify the test kv cache reuse, when use mamba cache.
 
-    [Test Category] Functional
-    [Test Target] kv cache reuse
+    [Test Category] Parameter
+    [Test Target] --disable-radix-cache
     """
 
     model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
