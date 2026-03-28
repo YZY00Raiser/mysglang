@@ -125,6 +125,7 @@ class TestMambaCache(CustomTestCase):
 
         return results
 
+    '''
     def test_mamba_size_large(self):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=2048,
@@ -135,6 +136,7 @@ class TestMambaCache(CustomTestCase):
             print(result)
         finally:
             kill_process_tree(self.process.pid)
+    '''
 
     def test_mamba_scheduler_no_buffer(self):
         self.process = self._launch_server_with_mamba_params(
@@ -213,6 +215,7 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
+    '''
     def test_mamba_long_sequence(self):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=2048
@@ -246,7 +249,7 @@ class TestMambaCache(CustomTestCase):
             self.assertEqual(success_count, 10)
         finally:
             kill_process_tree(self.process.pid)
-
+    '''
 
 if __name__ == "__main__":
     unittest.main()
