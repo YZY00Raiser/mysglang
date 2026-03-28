@@ -13,14 +13,16 @@ from sglang.test.test_utils import (
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
-register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
+register_npu_ci(est_time=500, suite="nightly-8-npu-a3", nightly=True)
 
 
 class TestMambaCache(CustomTestCase):
-    """Testcase：Verify the MambaCache
+    """Testcase：Verify the MambaCache with different parameters, concurrent requests, long sequence,
+    Inference request successful
 
     [Test Category] Parameter
-    [Test Target] --lora-target-modules
+    [Test Target] --mamba-full-memory-ratio, --mamba-ssm-dtype, --mamba-track-interval, --mamba-track-size,
+    --max-mamba-cache-size
     """
 
     model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path
@@ -34,7 +36,8 @@ class TestMambaCache(CustomTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
+        if cls.process:
+            kill_process_tree(cls.process.pid)
 
     def _launch_server_with_mamba_params(
         self,
