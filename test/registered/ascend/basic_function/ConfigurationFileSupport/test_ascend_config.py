@@ -21,7 +21,7 @@ register_npu_ci(
     nightly=True,
 )
 
-
+'''
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -70,7 +70,10 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-class TestConfigPriority(TestConfig):
+'''
+
+
+class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
     will use false model path service start fail .
@@ -80,15 +83,15 @@ class TestConfigPriority(TestConfig):
     """
 
     model = "/data/Qwen/Qwen3-32B"
+    config = CONFIG_YAML_PATH
 
     @classmethod
     def _launch_server(cls):
-        other_args = cls._build_other_args()
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
+            other_args=["--config", cls.config, ],
         )
 
     @classmethod

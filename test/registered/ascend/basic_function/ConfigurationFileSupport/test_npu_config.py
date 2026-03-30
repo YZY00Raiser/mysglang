@@ -102,7 +102,7 @@ class TestConfigPriority(CustomTestCase):
                 )
             except Exception as e:
                 self.assertIn(
-                    "Server process exited with code 1",
+                    "Server process exited with code 1.",
                     str(e),
                 )
             finally:
