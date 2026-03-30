@@ -1,6 +1,5 @@
 import tempfile
-import os
-import subprocess
+
 import unittest
 
 import requests
@@ -46,7 +45,7 @@ class TestConfig(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_config_yaml_server_generate(self):
+    def test_config(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
