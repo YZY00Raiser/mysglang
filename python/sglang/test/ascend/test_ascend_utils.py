@@ -19,7 +19,7 @@ from sglang.test.test_utils import (
     _try_enable_offline_mode_if_cache_complete,
     _wait_for_server_health,
     auto_config_device,
-    popen_launch_server,
+    popen_launch_server, _create_clean_subprocess_env,
 )
 
 # Model weights storage directory
@@ -560,6 +560,29 @@ def run_bench_serving(
 
     assert res["completed"] == num_prompts
     return res
+
+
+def popen_launch_server_with_config_yaml(config_file, base_url, timeout):
+    _, host, port = base_url.split(":")
+    host = host[2:]
+    command = [
+        "python3",
+        "-m",
+        "sglang.launch_server",
+        "--config", config_file,
+        "--host", host,
+        "--port", port,
+    ]
+
+    env = _create_clean_subprocess_env(os.environ.copy())
+    process = subprocess.Popen(
+        command,
+        stdout=None,
+        stderr=None,
+        env=env
+    )
+    _wait_for_server_health(process, base_url, None, timeout)
+    return process
 
 
 def popen_launch_server_config(
