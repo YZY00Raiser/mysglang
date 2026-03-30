@@ -3,20 +3,18 @@
 import asyncio
 import copy
 import os
-import shlex
 import subprocess
 from types import SimpleNamespace
 from typing import Awaitable, Callable, NamedTuple, Optional
 import logging
 import time
+from urllib.parse import urlparse
 
 from sglang.bench_serving import run_benchmark
 from sglang.srt.utils import kill_process_tree
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
-    _launch_server_process,
-    _try_enable_offline_mode_if_cache_complete,
     _wait_for_server_health,
     auto_config_device,
     popen_launch_server, _create_clean_subprocess_env,
@@ -562,179 +560,6 @@ def run_bench_serving(
     return res
 
 
-def popen_launch_server_with_config_yaml(config_file, base_url, timeout):
-    _, host, port = base_url.split(":")
-    host = host[2:]
-    command = [
-        "python3",
-        "-m",
-        "sglang.launch_server",
-        "--config", config_file,
-        "--host", host,
-        "--port", port,
-    ]
-
-    env = _create_clean_subprocess_env(os.environ.copy())
-    process = subprocess.Popen(
-        command,
-        stdout=None,
-        stderr=None,
-        env=env
-    )
-    _wait_for_server_health(process, base_url, None, timeout)
-    return process
-
-
-def popen_launch_server_config(
-    model: str,
-    base_url: str,
-    timeout: float,
-    api_key: Optional[str] = None,
-    other_args: Optional[list[str]] = None,
-    env: Optional[dict] = None,
-    return_stdout_stderr: Optional[tuple] = None,
-    device: str = "auto",
-    pd_separated: bool = False,
-    num_replicas: Optional[int] = None,
-):
-    """Launch a server process with automatic device detection and offline/online retry.
-
-    Args:
-        model: Model path or identifier
-        base_url: Base URL for the server
-        timeout: Timeout for server startup
-        api_key: Optional API key for authentication
-        other_args: Additional command line arguments
-        env: Environment dict for subprocess
-        return_stdout_stderr: Optional tuple for output capture
-        device: Device type ("auto", "cuda", "rocm" or "cpu")
-        pd_separated: Whether to use PD separated mode
-        num_replicas: Number of replicas for mixed PD mode
-
-    Returns:
-        Started subprocess.Popen object
-    """
-    other_args = other_args or []
-
-    # Auto-detect device if needed
-    if device == "auto":
-        device = auto_config_device()
-        other_args = list(other_args)
-        other_args += ["--device", str(device)]
-
-    # CI-specific: Validate cache and enable offline mode if complete
-    if env is None:
-        env = os.environ.copy()
-    else:
-        env = env.copy()
-
-    # Store per-run marker path for potential invalidation
-    per_run_marker_path = None
-    try:
-        from sglang.utils import is_in_ci
-
-        if is_in_ci():
-            per_run_marker_path = _try_enable_offline_mode_if_cache_complete(
-                model, env, other_args
-            )
-    except Exception as e:
-        print(f"CI cache validation failed (non-fatal): {e}")
-
-    # Build server command
-    _, host, port = base_url.split(":")
-    host = host[2:]
-
-    use_mixed_pd_engine = not pd_separated and num_replicas is not None
-    if pd_separated or use_mixed_pd_engine:
-        command = "sglang.launch_pd_server"
-    else:
-        command = "sglang.launch_server"
-
-    command = [
-        "python3",
-        "-m",
-        command,
-        *[str(x) for x in other_args],
-    ]
-
-    if pd_separated or use_mixed_pd_engine:
-        command.extend(["--lb-host", host, "--lb-port", port])
-    else:
-        command.extend(["--host", host, "--port", port])
-
-    if use_mixed_pd_engine:
-        command.extend(["--mixed", "--num-replicas", str(num_replicas)])
-
-    if api_key:
-        command += ["--api-key", api_key]
-
-    print(f"command={shlex.join(command)}")
-
-    # Track if offline mode was enabled for potential retry
-    offline_enabled = env.get("HF_HUB_OFFLINE") == "1"
-
-    # First launch attempt
-    process = _launch_server_process(command, env, return_stdout_stderr, model)
-    success, error_msg = _wait_for_server_health(process, base_url, api_key, timeout)
-
-    # If offline launch failed and offline was enabled, retry with online mode
-    if not success and offline_enabled:
-        print(
-            f"CI_OFFLINE: Offline launch failed ({error_msg}), retrying with online mode..."
-        )
-
-        # Kill failed process
-        try:
-            if process.poll() is None:
-                kill_process_tree(process.pid)
-            else:
-                process.wait(timeout=5)
-        except Exception as e:
-            print(f"CI_OFFLINE: Error cleaning up failed offline process: {e}")
-
-        # Invalidate per-run marker to prevent subsequent tests from using offline
-        if per_run_marker_path and os.path.exists(per_run_marker_path):
-            try:
-                os.remove(per_run_marker_path)
-                print("CI_OFFLINE: Invalidated per-run marker due to offline failure")
-            except Exception as e:
-                print(f"CI_OFFLINE: Failed to remove per-run marker: {e}")
-
-        # Retry with online mode
-        env["HF_HUB_OFFLINE"] = "0"
-        process = _launch_server_process(command, env, return_stdout_stderr, model)
-        success, error_msg = _wait_for_server_health(
-            process, base_url, api_key, timeout
-        )
-
-        if success:
-            print("CI_OFFLINE: Online retry succeeded")
-            return process
-
-        # Online retry also failed
-        try:
-            kill_process_tree(process.pid)
-        except Exception as e:
-            print(f"CI_OFFLINE: Error killing process after online retry failure: {e}")
-
-        if "exited" in error_msg:
-            raise Exception(error_msg + ". Check server logs for errors.")
-        raise TimeoutError(error_msg)
-
-    # First attempt succeeded or offline was not enabled
-    if success:
-        return process
-
-    # First attempt failed and offline was not enabled
-    try:
-        kill_process_tree(process.pid)
-    except Exception as e:
-        print(f"CI_OFFLINE: Error killing process after first attempt failure: {e}")
-
-    if "exited" in error_msg:
-        raise Exception(error_msg + ". Check server logs for errors.")
-    raise TimeoutError(error_msg)
-
 
 def execute_serving_performance_test(
     host,
@@ -814,21 +639,45 @@ def execute_serving_performance_test(
 
     return {"mean_ttft": mean_ttft, "mean_tpot": mean_tpot, "total_tps": total_tps}
 
-#launch server with "--config" parameter
+# launch server with "--config" parameter
+def popen_launch_server_with_config_yaml(config_file, base_url, timeout):
+    parsed_url = urlparse(base_url)
+    host = parsed_url.hostname
+    port = parsed_url.port
+    host = host[2:]
+    command = [
+        "python3",
+        "-m",
+        "sglang.launch_server",
+        "--config",
+        config_file,
+        "--host",
+        host,
+        "--port",
+        port,
+    ]
+
+    env = _create_clean_subprocess_env(os.environ.copy())
+    process = subprocess.Popen(command, stdout=None, stderr=None, env=env)
+    _wait_for_server_health(process, base_url, None, timeout)
+    return process
+
+
+# hook factory
 def create_attention_monitor_hook_factory(config):
-    # hook factory
     layer_index = config.get("layer_index", 0)
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    if not logging.root.handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
 
     def attention_monitor_hook(module, inputs, output):
         # The actual hook function is called during the forward propagation of the self-attention layer.
         timestamp = time.time()
 
-        hidden_states = inputs[1] if inputs else None
+        hidden_states = inputs[1] if inputs and len(inputs) > 1 else None
 
         monitor_record = {
             "timestamp": timestamp,
@@ -843,3 +692,4 @@ def create_attention_monitor_hook_factory(config):
         return output
 
     return attention_monitor_hook
+
