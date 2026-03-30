@@ -1,3 +1,5 @@
+import tempfile
+
 import unittest
 
 import requests
@@ -5,7 +7,7 @@ import requests
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     CONFIG_YAML_PATH,
-    popen_launch_server_config,
+    popen_launch_server_with_config_yaml,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -29,24 +31,14 @@ class TestConfig(CustomTestCase):
     [Test Target] --config
     """
 
-    model = None
     config = CONFIG_YAML_PATH
 
     @classmethod
-    def _build_other_args(cls):
-        return [
-            "--config",
+    def setUpClass(cls):
+        cls.process = popen_launch_server_with_config_yaml(
             cls.config,
-        ]
-
-    @classmethod
-    def _launch_server(cls):
-        other_args = cls._build_other_args()
-        cls.process = popen_launch_server_config(
-            cls.model,
             DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
+            DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
         )
 
     @classmethod
@@ -54,7 +46,6 @@ class TestConfig(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_config(self):
-        self._launch_server()
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -70,7 +61,7 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-class TestConfigPriority(TestConfig):
+class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
     will use false model path service start fail .
@@ -80,28 +71,33 @@ class TestConfigPriority(TestConfig):
     """
 
     model = "/nonexistent/Qwen/Qwen3-32B"
+    config = CONFIG_YAML_PATH
 
-    @classmethod
-    def _launch_server(cls):
-        other_args = cls._build_other_args()
-        cls.process = popen_launch_server(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn(
-            "Server process exited with code 1. Check server logs for errors.",
-            str(ctx.exception),
-        )
+    def test_config_priority(self):
+        error_message = "Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/nonexistent/Qwen/Qwen3-32B'."
+        with tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as out_log_file, tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as err_log_file:
+            try:
+                popen_launch_server(
+                    self.model,
+                    DEFAULT_URL_FOR_TEST,
+                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                    other_args=["--config", self.config],
+                    return_stdout_stderr=(out_log_file, err_log_file),
+                )
+            except Exception as e:
+                self.assertIn(
+                    "Server process exited with code 1.",
+                    str(e),
+                )
+            finally:
+                err_log_file.seek(0)
+                content = err_log_file.read()
+                # error_message information is recorded in the error log
+                self.assertIn(error_message, content)
 
 
 if __name__ == "__main__":
