@@ -88,7 +88,7 @@ class TestConfigPriority(CustomTestCase):
     config = CONFIG_YAML_PATH
 
     def test_config_priority(self):
-        error_message = "make sure '/data/Qwen/Qwen3-32B' is the correct path"
+        error_message = "/nonexistent/Qwen/Qwen3-32B"
         with tempfile.NamedTemporaryFile(
             mode="w+", delete=True, suffix="out.log"
         ) as out_log_file, tempfile.NamedTemporaryFile(
