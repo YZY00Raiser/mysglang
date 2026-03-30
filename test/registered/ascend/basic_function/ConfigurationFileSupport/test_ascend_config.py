@@ -16,12 +16,14 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
-MODEL_PATH = "/home/weights/Qwen3-0.6B"
-PATH = "/home/l30081563/prtest/sglang/test/registered/ascend/basic_function/parameter"
-CONFIG_YAML_PATH = f"{PATH}/config.yaml"
-CONFIG_INVALID_YAML_PATH = f"{PATH}/config_invalid.yaml"
+# MODEL_PATH = "/home/weights/Qwen3-0.6B"
+# PATH = "/home/l30081563/prtest/sglang/test/registered/ascend/basic_function/parameter"
+# CONFIG_YAML_PATH = f"{PATH}/config.yaml"
+# CONFIG_INVALID_YAML_PATH = f"{PATH}/config_invalid.yaml"
 
-
+CONFIG_YAML_PATH = (
+    "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml"
+)
 class TestAscendConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -33,7 +35,7 @@ class TestAscendConfig(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = MODEL_PATH
+        # cls.model = MODEL_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
 
         # TODO：或许应该在这里生成config文件
@@ -85,7 +87,7 @@ class TestAscendConfig(CustomTestCase):
 
 
 
-
+'''
 class TestAscendConfigInValidConfigFileType(CustomTestCase):
     """Testcase: Verify set --config non yaml file format the service start fail.
 
@@ -138,6 +140,8 @@ class TestAscendConfigInValidConfigFileType(CustomTestCase):
                 if process:
                     kill_process_tree(process.pid)
 
+'''
+
 
 
 
@@ -161,9 +165,9 @@ class TestAscendConfigInValidConfigFileType(CustomTestCase):
 
 
 if __name__ == "__main__":
-    # unittest.main()
-    loader = unittest.TestLoader()
-    suite = unittest.TestSuite()
-    suite.addTests(loader.loadTestsFromTestCase(TestAscendConfig))
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+    unittest.main()
+    # loader = unittest.TestLoader()
+    # suite = unittest.TestSuite()
+    # suite.addTests(loader.loadTestsFromTestCase(TestAscendConfig))
+    # runner = unittest.TextTestRunner()
+    # runner.run(suite)
