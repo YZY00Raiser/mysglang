@@ -1,3 +1,5 @@
+import os
+import subprocess
 import unittest
 
 import requests
@@ -5,14 +7,13 @@ import requests
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     CONFIG_YAML_PATH,
-    # popen_launch_server,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
-    popen_launch_server,
+    popen_launch_server, _wait_for_server_health, _create_clean_subprocess_env,
 )
 
 register_npu_ci(
@@ -29,34 +30,34 @@ class TestConfig(CustomTestCase):
     [Test Target] --config
     """
 
-    model = ""
     config = CONFIG_YAML_PATH
 
     @classmethod
-    def _build_other_args(cls):
-        return [
+    def launch_server_with_config_yaml(cls, config_file, url, timeout):
+        command = [
+            "python3",
+            "-m",
+            "sglang.launch_server",
             "--config",
-            cls.config,
+            config_file,
         ]
+        process = subprocess.Popen(command, stdout=None, stderr=None,
+                                   env=_create_clean_subprocess_env(os.environ.copy()))
+        _wait_for_server_health(process, url, None, timeout)
+        return process
 
     @classmethod
-    def _launch_server(cls):
-        other_args = cls._build_other_args()
-        cls.process = popen_launch_server(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
+    def setUpClass(cls):
+        cls.base_url = DEFAULT_URL_FOR_TEST
+        cls.process = cls.launch_server_with_config_yaml(cls.config, cls.base_url, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
     def test_config(self):
-        self._launch_server()
         response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
+            f"{self.base_url}/generate",
             json={
                 "text": "The capital of France is",
                 "sampling_params": {
