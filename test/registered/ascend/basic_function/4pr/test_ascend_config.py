@@ -79,7 +79,7 @@ class TestConfigPriority(TestConfig):
     [Test Target] --config
     """
 
-    model = "/data/Qwen/Qwen3-32B"
+    model = "/nonexistent/Qwen/Qwen3-32B"
 
     @classmethod
     def _launch_server(cls):
