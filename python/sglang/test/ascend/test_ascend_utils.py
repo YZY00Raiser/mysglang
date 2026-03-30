@@ -815,7 +815,7 @@ def execute_serving_performance_test(
     return {"mean_ttft": mean_ttft, "mean_tpot": mean_tpot, "total_tps": total_tps}
 
 
-def create_attention_monitor_factory_hook(config):
+def create_attention_monitor_hook_factory(config):
     # hook factory
     layer_index = config.get("layer_index", 0)
     logging.basicConfig(
