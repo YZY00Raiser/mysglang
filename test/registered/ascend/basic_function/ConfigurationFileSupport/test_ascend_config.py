@@ -7,6 +7,9 @@ from sglang.srt.utils import kill_process_tree
 #     CONFIG_YAML_PATH,
 #     popen_launch_server_config,
 # )
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_32B_WEIGHTS_PATH,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -84,7 +87,8 @@ class TestConfigPriority(CustomTestCase):
     [Test Target] --config
     """
 
-    model = "/data/Qwen/Qwen3-32B"
+    # model = "/data/Qwen/Qwen3-32B"
+    model = QWEN3_32B_WEIGHTS_PATH
     config = CONFIG_YAML_PATH
 
     @classmethod
