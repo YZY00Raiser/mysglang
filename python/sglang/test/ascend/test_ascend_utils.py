@@ -267,7 +267,6 @@ CONFIG_VALID_YAML_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_
 HOOK_FUNCTION_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_function/ForwardHooks/test_npu_forward_hooks.py"
 
 
-
 class ModelTestConfig(NamedTuple):
     """
     Configuration for model testing.
@@ -562,7 +561,7 @@ def run_bench_serving(
 
 
 def popen_launch_server_config(
-    model: str,
+
     base_url: str,
     timeout: float,
     api_key: Optional[str] = None,
@@ -611,7 +610,7 @@ def popen_launch_server_config(
 
         if is_in_ci():
             per_run_marker_path = _try_enable_offline_mode_if_cache_complete(
-                model, env, other_args
+                env, other_args
             )
     except Exception as e:
         print(f"CI cache validation failed (non-fatal): {e}")
@@ -650,7 +649,7 @@ def popen_launch_server_config(
     offline_enabled = env.get("HF_HUB_OFFLINE") == "1"
 
     # First launch attempt
-    process = _launch_server_process(command, env, return_stdout_stderr, model)
+    process = _launch_server_process(command, env, return_stdout_stderr)
     success, error_msg = _wait_for_server_health(process, base_url, api_key, timeout)
 
     # If offline launch failed and offline was enabled, retry with online mode
@@ -678,7 +677,7 @@ def popen_launch_server_config(
 
         # Retry with online mode
         env["HF_HUB_OFFLINE"] = "0"
-        process = _launch_server_process(command, env, return_stdout_stderr, model)
+        process = _launch_server_process(command, env, return_stdout_stderr)
         success, error_msg = _wait_for_server_health(
             process, base_url, api_key, timeout
         )
