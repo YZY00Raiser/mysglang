@@ -29,7 +29,7 @@ class TestConfig(CustomTestCase):
     [Test Target] --config
     """
 
-    model = None
+    model = ""
     config = CONFIG_YAML_PATH
 
     @classmethod
