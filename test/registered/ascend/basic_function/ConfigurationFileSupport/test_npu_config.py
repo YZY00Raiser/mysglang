@@ -84,7 +84,7 @@ class TestConfigPriority(CustomTestCase):
     [Test Target] --config
     """
 
-    model = "/data/Qwen/Qwen3-32B"
+    model = "/nonexistent/Qwen/Qwen3-32B"
     config = CONFIG_YAML_PATH
 
     def test_config_priority(self):
