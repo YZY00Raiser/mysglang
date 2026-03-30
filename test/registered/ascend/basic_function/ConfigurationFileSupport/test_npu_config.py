@@ -1,3 +1,6 @@
+import tempfile
+import os
+import subprocess
 import unittest
 
 import requests
@@ -5,14 +8,13 @@ import requests
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     CONFIG_YAML_PATH,
-    popen_launch_server_config,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
-    popen_launch_server,
+    popen_launch_server, _wait_for_server_health, _create_clean_subprocess_env,
 )
 
 register_npu_ci(
@@ -29,32 +31,32 @@ class TestConfig(CustomTestCase):
     [Test Target] --config
     """
 
-    model = None
     config = CONFIG_YAML_PATH
 
     @classmethod
-    def _build_other_args(cls):
-        return [
+    def launch_server_with_config_yaml(cls, config_file, url, timeout):
+        command = [
+            "python3",
+            "-m",
+            "sglang.launch_server",
             "--config",
-            cls.config,
+            config_file,
         ]
+        process = subprocess.Popen(command, stdout=None, stderr=None,
+                                   env=_create_clean_subprocess_env(os.environ.copy()))
+        _wait_for_server_health(process, url, None, timeout)
+        return process
 
     @classmethod
-    def _launch_server(cls):
-        other_args = cls._build_other_args()
-        cls.process = popen_launch_server_config(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
+    def setUpClass(cls):
+        cls.process = cls.launch_server_with_config_yaml(cls.config, DEFAULT_URL_FOR_TEST,
+                                                         DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
     def test_config(self):
-        self._launch_server()
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -70,7 +72,7 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-class TestConfigPriority(TestConfig):
+class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
     will use false model path service start fail .
@@ -80,28 +82,33 @@ class TestConfigPriority(TestConfig):
     """
 
     model = "/nonexistent/Qwen/Qwen3-32B"
+    config = CONFIG_YAML_PATH
 
-    @classmethod
-    def _launch_server(cls):
-        other_args = cls._build_other_args()
-        cls.process = popen_launch_server(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
-
-    def test_config(self):
-        with self.assertRaises(Exception) as ctx:
-            self._launch_server()
-        self.assertIn(
-            "Server process exited with code 1. Check server logs for errors.",
-            str(ctx.exception),
-        )
+    def test_config_priority(self):
+        error_message = "make sure '/nonexistent/Qwen/Qwen3-32B' is the correct path"
+        with tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as out_log_file, tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as err_log_file:
+            try:
+                popen_launch_server(
+                    self.model,
+                    DEFAULT_URL_FOR_TEST,
+                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                    other_args=["--config", self.config],
+                    return_stdout_stderr=(out_log_file, err_log_file),
+                )
+            except Exception as e:
+                self.assertIn(
+                    "Server process exited with code 1",
+                    str(e),
+                )
+            finally:
+                err_log_file.seek(0)
+                content = err_log_file.read()
+                # error_message information is recorded in the error log
+                self.assertIn(error_message, content)
 
 
 if __name__ == "__main__":
