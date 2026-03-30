@@ -7,6 +7,8 @@ import shlex
 import subprocess
 from types import SimpleNamespace
 from typing import Awaitable, Callable, NamedTuple, Optional
+import logging
+import time
 
 from sglang.bench_serving import run_benchmark
 from sglang.srt.utils import kill_process_tree
@@ -561,7 +563,6 @@ def run_bench_serving(
 
 
 def popen_launch_server_config(
-
     base_url: str,
     timeout: float,
     api_key: Optional[str] = None,
@@ -788,3 +789,33 @@ def execute_serving_performance_test(
     )
 
     return {"mean_ttft": mean_ttft, "mean_tpot": mean_tpot, "total_tps": total_tps}
+
+
+def create_attention_monitor_factory(config):
+    # hook factory
+    layer_index = config.get("layer_index", 0)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+    def attention_monitor_hook(module, inputs, output):
+        # The actual hook function is called during the forward propagation of the self-attention layer.
+        timestamp = time.time()
+
+        hidden_states = inputs[1] if inputs else None
+
+        monitor_record = {
+            "timestamp": timestamp,
+            "layer_index": layer_index,
+            "module_type": type(module).__name__,
+            "inputs": hidden_states.sum(-1)[:5] if hidden_states is not None else None,
+            "outputs": output.sum(-1)[:5],
+        }
+
+        logging.info(f"hook effect: {monitor_record}")
+
+        return output
+
+    return attention_monitor_hook
