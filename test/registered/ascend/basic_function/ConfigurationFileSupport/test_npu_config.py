@@ -24,8 +24,6 @@ register_npu_ci(
 )
 
 '''
-
-
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -74,6 +72,7 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 '''
 
+
 class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
@@ -83,11 +82,11 @@ class TestConfigPriority(CustomTestCase):
     [Test Target] --config
     """
 
-    model = "/nonexistent/Qwen/Qwen3-32B"
+    model = "/data/Qwen/Qwen3-32B"
     config = CONFIG_YAML_PATH
 
     def test_config_priority(self):
-        error_message = "make sure '/nonexistent/Qwen/Qwen3-32B' is the correct path"
+        error_message = "make sure '/data/Qwen/Qwen3-32B' is the correct path"
         with tempfile.NamedTemporaryFile(
             mode="w+", delete=True, suffix="out.log"
         ) as out_log_file, tempfile.NamedTemporaryFile(
