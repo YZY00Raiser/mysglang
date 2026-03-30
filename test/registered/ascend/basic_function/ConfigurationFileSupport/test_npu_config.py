@@ -26,7 +26,7 @@ CONFIG_YAML_PATH = (
     "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml"
 )
 
-
+'''
 class TestSGLangConfigServer(CustomTestCase):
     config = CONFIG_YAML_PATH
 
@@ -76,15 +76,15 @@ class TestSGLangConfigServer(CustomTestCase):
                     "max_new_tokens": 32,
                 },
             },
-            timeout=30
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        print("✅ 测试通过：配置文件启动服务正常工作")
 
 
 '''
+
+
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -95,34 +95,41 @@ class TestConfig(CustomTestCase):
     config = CONFIG_YAML_PATH
 
     @classmethod
-    def launch_server_with_config_yaml(cls, config_file, url, timeout):
+    def launch_server_with_config_yaml(cls, config_file, base_url, timeout):
+        _, host, port = base_url.split(":")
+        host = host[2:]
         command = [
             "python3",
             "-m",
             "sglang.launch_server",
-            "--config",
-            config_file,
+            "--config", config_file,
+            "--host", host,
+            "--port", port,
         ]
-        process = subprocess.Popen(command, stdout=None, stderr=None,
-                                   env=_create_clean_subprocess_env(os.environ.copy()))
-        _wait_for_server_health(process, url, None, timeout)
+
+        env = _create_clean_subprocess_env(os.environ.copy())
+        process = subprocess.Popen(
+            command,
+            stdout=None,
+            stderr=None,
+            env=env
+        )
+        _wait_for_server_health(process, base_url, None, timeout)
         return process
-
-
-
-
-
 
     @classmethod
     def setUpClass(cls):
-        cls.process = cls.launch_server_with_config_yaml(cls.config, DEFAULT_URL_FOR_TEST,
-                                                         DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
+        cls.process = cls.launch_server_with_config_yaml(
+            cls.config,
+            DEFAULT_URL_FOR_TEST,
+            DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
+        )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_config(self):
+    def test_config_yaml_server_generate(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -138,6 +145,7 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
+'''
 class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
