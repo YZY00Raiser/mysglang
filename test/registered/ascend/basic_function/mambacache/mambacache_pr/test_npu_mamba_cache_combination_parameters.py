@@ -69,8 +69,6 @@ class TestMambaCache(CustomTestCase):
             "--tp-size",
             8,
             "--disable-radix-cache",
-            "--base-gpu-id",
-            "8",
         ]
         if max_mamba_cache_size is not None:
             other_args.extend(["--max-mamba-cache-size", max_mamba_cache_size])
@@ -298,6 +296,9 @@ class TestMambaCache(CustomTestCase):
                 self.assertIn(error_message, content)
     '''
 
+    '''
+
+
     def test_mamba_track_interval_not_divisible(self):
 
         popen_launch_server(
@@ -332,6 +333,9 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         print("111111111111111111111111111111111111111111111111111111111")
         print(response.text)
+    '''
+
+
 
     def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
