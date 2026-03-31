@@ -298,7 +298,7 @@ class TestMambaCache(CustomTestCase):
 
     def test_mamba_track_interval_not_divisible(self):
 
-        popen_launch_server(
+        process = popen_launch_server(
             self.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -330,10 +330,11 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         print("111111111111111111111111111111111111111111111111111111111")
         print(response.text)
+        kill_process_tree(process.pid)
 
     def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
-        popen_launch_server(
+        process = popen_launch_server(
             self.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -368,6 +369,7 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         print("2222222222222222222222222222222222222222222222222222222222222222")
         print(response.text)
+        kill_process_tree(process.pid)
 
 
 if __name__ == "__main__":
