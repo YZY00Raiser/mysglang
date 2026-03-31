@@ -257,7 +257,7 @@ class TestMambaCache(CustomTestCase):
                 content = err_log_file.read()
                 # error_message information is recorded in the error log
                 self.assertIn(error_message, content)
-    '''
+
     def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
         error_message = "No module named 'cuda'"
@@ -298,6 +298,31 @@ class TestMambaCache(CustomTestCase):
                 content = err_log_file.read()
                 # error_message information is recorded in the error log
                 self.assertIn(error_message, content)
+    '''
+
+    def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
+        # mamba_track_interval less than speculative_num_draft_tokens, service start failed
+
+        popen_launch_server(
+            self.model,
+            DEFAULT_URL_FOR_TEST,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=[
+                "--trust-remote-code",
+                "--mem-fraction-static",
+                "0.5",
+                "--attention-backend",
+                "ascend",
+                "--disable-cuda-graph",
+                "--mamba-track-interval",
+                "128",
+                "--tp-size",
+                "8",
+                "--disable-radix-cache",
+                "--speculative-num-draft-tokens",
+                "129"
+            ],
+        )
 
 
 if __name__ == "__main__":
