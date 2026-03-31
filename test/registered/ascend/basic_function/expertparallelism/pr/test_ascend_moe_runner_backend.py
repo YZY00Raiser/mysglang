@@ -24,8 +24,9 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     [Test Category] Parameter
     [Test Target] --moe-runner-backend
     """
-    # run_command("export SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT=1")
-    # run_command("export HCCL_BUFFSIZE=1024")
+    
+    run_command("export SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT=1")
+    run_command("export HCCL_BUFFSIZE=1024")
     model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
     moe_runner_backend = "triton"
 
@@ -96,16 +97,6 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
 
 class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
     moe_runner_backend = "auto"
-
-    @classmethod
-    def get_server_args(cls):
-        other_args = [
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-        ]
-
-        return other_args
 
 
 if __name__ == "__main__":
