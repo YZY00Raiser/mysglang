@@ -5,7 +5,6 @@ import requests
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
-    run_command,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -25,8 +24,6 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     [Test Target] --moe-runner-backend
     """
 
-    # run_command("export SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT=1")
-    # run_command("export HCCL_BUFFSIZE=1024")
     model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
     moe_runner_backend = "triton"
 
@@ -61,10 +58,10 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "--moe-runner-backend",
                 cls.moe_runner_backend,
             ],
-            # env={
-            #     "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
-            #     "HCCL_BUFFSIZE": "1024",
-            # },
+            env={
+                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                "HCCL_BUFFSIZE": "1024",
+            },
         )
 
     @classmethod
