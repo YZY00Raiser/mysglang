@@ -259,12 +259,17 @@ CONFIG_YAML_PATH = (
 )
 CONFIG_VALID_YAML_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/config_valid.yaml"
 HOOK_FUNCTION_PATH = "/__w/sglang/sglang/test/registered/ascend/basic_function/parameter/test_ascend_forward_hooks:create_attention_monitor_factory"
-'''
+
 CONFIG_YAML_PATH = (
     "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml"
 )
 CONFIG_VALID_YAML_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_function/parameter/config_valid.yaml"
 HOOK_FUNCTION_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_function/ForwardHooks/test_npu_forward_hooks.py"
+'''
+CONFIG_YAML_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "../../../test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml",
+)
 
 
 class ModelTestConfig(NamedTuple):
@@ -560,7 +565,6 @@ def run_bench_serving(
     return res
 
 
-
 def execute_serving_performance_test(
     host,
     port,
@@ -639,11 +643,14 @@ def execute_serving_performance_test(
 
     return {"mean_ttft": mean_ttft, "mean_tpot": mean_tpot, "total_tps": total_tps}
 
+
 # launch server with "--config" parameter
 def popen_launch_server_with_config_yaml(config_file, base_url, timeout):
-    parsed_url = urlparse(base_url)
-    host = parsed_url.hostname
-    port = parsed_url.port
+    # parsed_url = urlparse(base_url)
+    # host = parsed_url.hostname
+    # port = parsed_url.port
+    # host = host[2:]
+    _, host, port = base_url.split(":")
     host = host[2:]
     command = [
         "python3",
@@ -692,4 +699,3 @@ def create_attention_monitor_hook_factory(config):
         return output
 
     return attention_monitor_hook
-
