@@ -70,7 +70,7 @@ class TestMambaCache(CustomTestCase):
             8,
             "--disable-radix-cache",
             "--base-gpu-id",
-            "8"
+            "7",
         ]
         if max_mamba_cache_size is not None:
             other_args.extend(["--max-mamba-cache-size", max_mamba_cache_size])
