@@ -4,7 +4,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH as MODEL_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -30,7 +30,7 @@ class TestEplbAlgorithm(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
-        cls.model = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8"
+        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -39,7 +39,7 @@ class TestEplbAlgorithm(CustomTestCase):
             other_args=[
                 "--trust-remote-code",
                 "--tp-size",
-                "16",
+                "2",
                 "--dp-size",
                 "1",
                 "--attention-backend",
@@ -47,7 +47,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--quantization",
                 "modelslim",
                 "--mem-fraction-static",
-                "0.9",
+                "0.85",
                 "--enable-dp-attention",
                 "--moe-a2a-backend",
                 "deepep",
@@ -73,6 +73,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "SGL_ENABLE_JIT_DEEPGEMM": "0",
                 "HCCL_BUFFSIZE": "512",
                 **os.environ,
+                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
             },
         )
 
@@ -81,7 +82,7 @@ class TestEplbAlgorithm(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_eplb_algorithm(self):
-        response = requests.get(f"{self.base_url}/get_server_info")
+        response = requests.get(f"{self.base_url}/server_info")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.eplb_algorithm, response.json().get("eplb_algorithm"))
 
