@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 
 import requests
@@ -68,6 +69,8 @@ class TestMambaCache(CustomTestCase):
             "--tp-size",
             8,
             "--disable-radix-cache",
+            "--base-gpu-id",
+            "8"
         ]
         if max_mamba_cache_size is not None:
             other_args.extend(["--max-mamba-cache-size", max_mamba_cache_size])
@@ -218,13 +221,42 @@ class TestMambaCache(CustomTestCase):
 
     def test_mamba_track_interval_err(self):
         # mamba_track_interval not divisible by page_size(128)
-        self.process = self._launch_server_with_mamba_params(
-            mamba_track_interval=127,
-        )
-        try:
-            self._test_basic_inference()
-        finally:
-            kill_process_tree(self.process.pid)
+        error_message = "No module named 'cuda'"
+        with tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as out_log_file, tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as err_log_file:
+            try:
+                popen_launch_server(
+                    self.model,
+                    DEFAULT_URL_FOR_TEST,
+                    timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                    other_args=[
+                        "--trust-remote-code",
+                        "--mem-fraction-static",
+                        "0.5",
+                        "--attention-backend",
+                        "ascend",
+                        "--disable-cuda-graph",
+                        "--mamba-track-interval",
+                        "127",
+                        "--tp-size",
+                        "8",
+                        "--disable-radix-cache",
+                    ],
+                    return_stdout_stderr=(out_log_file, err_log_file),
+                )
+            except Exception as e:
+                self.assertIn(
+                    "Server process exited with code -9.",
+                    str(e),
+                )
+            finally:
+                err_log_file.seek(0)
+                content = err_log_file.read()
+                # error_message information is recorded in the error log
+                self.assertIn(error_message, content)
 
 
 if __name__ == "__main__":
