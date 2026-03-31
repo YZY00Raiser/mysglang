@@ -18,10 +18,10 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 
 class TestmoeA2ABackendAscendFuseep(CustomTestCase):
-    """Testcase：Verify set --moe-runner-backend, the inference request is successfully processed.
+    """Testcase：Verify set --moe-a2a-backend, the inference request is successfully processed.
 
     [Test Category] Parameter
-    [Test Target] --moe-runner-backend
+    [Test Target] --moe-a2a-backend
     """
 
     model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
@@ -42,7 +42,7 @@ class TestmoeA2ABackendAscendFuseep(CustomTestCase):
                 "0.85",
                 "--tp-size",
                 "2",
-                "--ep",
+                "--expert-parallel-size",
                 "1",
                 "--enable-eplb",
                 "--moe-a2a-backend",
