@@ -17,7 +17,7 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 
-class TestMoreRunnerBackendTriton(CustomTestCase):
+class TestmoeA2ABackendAscendFuseep(CustomTestCase):
     """Testcase：Verify set --moe-runner-backend, the inference request is successfully processed.
 
     [Test Category] Parameter
@@ -68,7 +68,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_moe_runner_backend(self):
+    def test_moe_a2a_backend(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -89,15 +89,11 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         self.assertEqual(
             response.status_code, 200, "The request status code is not 200."
         )
-        self.assertEqual(
-            response.json()["moe_runner_backend"],
-            self.moe_runner_backend,
-            "--moe-runner-backend is not taking effect.",
-        )
+        self.assertEqual(response.json()["moe_a2a_backend"], self.moe_a2a_backend)
 
 
-class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
-    moe_runner_backend = "deepep"
+class TestmoeA2ABackendDeepep(TestmoeA2ABackendAscendFuseep):
+    moe_a2a_backend = "deepep"
 
 
 if __name__ == "__main__":
