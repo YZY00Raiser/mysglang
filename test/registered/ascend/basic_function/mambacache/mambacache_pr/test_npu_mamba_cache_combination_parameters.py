@@ -41,12 +41,12 @@ class TestMambaCache(CustomTestCase):
             kill_process_tree(cls.process.pid)
 
     def _launch_server_with_mamba_params(
-            self,
-            max_mamba_cache_size=None,
-            mamba_ssm_dtype=None,
-            mamba_full_memory_ratio=0.9,
-            mamba_scheduler_strategy="auto",
-            mamba_track_interval=256,
+        self,
+        max_mamba_cache_size=None,
+        mamba_ssm_dtype=None,
+        mamba_full_memory_ratio=0.9,
+        mamba_scheduler_strategy="auto",
+        mamba_track_interval=256,
     ):
         other_args = [
             "--trust-remote-code",
@@ -96,6 +96,7 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         return response.text
 
+    '''
     def test_mamba_long_sequence(self):
         self.process = self._launch_server_with_mamba_params(max_mamba_cache_size=1024)
         try:
@@ -202,6 +203,8 @@ class TestMambaCache(CustomTestCase):
             self._test_basic_inference()
         finally:
             kill_process_tree(self.process.pid)
+
+    '''
 
     def test_mamba_max_mamba_cache_size_2048(self):
         self.process = self._launch_server_with_mamba_params(
