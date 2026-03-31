@@ -42,6 +42,8 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "0.85",
                 "--tp-size",
                 "2",
+                "--ep",
+                "1",
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "deepep",

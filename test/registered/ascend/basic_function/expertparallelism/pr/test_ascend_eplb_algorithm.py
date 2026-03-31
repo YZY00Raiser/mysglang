@@ -42,6 +42,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "2",
                 "--dp-size",
                 "1",
+                "--expert-parallel-size",
+                "1",
                 "--attention-backend",
                 "ascend",
                 "--mem-fraction-static",
