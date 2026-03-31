@@ -3,7 +3,10 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import (
+    DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+    run_command,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -12,7 +15,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 
 class TestMoreRunnerBackendTriton(CustomTestCase):
@@ -21,7 +24,8 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     [Test Category] Parameter
     [Test Target] --moe-runner-backend
     """
-
+    run_command("export SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT=1")
+    run_command("export HCCL_BUFFSIZE=1024")
     model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
     moe_runner_backend = "triton"
 
@@ -79,7 +83,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         self.assertIn(
             "Paris", response.text, "The inference result does not include Paris."
         )
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/get_server_info")
+        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/server_info")
         self.assertEqual(
             response.status_code, 200, "The request status code is not 200."
         )
