@@ -318,10 +318,24 @@ class TestMambaCache(CustomTestCase):
                 "8",
                 "--disable-radix-cache",
             ],
-
         )
-    '''
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": self.test_prompt,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.expected_output, response.text)
+        print("111111111111111111111111111111111111111111111111111111111")
+        return response.text
+
         def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
+
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
 
         popen_launch_server(
@@ -345,7 +359,20 @@ class TestMambaCache(CustomTestCase):
             ],
         )
 
-    '''
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": self.test_prompt,
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.expected_output, response.text)
+        print("2222222222222222222222222222222222222222222222222222222222222222")
+        return response.text
 
 
 if __name__ == "__main__":
