@@ -97,7 +97,6 @@ class TestMambaCache(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.expected_output, response.text)
-        return response.text
 
     '''
     def test_mamba_long_sequence(self):
