@@ -296,9 +296,7 @@ class TestMambaCache(CustomTestCase):
                 self.assertIn(error_message, content)
     '''
 
-    '''
-        def test_mamba_track_interval_not_divisible(self):
-
+    def test_mamba_track_interval_not_divisible(self):
         process = popen_launch_server(
             self.model,
             DEFAULT_URL_FOR_TEST,
@@ -333,7 +331,6 @@ class TestMambaCache(CustomTestCase):
         print(response.text)
         kill_process_tree(process.pid)
 
-    '''
     def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
         process = popen_launch_server(
