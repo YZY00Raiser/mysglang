@@ -332,7 +332,7 @@ class TestMambaCache(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.expected_output, response.text)
         print("111111111111111111111111111111111111111111111111111111111")
-        return response.text
+        print(response.text)
 
     def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
@@ -370,7 +370,7 @@ class TestMambaCache(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.expected_output, response.text)
         print("2222222222222222222222222222222222222222222222222222222222222222")
-        return response.text
+        print(response.text)
 
 
 if __name__ == "__main__":
