@@ -148,7 +148,6 @@ class TestConfig(CustomTestCase):
 '''
 
 
-
 class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
@@ -162,7 +161,7 @@ class TestConfigPriority(CustomTestCase):
     config = CONFIG_YAML_PATH
 
     def test_config_priority(self):
-        error_message = "/nonexistent/Qwen/Qwen3-32B"
+        error_message = "Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/nonexistent/Qwen/Qwen3-32B'."
         with tempfile.NamedTemporaryFile(
             mode="w+", delete=True, suffix="out.log"
         ) as out_log_file, tempfile.NamedTemporaryFile(
