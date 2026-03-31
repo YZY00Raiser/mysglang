@@ -296,9 +296,6 @@ class TestMambaCache(CustomTestCase):
                 self.assertIn(error_message, content)
     '''
 
-    '''
-
-
     def test_mamba_track_interval_not_divisible(self):
 
         popen_launch_server(
@@ -333,9 +330,6 @@ class TestMambaCache(CustomTestCase):
         self.assertIn(self.expected_output, response.text)
         print("111111111111111111111111111111111111111111111111111111111")
         print(response.text)
-    '''
-
-
 
     def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
@@ -353,7 +347,7 @@ class TestMambaCache(CustomTestCase):
                 "--mamba-track-interval",
                 "128",
                 "--tp-size",
-                "8",
+                "16",
                 "--disable-radix-cache",
                 "--speculative-num-draft-tokens",
                 "129"
