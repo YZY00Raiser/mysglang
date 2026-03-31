@@ -68,10 +68,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 cls.eplb_algorithm,
             ],
             env={
-                "SGL_ENABLE_JIT_DEEPGEMM": "0",
-                "HCCL_BUFFSIZE": "1024",
-                **os.environ,
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                "HCCL_BUFFSIZE": "1024",
             },
         )
 
