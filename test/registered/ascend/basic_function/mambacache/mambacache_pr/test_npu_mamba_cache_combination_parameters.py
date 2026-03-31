@@ -350,7 +350,7 @@ class TestMambaCache(CustomTestCase):
                 "--mamba-track-interval",
                 "128",
                 "--tp-size",
-                "16",
+                "8",
                 "--disable-radix-cache",
                 "--speculative-num-draft-tokens",
                 "129"
