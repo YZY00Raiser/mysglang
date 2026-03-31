@@ -3,7 +3,7 @@ import unittest
 from types import SimpleNamespace
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
 from sglang.test.test_utils import (
@@ -12,7 +12,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-16-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 
 class TestAscendMoeDenseTPSize(CustomTestCase):
@@ -24,7 +24,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
+        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -33,7 +33,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
             other_args=[
                 "--trust-remote-code",
                 "--tp",
-                "16",
+                "2",
                 "--moe-dense-tp-size",
                 "1",
                 "--moe-a2a-backend",
@@ -45,6 +45,8 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "--quantization",
                 "modelslim",
                 "--disable-cuda-graph",
+                "--mem-fraction-static",
+                "0.85",
             ],
             env={
                 "HCCL_BUFFSIZE": "1000",
