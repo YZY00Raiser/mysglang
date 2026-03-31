@@ -266,11 +266,14 @@ CONFIG_YAML_PATH = (
 CONFIG_VALID_YAML_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_function/parameter/config_valid.yaml"
 HOOK_FUNCTION_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_function/ForwardHooks/test_npu_forward_hooks.py"
 '''
+# CONFIG_YAML_PATH = os.path.join(
+#     os.path.dirname(__file__),
+#     "../../../test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml",
+# )
 CONFIG_YAML_PATH = os.path.join(
     os.path.dirname(__file__),
-    "../../../test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml",
+    "../../test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml",
 )
-
 
 class ModelTestConfig(NamedTuple):
     """
