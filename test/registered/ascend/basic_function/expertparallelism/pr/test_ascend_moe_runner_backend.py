@@ -24,7 +24,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     [Test Category] Parameter
     [Test Target] --moe-runner-backend
     """
-    
+
     run_command("export SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT=1")
     run_command("export HCCL_BUFFSIZE=1024")
     model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
