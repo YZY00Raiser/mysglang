@@ -651,7 +651,7 @@ def execute_serving_performance_test(
 def popen_launch_server_with_config_yaml(config_file, base_url, timeout):
     parsed_url = urlparse(base_url)
     host = parsed_url.hostname
-    # port = parsed_url.port
+    port = parsed_url.port
     # _, host, port = base_url.split(":")
     # host = host[2:]
     command = [
