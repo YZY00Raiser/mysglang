@@ -334,10 +334,8 @@ class TestMambaCache(CustomTestCase):
         print("111111111111111111111111111111111111111111111111111111111")
         return response.text
 
-        def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
-
+    def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
-
         popen_launch_server(
             self.model,
             DEFAULT_URL_FOR_TEST,
