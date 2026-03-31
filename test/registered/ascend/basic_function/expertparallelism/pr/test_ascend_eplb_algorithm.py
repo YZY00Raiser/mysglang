@@ -25,7 +25,7 @@ class TestEplbAlgorithm(CustomTestCase):
     [Test Target] --eplb-algorithm
     """
 
-    eplb_algorithm = "deepseek"
+    eplb_algorithm = "auto"
 
     @classmethod
     def setUpClass(cls):
@@ -44,8 +44,6 @@ class TestEplbAlgorithm(CustomTestCase):
                 "1",
                 "--attention-backend",
                 "ascend",
-                "--quantization",
-                "modelslim",
                 "--mem-fraction-static",
                 "0.85",
                 "--enable-dp-attention",
@@ -56,7 +54,7 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--disable-cuda-graph",
                 "--enable-eplb",
                 "--ep-num-redundant-experts",
-                "16",
+                "4",
                 "--eplb-rebalance-num-iterations",
                 "50",
                 "--expert-distribution-recorder-buffer-size",
