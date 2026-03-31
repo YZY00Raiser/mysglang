@@ -25,6 +25,7 @@ class TestDeepEpAutoDeepseekR1(CustomTestCase):
     [Test Target] --moe-a2a-backend; --deepep-mode
     """
     accuracy = 0.96
+
     @classmethod
     def setUpClass(cls):
         cls.model = MODEL_PATH
@@ -135,6 +136,7 @@ class TestDeepEpAutoDeepseekR1(CustomTestCase):
             self.accuracy,
             f'Accuracy of {self.model} is {str(metrics["accuracy"])}, is lower than {self.accuracy}',
         )
+
 
 if __name__ == "__main__":
     unittest.main()
