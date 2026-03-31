@@ -57,7 +57,7 @@ class TestConfig(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-'''
+
 class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
@@ -95,8 +95,6 @@ class TestConfigPriority(CustomTestCase):
                 content = err_log_file.read()
                 # error_message information is recorded in the error log
                 self.assertIn(error_message, content)
-
-'''
 
 
 if __name__ == "__main__":
