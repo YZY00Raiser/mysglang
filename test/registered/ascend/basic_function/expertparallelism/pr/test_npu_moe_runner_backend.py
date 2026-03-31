@@ -99,8 +99,8 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         )
 
 
-# class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
-#     moe_runner_backend = "auto"
+class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
+    moe_runner_backend = "auto"
 
 
 if __name__ == "__main__":
