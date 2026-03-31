@@ -204,11 +204,22 @@ class TestMambaCache(CustomTestCase):
         finally:
             kill_process_tree(self.process.pid)
 
-    '''
+
 
     def test_mamba_max_mamba_cache_size_2048(self):
         self.process = self._launch_server_with_mamba_params(
             max_mamba_cache_size=2048,
+        )
+        try:
+            self._test_basic_inference()
+        finally:
+            kill_process_tree(self.process.pid)
+    '''
+
+    def test_mamba_track_interval_err(self):
+        # mamba_track_interval not divisible by page_size(128)
+        self.process = self._launch_server_with_mamba_params(
+            mamba_track_interval=127,
         )
         try:
             self._test_basic_inference()
