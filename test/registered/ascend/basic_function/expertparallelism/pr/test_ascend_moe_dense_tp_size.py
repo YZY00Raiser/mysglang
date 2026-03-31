@@ -42,8 +42,6 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "512",
                 "--attention-backend",
                 "ascend",
-                "--quantization",
-                "modelslim",
                 "--disable-cuda-graph",
                 "--mem-fraction-static",
                 "0.85",
