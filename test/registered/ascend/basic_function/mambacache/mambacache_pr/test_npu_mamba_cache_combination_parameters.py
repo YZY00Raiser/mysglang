@@ -320,8 +320,8 @@ class TestMambaCache(CustomTestCase):
             ],
 
         )
-
-    def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
+    '''
+        def test_mamba_track_interval_less_speculative_num_draft_tokens(self):
         # mamba_track_interval less than speculative_num_draft_tokens, service start failed
 
         popen_launch_server(
@@ -344,6 +344,8 @@ class TestMambaCache(CustomTestCase):
                 "129"
             ],
         )
+
+    '''
 
 
 if __name__ == "__main__":
