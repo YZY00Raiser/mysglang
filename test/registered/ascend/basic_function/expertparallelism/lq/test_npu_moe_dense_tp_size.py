@@ -12,7 +12,7 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
-DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH="/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
 class TestAscendMoeDenseTPSize(CustomTestCase):
@@ -40,12 +40,10 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "--tp-size",
                 "2",
                 "--ep-size",
-                "1",
+                "2",
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
-                "--deepep-mode",
-                "normal",
                 "--ep-num-redundant-experts",
                 "4",
                 "--eplb-rebalance-num-iterations",
