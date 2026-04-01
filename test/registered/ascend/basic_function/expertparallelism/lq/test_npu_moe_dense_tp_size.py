@@ -43,7 +43,6 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "2",
                 "--enable-eplb",
                 "--moe-a2a-backend",
-                "ascend_fuseep",
                 "deepep",
                 "--ep-num-redundant-experts",
                 "4",
