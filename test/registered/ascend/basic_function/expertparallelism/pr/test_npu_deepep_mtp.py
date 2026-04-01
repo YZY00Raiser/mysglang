@@ -18,7 +18,7 @@ class TestAscendDeepEP(CustomTestCase):
     Testcase：Verify the correctness and performance of DeepSeek Model when the MTP technology and deepep are used
 
     [Test Category] Parameter
-    [Test Target] use MTP by test model DeepSeek R1, --scheduler-recv-interval 10, --moe-a2a-backend deepep,
+    [Test Target] use MTP by test model DeepSeek-Coder-V2-Lite-Instruct, --scheduler-recv-interval 10, --moe-a2a-backend deepep,
     --deepep-mode auto
     """
 
@@ -73,6 +73,7 @@ class TestAscendDeepEP(CustomTestCase):
             "SGLANG_NPU_USE_EINSUM_MM": "1",
             "SLANG_ENABLE_SPEC_V2": "1",
             "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
+            "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1"
         }
         os.environ.update(cls.extra_envs)
 
