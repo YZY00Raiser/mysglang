@@ -13,7 +13,7 @@ from sglang.test.test_utils import (
     popen_launch_server, CustomTestCase,
 )
 
-register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 SKIP_OUT_LOG = "./skip_out_log.txt"
 SKIP_ERR_LOG = "./skip_err_log.txt"
@@ -39,9 +39,9 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--chunked-prefill-size",
         "1024",
         "--tp-size",
-        "8",
-        "--quantization",
-        "modelslim",
+        "2",
+        "--mem-fraction-static",
+        "0.85",
         "--moe-a2a-backend",
         "deepep",
         "--deepep-mode",

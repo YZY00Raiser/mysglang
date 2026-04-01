@@ -17,7 +17,7 @@ from sglang.test.test_utils import (
 
 from sglang.test.ci.ci_register import register_npu_ci
 
-register_npu_ci(est_time=200, suite="nightly-16-npu-a3", nightly=True)
+register_npu_ci(est_time=200, suite="nightly-2-npu-a3", nightly=True)
 
 
 class _BaseTestDynamicEPLB(CustomTestCase):
@@ -44,15 +44,13 @@ class _BaseTestDynamicEPLB(CustomTestCase):
             other_args=[
                 "--trust-remote-code",
                 "--tp-size",
-                "16",
+                "2",
                 "--dp-size",
                 "1",
                 "--attention-backend",
                 "ascend",
-                "--quantization",
-                "modelslim",
                 "--mem-fraction-static",
-                "0.9",
+                "0.85",
                 "--enable-dp-attention",
                 "--moe-a2a-backend",
                 "deepep",
