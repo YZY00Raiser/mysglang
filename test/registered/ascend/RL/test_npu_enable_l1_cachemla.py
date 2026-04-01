@@ -13,7 +13,7 @@ from sglang.test.test_utils import (
 DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V2-Lite-W8A8"
 
 
-class TestAscendMlaHicache(CustomTestCase):
+class TestRL(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
