@@ -29,11 +29,9 @@ class TestEplbAlgorithm(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-        cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
-            cls.model,
-            cls.base_url,
+            DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
                 "--trust-remote-code",
@@ -73,12 +71,12 @@ class TestEplbAlgorithm(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_eplb_algorithm(self):
-        response = requests.get(f"{self.base_url}/server_info")
+        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/server_info")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.eplb_algorithm, response.json().get("eplb_algorithm"))
 
         response = requests.post(
-            f"{self.base_url}/generate",
+            f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
                 "sampling_params": {
