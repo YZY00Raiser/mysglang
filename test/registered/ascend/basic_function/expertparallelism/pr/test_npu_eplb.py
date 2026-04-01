@@ -59,7 +59,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--disable-cuda-graph",
                 "--enable-eplb",
                 "--ep-num-redundant-experts",
-                "16",
+                "4",
                 "--eplb-rebalance-num-iterations",
                 "50",
                 "--expert-distribution-recorder-buffer-size",
