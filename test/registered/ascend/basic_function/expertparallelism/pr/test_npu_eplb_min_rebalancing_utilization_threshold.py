@@ -1,11 +1,10 @@
 import os
 import unittest
-from abc import ABC
 
 from types import SimpleNamespace
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import QWEN3_30B_A3B_W8A8_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.few_shot_gsm8k import run_eval
 from sglang.test.test_utils import (
@@ -22,7 +21,7 @@ REBALANCE_OUT_LOG = "./rebalance_out_log.txt"
 REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
 
 
-class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
+class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     """
     Testcase：Validates that rebalancing operations are triggered or skipped based on the configured
     --eplb-min-rebalancing-utilization-threshold value and current load balance.
@@ -30,7 +29,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
     [Test Category] Parameter
     [Test Target] --eplb-min-rebalancing-utilization-threshold
     """
-    model = QWEN3_30B_A3B_W8A8_WEIGHTS_PATH
+    model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
     accuracy = 0.86
     common_args = [
         "--attention-backend",
@@ -79,6 +78,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
                 "SGLANG_EXPERT_LOCATION_UPDATER_CANARY": "1",
                 "HCCL_BUFFSIZE": "1024",
                 "SGLANG_DEEPEP_BF16_DISPATCH": "1",
+                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
                 **os.environ,
             },
             return_stdout_stderr=(cls.out_file, cls.err_file),
