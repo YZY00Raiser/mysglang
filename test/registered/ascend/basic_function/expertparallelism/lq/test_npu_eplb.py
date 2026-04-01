@@ -70,8 +70,6 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "stat",
                 "--ep-dispatch-algorithm",
                 "static",
-                "--base-gpu-id",
-                "8",
                 *cls.extra_args,
             ],
             env={
