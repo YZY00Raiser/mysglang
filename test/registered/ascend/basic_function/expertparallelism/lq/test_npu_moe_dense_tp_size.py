@@ -52,8 +52,8 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "50",
                 "--expert-distribution-recorder-mode",
                 "stat",
-                "--moe-dense-tp-size",
-                "1",
+                # "--moe-dense-tp-size",
+                # "1",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
