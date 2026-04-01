@@ -1,99 +1,110 @@
+import os
 import unittest
-
-import requests
+from types import SimpleNamespace
+from urllib.parse import urlparse
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import (
-    DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
-)
-from sglang.test.ci.ci_register import register_npu_ci
+from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.test_utils import (
-    DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
-
-class TestmoeA2ABackendAscendFuseep(CustomTestCase):
-    """Testcase：Verify set --moe-a2a-backend, the inference request is successfully processed.
+class TestAscendDeepEP(CustomTestCase):
+    """
+    Testcase：Verify the correctness and performance of DeepSeek Model when the MTP technology and deepep are used
 
     [Test Category] Parameter
-    [Test Target] --moe-a2a-backend
+    [Test Target] use MTP by test model DeepSeek R1, --scheduler-recv-interval 10, --moe-a2a-backend deepep,
+    --deepep-mode auto
     """
-
-    model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-    moe_a2a_backend = "ascend_fuseep"
 
     @classmethod
     def setUpClass(cls):
+        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+        cls.accuracy = 0.95
+
+        cls.base_url = DEFAULT_URL_FOR_TEST
+        cls.url = urlparse(cls.base_url)
+
+        cls.common_args = [
+            "--trust-remote-code",
+            "--attention-backend",
+            "ascend",
+            "--mem-fraction-static",
+            0.8,
+            "--max-running-requests",
+            32,
+            "--disable-radix-cache",
+            "--chunked-prefill-size",
+            32768,
+            "--disable-cuda-graph",
+            "--tp-size",
+            2,
+            "--mem-fraction-static",
+            0.85,
+            "--dp-size",
+            1,
+            "--ep-size",
+            16,
+            "--moe-a2a-backend",
+            "deepep",
+            "--deepep-mode",
+            "auto",
+            "--speculative-algorithm",
+            "NEXTN",
+            "--speculative-num-steps",
+            1,
+            "--speculative-eagle-topk",
+            1,
+            "--speculative-num-draft-tokens",
+            2,
+            "--scheduler-recv-interval",
+            10,
+        ]
+
+        cls.extra_envs = {
+            "HCCL_BUFFSIZE": "1024",
+            "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
+            "SGLANG_NPU_USE_MLAPO": "1",
+            "SGLANG_NPU_USE_EINSUM_MM": "1",
+            "SLANG_ENABLE_SPEC_V2": "1",
+            "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
+        }
+        os.environ.update(cls.extra_envs)
+
         cls.process = popen_launch_server(
             cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            cls.base_url,
+            timeout=1500,
             other_args=[
-                "--trust-remote-code",
-                "--attention-backend",
-                "ascend",
-                "--disable-cuda-graph",
-                "--mem-fraction-static",
-                "0.85",
-                "--tp-size",
-                "2",
-                "--expert-parallel-size",
-                "1",
-                "--enable-eplb",
-                "--moe-a2a-backend",
-                cls.moe_a2a_backend,
-                "--deepep-mode",
-                "normal",
-                "--ep-num-redundant-experts",
-                "4",
-                "--eplb-rebalance-num-iterations",
-                "50",
-                "--expert-distribution-recorder-buffer-size",
-                "50",
-                "--expert-distribution-recorder-mode",
-                "stat",
+                *cls.common_args,
             ],
-            env={
-                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
-                "HCCL_BUFFSIZE": "1024",
-            },
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_moe_a2a_backend(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
+    def test_a_gsm8k(self):
+        args = SimpleNamespace(
+            num_shots=5,
+            data_path=None,
+            num_questions=200,
+            max_new_tokens=512,
+            parallel=128,
+            host=f"http://{self.url.hostname}",
+            port=int(self.url.port),
         )
-        self.assertEqual(
-            response.status_code, 200, "The request status code is not 200."
-        )
-        self.assertIn(
-            "Paris", response.text, "The inference result does not include Paris."
-        )
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/server_info")
-        self.assertEqual(
-            response.status_code, 200, "The request status code is not 200."
-        )
-        self.assertEqual(response.json()["moe_a2a_backend"], self.moe_a2a_backend)
 
-
-class TestmoeA2ABackendDeepep(TestmoeA2ABackendAscendFuseep):
-    moe_a2a_backend = "deepep"
+        metrics = run_eval_few_shot_gsm8k(args)
+        self.assertGreaterEqual(
+            metrics["accuracy"],
+            self.accuracy,
+        )
 
 
 if __name__ == "__main__":
