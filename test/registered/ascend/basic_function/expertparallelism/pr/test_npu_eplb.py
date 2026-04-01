@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import sglang as sgl
 from sglang.srt.utils import kill_process_tree
 from sglang.test.run_eval import run_eval
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH as MODEL_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -19,9 +19,10 @@ from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=200, suite="nightly-16-npu-a3", nightly=True)
 
+
 class _BaseTestDynamicEPLB(CustomTestCase):
     """
-    Testcase：Verify the correctness of the function when eplb is enabled and the accuracy of DeepSeek-R1-W8A8 on MMLU
+    Testcase：Verify the correctness of the function when eplb is enabled and the accuracy of DeepSeek-Coder-V2-Lite-Instruct on MMLU
     dataset
 
     [Test Category] Parameter
@@ -34,8 +35,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        # cls.model = MODEL_PATH
-        cls.model = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8"
+        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -106,23 +106,22 @@ class TestDynamicEPLBMultiChunk(_BaseTestDynamicEPLB):
 
 class TestStaticEPLB(CustomTestCase):
     def test_save_expert_distribution_and_init_expert_location(self):
-        os.environ["SGL_ENABLE_JIT_DEEPGEMM"] = "0"
-        os.environ["HCCL_BUFFSIZE"] = "500"
+        os.environ["SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT"] = "1"
+        os.environ["HCCL_BUFFSIZE"] = "1024"
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             engine_kwargs = dict(
-                model_path=MODEL_PATH,
+                model_path=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
                 trust_remote_code=True,
                 attention_backend="ascend",
-                quantization="modelslim",
-                mem_fraction_static=0.9,
+                mem_fraction_static=0.85,
                 deepep_mode="normal",
                 ep_num_redundant_experts=16,
                 enable_dp_attention=True,
                 moe_a2a_backend="deepep",
                 disable_cuda_graph=True,
                 expert_distribution_recorder_mode="stat",
-                tp_size=16,
+                tp_size=2,
                 dp_size=1,
                 log_level="info",
                 enable_expert_distribution_metrics=True,
