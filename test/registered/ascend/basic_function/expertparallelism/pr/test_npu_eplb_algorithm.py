@@ -46,6 +46,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--mem-fraction-static",
                 "0.85",
                 "--enable-dp-attention",
+                "--moe-a2a-backend",
+                "deepep",
                 "--deepep-mode",
                 "low_latency",
                 "--disable-cuda-graph",
