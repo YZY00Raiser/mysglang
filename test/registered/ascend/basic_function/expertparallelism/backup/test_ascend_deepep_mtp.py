@@ -90,8 +90,6 @@ class TestAscendDeepEP(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_a_gsm8k(self):
-        print(f"##=== Testing accuracy: {model} ===##")
-
         args = SimpleNamespace(
             num_shots=5,
             data_path=None,
