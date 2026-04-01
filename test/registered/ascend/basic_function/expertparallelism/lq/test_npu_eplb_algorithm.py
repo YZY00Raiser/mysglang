@@ -59,8 +59,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 "50",
                 "--expert-distribution-recorder-mode",
                 "stat",
-                # "--eplb-algorithm",
-                # cls.eplb_algorithm,
+                "--eplb-algorithm",
+                cls.eplb_algorithm,
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
