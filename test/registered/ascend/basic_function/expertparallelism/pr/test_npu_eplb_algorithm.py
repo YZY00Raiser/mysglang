@@ -61,8 +61,6 @@ class TestEplbAlgorithm(CustomTestCase):
                 "--enable-expert-distribution-metrics",
                 "--expert-distribution-recorder-mode",
                 "stat",
-                "--ep-dispatch-algorithm",
-                "static",
                 "--eplb-algorithm",
                 cls.eplb_algorithm,
             ],
