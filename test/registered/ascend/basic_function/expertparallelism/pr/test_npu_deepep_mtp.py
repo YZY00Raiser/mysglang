@@ -12,6 +12,7 @@ from sglang.test.test_utils import (
     CustomTestCase,
     popen_launch_server,
 )
+
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 
@@ -36,8 +37,6 @@ class TestAscendDeepEP(CustomTestCase):
             "--trust-remote-code",
             "--attention-backend",
             "ascend",
-            "--mem-fraction-static",
-            0.8,
             "--max-running-requests",
             32,
             "--disable-radix-cache",
@@ -51,7 +50,7 @@ class TestAscendDeepEP(CustomTestCase):
             "--dp-size",
             1,
             "--ep-size",
-            16,
+            2,
             "--moe-a2a-backend",
             "deepep",
             "--deepep-mode",
