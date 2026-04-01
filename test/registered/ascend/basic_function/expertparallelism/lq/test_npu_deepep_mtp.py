@@ -50,7 +50,7 @@ class TestAscendDeepEP(CustomTestCase):
             "--dp-size",
             1,
             "--ep-size",
-            16,
+            2,
             "--moe-a2a-backend",
             "deepep",
             "--deepep-mode",
