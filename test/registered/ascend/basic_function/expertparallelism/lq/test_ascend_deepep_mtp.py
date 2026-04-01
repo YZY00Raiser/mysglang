@@ -5,13 +5,12 @@ from urllib.parse import urlparse
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
-# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.test_utils import (
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
-DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH="/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
 class TestAscendDeepEP(CustomTestCase):
@@ -19,7 +18,7 @@ class TestAscendDeepEP(CustomTestCase):
     Testcase：Verify the correctness and performance of DeepSeek Model when the MTP technology and deepep are used
 
     [Test Category] Parameter
-    [Test Target] use MTP by test model DeepSeek-Coder-V2-Lite-Instruct, --scheduler-recv-interval 10, --moe-a2a-backend deepep,
+    [Test Target] use MTP by test model DeepSeek R1, --scheduler-recv-interval 10, --moe-a2a-backend deepep,
     --deepep-mode auto
     """
 
@@ -35,6 +34,10 @@ class TestAscendDeepEP(CustomTestCase):
             "--trust-remote-code",
             "--attention-backend",
             "ascend",
+            "--quantization",
+            "modelslim",
+            "--mem-fraction-static",
+            0.8,
             "--max-running-requests",
             32,
             "--disable-radix-cache",
@@ -42,13 +45,11 @@ class TestAscendDeepEP(CustomTestCase):
             32768,
             "--disable-cuda-graph",
             "--tp-size",
-            2,
-            "--mem-fraction-static",
-            0.85,
+            16,
             "--dp-size",
             1,
             "--ep-size",
-            2,
+            16,
             "--moe-a2a-backend",
             "deepep",
             "--deepep-mode",
@@ -74,7 +75,6 @@ class TestAscendDeepEP(CustomTestCase):
             "SGLANG_NPU_USE_EINSUM_MM": "1",
             "SLANG_ENABLE_SPEC_V2": "1",
             "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-            "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1"
         }
         os.environ.update(cls.extra_envs)
 

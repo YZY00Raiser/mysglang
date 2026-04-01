@@ -55,6 +55,8 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
+        "--base-gpu-id",
+        "8",
     ]
     test_args = []
     out_file = None
