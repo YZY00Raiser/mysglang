@@ -46,33 +46,25 @@ class TestSetForwardHooks(CustomTestCase):
     forward_hooks = json.dumps(hooks_spec)
 
     @classmethod
-    def _build_other_args(cls):
-        return [
-            "--trust-remote-code",
-            "--mem-fraction-static",
-            "0.8",
-            "--attention-backend",
-            "ascend",
-            "--disable-cuda-graph",
-            "--tp-size",
-            "4",
-            "--forward-hooks",
-            cls.forward_hooks,
-        ]
-
-    @classmethod
-    def _launch_server(cls):
-        other_args = cls._build_other_args()
+    def setUpClass(cls):
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
+            other_args=[
+                "--trust-remote-code",
+                "--mem-fraction-static",
+                "0.8",
+                "--attention-backend",
+                "ascend",
+                "--disable-cuda-graph",
+                "--tp-size",
+                "4",
+                "--forward-hooks",
+                cls.forward_hooks,
+            ],
             return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
-
-    @classmethod
-    def setUpClass(cls):
         cls.out_log_file_name = "./tmp_out_log.txt"
         cls.hook_log_file_name = "./tmp_hook_log.txt"
         cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
