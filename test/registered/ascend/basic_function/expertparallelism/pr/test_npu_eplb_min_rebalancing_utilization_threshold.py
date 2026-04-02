@@ -1,6 +1,5 @@
 import os
 import unittest
-from abc import ABC
 
 from types import SimpleNamespace
 
@@ -11,7 +10,8 @@ from sglang.test.few_shot_gsm8k import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
-    popen_launch_server, CustomTestCase,
+    CustomTestCase,
+    popen_launch_server,
 )
 
 register_npu_ci(est_time=400, suite="nightly-8-npu-a3", nightly=True)
@@ -22,7 +22,7 @@ REBALANCE_OUT_LOG = "./rebalance_out_log.txt"
 REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
 
 
-class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
+class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     """
     Testcase：Validates that rebalancing operations are triggered or skipped based on the configured
     --eplb-min-rebalancing-utilization-threshold value and current load balance.
@@ -115,7 +115,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         self.assertIn(self.log_info, content)
 
 
-class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase):
+class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtilizationThresholdBase):
     """
     Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.05, if the load balance
     exceeds this threshold, rebalancing operations are skipped.
@@ -127,7 +127,7 @@ class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtiliz
 
 
 @unittest.skip("Temporarily skipped due to execution failure. Issue #49 has been filed for investigation.")
-class TestEplbMinRebalancingUtilizationThreshold095(TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase):
+class TestEplbMinRebalancingUtilizationThreshold095(TestEplbMinRebalancingUtilizationThresholdBase):
     """
     Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.95, if load balancing
     is less than or equal to this threshold, rebalancing operations are triggered.
