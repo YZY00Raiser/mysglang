@@ -75,7 +75,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
             max_new_tokens=512,
             parallel=128,
             host="http://127.0.0.1",
-            port=int(self.base_url.split(":")[-1]),
+            port=int(DEFAULT_URL_FOR_TEST.split(":")[-1]),
         )
         metrics = run_eval_few_shot_gsm8k(args)
         self.assertGreater(metrics["accuracy"], 0.95)
