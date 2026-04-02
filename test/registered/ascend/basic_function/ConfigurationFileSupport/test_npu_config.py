@@ -23,11 +23,13 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
+
+
 # CONFIG_YAML_PATH = (
 #     "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml"
 # )
 
-'''
+
 class TestSGLangConfigServer(CustomTestCase):
     config = CONFIG_YAML_PATH
 
@@ -84,8 +86,6 @@ class TestSGLangConfigServer(CustomTestCase):
 
 
 '''
-
-'''
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
 
@@ -144,7 +144,7 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+'''
 
 '''
 class TestConfig(CustomTestCase):
@@ -155,8 +155,8 @@ class TestConfig(CustomTestCase):
     """
 
     config = CONFIG_YAML_PATH
-    '''
-        @classmethod
+
+    @classmethod
     def launch_server_with_config_yaml(cls, config_file, base_url, timeout):
         _, host, port = base_url.split(":")
         host = host[2:]
@@ -178,8 +178,6 @@ class TestConfig(CustomTestCase):
         )
         _wait_for_server_health(process, base_url, None, timeout)
         return process
-
-    '''
 
     @classmethod
     def setUpClass(cls):
@@ -207,8 +205,9 @@ class TestConfig(CustomTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+'''
 
-
+'''
 class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
@@ -246,7 +245,7 @@ class TestConfigPriority(CustomTestCase):
                 content = err_log_file.read()
                 # error_message information is recorded in the error log
                 self.assertIn(error_message, content)
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
