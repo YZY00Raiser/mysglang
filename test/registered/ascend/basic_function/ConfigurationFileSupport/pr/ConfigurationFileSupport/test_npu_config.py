@@ -36,7 +36,7 @@ class TestConfig(CustomTestCase):
 
     # launch server with "--config" parameter
     @classmethod
-    def popen_launch_server_with_config_yaml(cls,config_file, base_url, timeout):
+    def popen_launch_server_with_config_yaml(cls, config_file, base_url, timeout):
         parsed_url = urlparse(base_url)
         host = parsed_url.hostname
         port = parsed_url.port
