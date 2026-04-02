@@ -74,7 +74,7 @@ class TestAscendDeepEP(CustomTestCase):
             "SGLANG_NPU_USE_EINSUM_MM": "1",
             "SLANG_ENABLE_SPEC_V2": "1",
             "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-            "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1"
+            "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
         }
         os.environ.update(cls.extra_envs)
 
