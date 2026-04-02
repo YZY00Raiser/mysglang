@@ -273,7 +273,7 @@ HOOK_FUNCTION_PATH = "/data/y30082119/mysglang/test/registered/ascend/basic_func
 #     "../../../test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml",
 # )
 CONFIG_YAML_PATH = (
-    "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/pr/ConfigurationFileSupport/config.yaml"
+    "/home/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/pr/ConfigurationFileSupport/config.yaml"
 )
 class ModelTestConfig(NamedTuple):
     """
