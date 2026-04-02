@@ -18,7 +18,7 @@ from sglang.test.test_utils import (
 from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=200, suite="nightly-2-npu-a3", nightly=True)
-DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH="/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
 class _BaseTestDynamicEPLB(CustomTestCase):
@@ -52,7 +52,6 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "ascend",
                 "--mem-fraction-static",
                 "0.5",
-                "--enable-dp-attention",
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
@@ -66,8 +65,6 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--expert-distribution-recorder-buffer-size",
                 "50",
                 "--enable-expert-distribution-metrics",
-                "--expert-distribution-recorder-mode",
-                "stat",
                 "--ep-dispatch-algorithm",
                 "static",
                 *cls.extra_args,
