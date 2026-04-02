@@ -47,6 +47,10 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.out_log_file_name = "./tmp_out_log.txt"
+        cls.hook_log_file_name = "./tmp_hook_log.txt"
+        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
+        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
@@ -65,10 +69,6 @@ class TestSetForwardHooks(CustomTestCase):
             ],
             return_stdout_stderr=(cls.out_log_file, cls.hook_log_file),
         )
-        cls.out_log_file_name = "./tmp_out_log.txt"
-        cls.hook_log_file_name = "./tmp_hook_log.txt"
-        cls.out_log_file = open(cls.out_log_file_name, "w+", encoding="utf-8")
-        cls.hook_log_file = open(cls.hook_log_file_name, "w+", encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
