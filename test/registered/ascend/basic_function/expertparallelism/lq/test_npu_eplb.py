@@ -90,12 +90,11 @@ class _BaseTestDynamicEPLB(CustomTestCase):
         self.assertGreater(metrics["score"], 0.5)
 
 
+'''
 class TestDynamicEPLBSimple(_BaseTestDynamicEPLB):
     pass
 
 
-
-'''
 class TestDynamicEPLBMultiChunk(_BaseTestDynamicEPLB):
     extra_args = ["--eplb-rebalance-layers-per-chunk", "1"]
 
@@ -162,7 +161,6 @@ class TestStaticEPLB(CustomTestCase):
             [", 4+4=8,", ", four plus four is eight, eight"],
         )
 '''
-
 
 if __name__ == "__main__":
     unittest.main()

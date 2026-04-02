@@ -70,7 +70,7 @@ class TestLimitMMDatePerRequest(CustomTestCase):
         cls.base_url += "/v1"
         cls.api_key = "sk-123456"
 
-        # limit_mm = '{"image":1, "video":1}'
+        limit_mm = '{"image":1, "video":1}'
         other_args = [
             "--mem-fraction-static",
             "0.5",
@@ -87,8 +87,8 @@ class TestLimitMMDatePerRequest(CustomTestCase):
             "--tp-size",
             "4",
             "--disable-cuda-graph",
-            # "--limit-mm-data-per-request",
-            # limit_mm,
+            "--limit-mm-data-per-request",
+            limit_mm,
             "--encoder-only",
             "--enable-prefix-mm-cache",
         ]
