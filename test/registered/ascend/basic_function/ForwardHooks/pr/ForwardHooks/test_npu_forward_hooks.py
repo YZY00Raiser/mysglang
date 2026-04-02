@@ -5,9 +5,9 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import (
-    QWEN3_32B_WEIGHTS_PATH,
-)
+# from sglang.test.ascend.test_ascend_utils import (
+#     QWEN3_32B_WEIGHTS_PATH,
+# )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -34,7 +34,7 @@ class TestSetForwardHooks(CustomTestCase):
     hook_function_path = (
         "sglang.test.ascend.test_ascend_utils:create_attention_monitor_hook_factory"
     )
-    model = QWEN3_32B_WEIGHTS_PATH
+    model = "/home/weights/Qwen/Qwen3-32B"
     hooks_spec = [
         {
             "name": "qwen_first_layer_attn_monitor",
@@ -79,7 +79,6 @@ class TestSetForwardHooks(CustomTestCase):
         os.remove(cls.hook_log_file_name)
 
     def test_forward_hooks(self):
-        self._launch_server()
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
