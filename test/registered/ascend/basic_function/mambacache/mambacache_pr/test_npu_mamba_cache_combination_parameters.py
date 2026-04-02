@@ -97,14 +97,14 @@ class TestMambaCache(CustomTestCase):
     def test_mamba_long_sequence(self):
         self.process = self._launch_server_with_mamba_params(max_mamba_cache_size=1024)
         try:
-            long_prompt = "Explain the concept of machine learning in detail." * 100000
+            long_prompt = "just return me a string with of 10000 characters:" + "A" * 10000
             response = requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",
                 json={
                     "text": long_prompt,
                     "sampling_params": {
                         "temperature": 0,
-                        "max_new_tokens": 128,
+                        "max_new_tokens": 10000,
                     },
                 },
                 timeout=120,
