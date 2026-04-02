@@ -3,8 +3,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-from sglang.test.ci.ci_register import register_npu_ci
+# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -12,7 +11,10 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
+from sglang.test.ci.ci_register import register_npu_ci
+
+register_npu_ci(est_time=200, suite="nightly-2-npu-a3", nightly=True)
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
 class TestEplbAlgorithm(CustomTestCase):
@@ -27,40 +29,21 @@ class TestEplbAlgorithm(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-        cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
-            cls.model,
-            cls.base_url,
+            DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+            DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
                 "--trust-remote-code",
-                "--tp-size",
-                "2",
-                "--dp-size",
-                "1",
-                "--expert-parallel-size",
-                "2",
                 "--attention-backend",
                 "ascend",
+                "--disable-cuda-graph",
                 "--mem-fraction-static",
                 "0.85",
-                "--enable-dp-attention",
-                "--moe-a2a-backend",
-                "deepep",
-                "--deepep-mode",
-                "low_latency",
-                "--disable-cuda-graph",
-                "--enable-eplb",
-                "--ep-num-redundant-experts",
-                "4",
-                "--eplb-rebalance-num-iterations",
-                "50",
-                "--expert-distribution-recorder-buffer-size",
-                "50",
-                "--enable-expert-distribution-metrics",
-                "--expert-distribution-recorder-mode",
-                "stat",
+                "--tp-size",
+                "2",
+                "--expert-parallel-size",
+                "2",
                 "--eplb-algorithm",
                 cls.eplb_algorithm,
             ],
@@ -75,12 +58,12 @@ class TestEplbAlgorithm(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_eplb_algorithm(self):
-        response = requests.get(f"{self.base_url}/server_info")
+        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/server_info")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.eplb_algorithm, response.json().get("eplb_algorithm"))
 
         response = requests.post(
-            f"{self.base_url}/generate",
+            f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
                 "sampling_params": {
