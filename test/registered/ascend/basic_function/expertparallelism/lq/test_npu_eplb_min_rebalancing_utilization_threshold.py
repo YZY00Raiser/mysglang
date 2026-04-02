@@ -14,7 +14,7 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
-DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH="/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 SKIP_OUT_LOG = "./skip_out_log.txt"
 SKIP_ERR_LOG = "./skip_err_log.txt"
@@ -42,7 +42,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--tp-size",
         "2",
         "--mem-fraction-static",
-        "0.85",
+        "0.5",
         "--moe-a2a-backend",
         "deepep",
         "--deepep-mode",
@@ -50,8 +50,6 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--enable-eplb",
         "--ep-num-redundant-experts",
         4,
-        "--eplb-rebalance-num-iterations",
-        50,
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
