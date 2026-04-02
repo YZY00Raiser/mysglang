@@ -46,8 +46,6 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--trust-remote-code",
                 "--tp-size",
                 "2",
-                "--dp-size",
-                "1",
                 "--attention-backend",
                 "ascend",
                 "--mem-fraction-static",
@@ -68,8 +66,6 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--ep-dispatch-algorithm",
                 "static",
                 *cls.extra_args,
-                "--base-gpu-id",
-                "6",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
@@ -104,9 +100,6 @@ class TestDynamicEPLBMultiChunk(_BaseTestDynamicEPLB):
 
 class TestStaticEPLB(CustomTestCase):
     def test_save_expert_distribution_and_init_expert_location(self):
-        os.environ["SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT"] = "1"
-        os.environ["HCCL_BUFFSIZE"] = "1024"
-
         with tempfile.TemporaryDirectory() as tmp_dir:
             engine_kwargs = dict(
                 model_path=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
@@ -114,13 +107,13 @@ class TestStaticEPLB(CustomTestCase):
                 attention_backend="ascend",
                 mem_fraction_static=0.85,
                 deepep_mode="normal",
-                ep_num_redundant_experts=16,
+                ep_num_redundant_experts=4,
                 enable_dp_attention=True,
                 moe_a2a_backend="deepep",
                 disable_cuda_graph=True,
                 expert_distribution_recorder_mode="stat",
                 tp_size=2,
-                dp_size=1,
+                dp_size=2,
                 log_level="info",
                 enable_expert_distribution_metrics=True,
             )
