@@ -89,6 +89,7 @@ class TestLimitMMDatePerRequest(CustomTestCase):
             "--disable-cuda-graph",
             # "--limit-mm-data-per-request",
             # limit_mm,
+            "--encoder-only",
             "--enable-prefix-mm-cache",
         ]
         # cls.process = popen_launch_server_wrapper(
