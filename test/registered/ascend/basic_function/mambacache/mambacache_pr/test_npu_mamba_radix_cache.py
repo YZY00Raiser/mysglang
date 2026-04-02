@@ -3,9 +3,9 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import (
-    QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
-)
+# from sglang.test.ascend.test_ascend_utils import (
+#     QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
+# )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -24,7 +24,7 @@ class TestMambaCache(CustomTestCase):
     [Test Target] --disable-radix-cache
     """
 
-    model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path
+    model = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
     BASE_ARGS = [
         "--trust-remote-code",
         "--mem-fraction-static",
