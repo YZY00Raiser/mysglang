@@ -1,6 +1,5 @@
 import os
 import unittest
-from abc import ABC
 
 from types import SimpleNamespace
 
@@ -21,8 +20,10 @@ SKIP_ERR_LOG = "./skip_err_log.txt"
 REBALANCE_OUT_LOG = "./rebalance_out_log.txt"
 REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
 
-QWEN3_30B_A3B_W8A8_WEIGHTS_PATH=""
-class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
+QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-30B-A3B-w8a8"
+
+
+class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     """
     Testcase：Validates that rebalancing operations are triggered or skipped based on the configured
     --eplb-min-rebalancing-utilization-threshold value and current load balance.
@@ -51,7 +52,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         "--ep-num-redundant-experts",
         16,
         "--eplb-rebalance-num-iterations",
-        50,#500
+        50,  # 500
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
@@ -115,7 +116,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         self.assertIn(self.log_info, content)
 
 
-class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase):
+class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtilizationThresholdBase):
     """
     Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.05, if the load balance
     exceeds this threshold, rebalancing operations are skipped.
@@ -127,7 +128,7 @@ class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtiliz
 
 
 @unittest.skip("Temporarily skipped due to execution failure. Issue #49 has been filed for investigation.")
-class TestEplbMinRebalancingUtilizationThreshold095(TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase):
+class TestEplbMinRebalancingUtilizationThreshold095(TestEplbMinRebalancingUtilizationThresholdBase):
     """
     Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.95, if load balancing
     is less than or equal to this threshold, rebalancing operations are triggered.
