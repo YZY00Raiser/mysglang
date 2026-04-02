@@ -15,9 +15,7 @@ from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
-    popen_launch_server,
-    _create_clean_subprocess_env,
-    _wait_for_server_health,
+    popen_launch_server, _create_clean_subprocess_env, _wait_for_server_health,
 )
 
 register_npu_ci(
@@ -38,41 +36,38 @@ class TestConfig(CustomTestCase):
 
     # launch server with "--config" parameter
     @classmethod
-    def popen_launch_server_with_config_yaml(cls, config_file, base_url, timeout):
-        _, host, port = base_url.split(":")
-        host = host[2:]
+    def popen_launch_server_with_config_yaml(cls,config_file, base_url, timeout):
+        parsed_url = urlparse(base_url)
+        host = parsed_url.hostname
+        port = parsed_url.port
         command = [
             "python3",
             "-m",
             "sglang.launch_server",
-            "--config", config_file,
-            "--host", host,
-            "--port", port,
+            "--config",
+            config_file,
+            "--host",
+            host,
+            "--port",
+            port,
         ]
 
         env = _create_clean_subprocess_env(os.environ.copy())
-        process = subprocess.Popen(
-            command,
-            stdout=None,
-            stderr=None,
-            env=env
-        )
+        process = subprocess.Popen(command, stdout=None, stderr=None, env=env)
         _wait_for_server_health(process, base_url, None, timeout)
         return process
 
     @classmethod
     def setUpClass(cls):
         cls.process = cls.popen_launch_server_with_config_yaml(
-            cls.config,
-            DEFAULT_URL_FOR_TEST,
-            DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
+            cls.config, DEFAULT_URL_FOR_TEST, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_config_yaml_server_generate(self):
+    def test_config(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
