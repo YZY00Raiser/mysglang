@@ -91,6 +91,7 @@ class TestLimitMMDatePerRequest(CustomTestCase):
             limit_mm,
             "--encoder-only",
             "--enable-prefix-mm-cache",
+            "--enable-api-server",
         ]
         # cls.process = popen_launch_server_wrapper(
         #     DEFAULT_URL_FOR_TEST, MODEL, other_args
