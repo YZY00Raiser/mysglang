@@ -50,7 +50,7 @@ class TestSetForwardHooks(CustomTestCase):
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
                 "--trust-remote-code",
                 "--mem-fraction-static",
