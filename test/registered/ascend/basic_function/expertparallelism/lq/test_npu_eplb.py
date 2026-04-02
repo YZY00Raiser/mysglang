@@ -71,6 +71,8 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--ep-dispatch-algorithm",
                 "static",
                 *cls.extra_args,
+                "--base-gpu-id",
+                "8",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",

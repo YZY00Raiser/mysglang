@@ -64,6 +64,8 @@ class TestAscendDeepEP(CustomTestCase):
             2,
             "--scheduler-recv-interval",
             10,
+            "--base-gpu-id",
+            "8",
         ]
 
         cls.extra_envs = {

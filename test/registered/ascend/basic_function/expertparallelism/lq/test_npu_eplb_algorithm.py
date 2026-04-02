@@ -59,6 +59,8 @@ class TestEplbAlgorithm(CustomTestCase):
                 # "stat",
                 "--eplb-algorithm",
                 cls.eplb_algorithm,
+                "--base-gpu-id",
+                "8",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
