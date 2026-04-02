@@ -19,7 +19,10 @@ QWEN3_VL_8B_INSTRUCT_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-VL-8B-Instruct"
 MODEL = QWEN3_VL_8B_INSTRUCT_WEIGHTS_PATH
 
 # image
-IMAGE_MAN_IRONING_URL = "https://raw.githubusercontent.com/sgl-project/sgl-test-files/refs/heads/main/images/man_ironing_on_back_of_suv.png"
+# IMAGE_MAN_IRONING_URL = "https://raw.githubusercontent.com/sgl-project/sgl-test-files/refs/heads/main/images/man_ironing_on_back_of_suv.png"
+
+# IMAGE_MAN_IRONING_URL = f"Pic1.png"
+IMAGE_MAN_IRONING_URL = "Pic1.png"
 
 
 def popen_launch_server_wrapper(base_url, model, other_args):
@@ -91,7 +94,6 @@ class TestLimitMMDatePerRequest(CustomTestCase):
             limit_mm,
             "--encoder-only",
             "--enable-prefix-mm-cache",
-            "--enable-api-server",
         ]
         # cls.process = popen_launch_server_wrapper(
         #     DEFAULT_URL_FOR_TEST, MODEL, other_args
