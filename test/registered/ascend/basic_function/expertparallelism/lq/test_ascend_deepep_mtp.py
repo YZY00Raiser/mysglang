@@ -5,13 +5,13 @@ from urllib.parse import urlparse
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
 from sglang.test.test_utils import (
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
     popen_launch_server,
 )
-
+DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH="/home/weights/DeepSeek-R1-0528-W8A8"
 
 class TestAscendDeepEP(CustomTestCase):
     """
@@ -24,7 +24,7 @@ class TestAscendDeepEP(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+        cls.model = DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH
         cls.accuracy = 0.95
 
         cls.base_url = DEFAULT_URL_FOR_TEST
@@ -53,7 +53,7 @@ class TestAscendDeepEP(CustomTestCase):
             "--moe-a2a-backend",
             "deepep",
             "--deepep-mode",
-            "not",
+            "auto",
             "--speculative-algorithm",
             "NEXTN",
             "--speculative-num-steps",
@@ -64,8 +64,6 @@ class TestAscendDeepEP(CustomTestCase):
             2,
             "--scheduler-recv-interval",
             10,
-            "--base-gpu-id",
-            "8",
         ]
 
         cls.extra_envs = {
@@ -92,9 +90,11 @@ class TestAscendDeepEP(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_a_gsm8k(self):
+        # print(f"##=== Testing accuracy: {model} ===##")
+
         args = SimpleNamespace(
             num_shots=5,
-            data_path=None,
+            data_path="/home/y30082119/mysglang/test/registered/ascend/basic_function/mambacache/test.jsonl",
             num_questions=200,
             max_new_tokens=512,
             parallel=128,

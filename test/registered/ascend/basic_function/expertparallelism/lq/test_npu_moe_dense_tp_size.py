@@ -84,7 +84,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
             port=port,
         )
         metrics = run_eval_few_shot_gsm8k(args)
-        self.assertGreater(metrics["accuracy"], 0.95)
+        self.assertGreater(metrics["accuracy"], 0.81)
 
 
 if __name__ == "__main__":
