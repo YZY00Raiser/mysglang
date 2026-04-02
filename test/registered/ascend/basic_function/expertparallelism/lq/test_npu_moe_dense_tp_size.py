@@ -39,7 +39,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "--tp-size",
                 "2",
                 "--ep-size",
-                "1",
+                "2",
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "deepep",
