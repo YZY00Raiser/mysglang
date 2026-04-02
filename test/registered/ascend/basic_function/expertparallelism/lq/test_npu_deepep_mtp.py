@@ -44,7 +44,7 @@ class TestAscendDeepEP(CustomTestCase):
             "--tp-size",
             2,
             "--mem-fraction-static",
-            0.85,
+            0.5,
             "--dp-size",
             1,
             "--ep-size",
