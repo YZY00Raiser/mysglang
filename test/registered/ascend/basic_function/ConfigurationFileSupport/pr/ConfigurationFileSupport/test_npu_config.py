@@ -49,7 +49,7 @@ class TestConfig(CustomTestCase):
             "--host",
             host,
             "--port",
-            port,
+            str(port),
         ]
 
         env = _create_clean_subprocess_env(os.environ.copy())
