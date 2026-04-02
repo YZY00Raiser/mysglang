@@ -58,7 +58,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "--moe-dense-tp-size",
                 "1",
                 "--base-gpu-id",
-                "8",
+                "6",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",

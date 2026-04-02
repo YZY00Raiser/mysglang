@@ -72,7 +72,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "static",
                 *cls.extra_args,
                 "--base-gpu-id",
-                "8",
+                "6",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
