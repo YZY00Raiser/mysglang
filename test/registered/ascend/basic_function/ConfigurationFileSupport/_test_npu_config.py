@@ -23,7 +23,7 @@ register_npu_ci(
 )
 
 CONFIG_YAML_PATH = (
-    "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml"
+    "/data/y30082119/mysglang/test/registered/ascend/basic_function/ConfigurationFileSupport/pr/ConfigurationFileSupport/config.yaml"
 )
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
