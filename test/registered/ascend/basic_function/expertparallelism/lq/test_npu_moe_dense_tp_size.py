@@ -1,5 +1,6 @@
 import unittest
 from types import SimpleNamespace
+from urllib.parse import urlparse
 
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
@@ -70,14 +71,17 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_gsm8k(self):
+        parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
+        host = parsed_url.hostname
+        port = parsed_url.port
         args = SimpleNamespace(
             num_shots=5,
             data_path=None,
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
-            host="http://127.0.0.1",
-            port=int(DEFAULT_URL_FOR_TEST.split(":")[-1]),
+            host=host,
+            port=port,
         )
         metrics = run_eval_few_shot_gsm8k(args)
         self.assertGreater(metrics["accuracy"], 0.95)
