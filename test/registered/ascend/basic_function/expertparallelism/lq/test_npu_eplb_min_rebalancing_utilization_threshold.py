@@ -54,7 +54,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         50,
         "--enable-expert-distribution-metrics",
         "--base-gpu-id",
-        "8",
+        "6",
     ]
     test_args = []
     out_file = None
