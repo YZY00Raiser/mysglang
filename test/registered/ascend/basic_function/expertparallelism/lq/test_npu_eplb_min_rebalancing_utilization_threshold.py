@@ -96,7 +96,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=5,
-            data_path=None,
+            data_path="/home/y30082119/mysglang/test/registered/ascend/basic_function/mambacache/test.jsonl",
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
