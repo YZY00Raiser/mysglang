@@ -52,7 +52,7 @@ class TestAscendDeepEP(CustomTestCase):
             "--moe-a2a-backend",
             "deepep",
             "--deepep-mode",
-            "auto",
+            "normal",
             "--speculative-algorithm",
             "NEXTN",
             "--speculative-num-steps",
