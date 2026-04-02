@@ -51,7 +51,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--attention-backend",
                 "ascend",
                 "--mem-fraction-static",
-                "0.85",
+                "0.5",
                 "--enable-dp-attention",
                 "--moe-a2a-backend",
                 "deepep",
