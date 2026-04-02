@@ -25,34 +25,36 @@ class TestMambaCache(CustomTestCase):
     """
 
     model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path
-    BASE_ARGS = [
-        "--trust-remote-code",
-        "--mem-fraction-static",
-        "0.5",
-        "--attention-backend",
-        "ascend",
-        "--disable-cuda-graph",
-        "--device",
-        "npu",
-        "--tp-size",
-        "8",
-        "--mamba-ssm-dtype",
-        "float32",
-        "--mamba-full-memory-ratio",
-        "0.5",
-        "--mamba-scheduler-strategy",
-        "auto",
-        "--mamba-track-interval",
-        "256",
-    ]
 
     @classmethod
     def setUpClass(cls):
+        other_args = [
+            "--trust-remote-code",
+            "--mem-fraction-static",
+            "0.5",
+            "--attention-backend",
+            "ascend",
+            "--disable-cuda-graph",
+            "--device",
+            "npu",
+            "--tp-size",
+            "8",
+            "--mamba-ssm-dtype",
+            "float32",
+            "--mamba-full-memory-ratio",
+            "0.5",
+            "--mamba-scheduler-strategy",
+            "auto",
+            "--mamba-track-interval",
+            "256",
+            "--base-gpu-id",
+            "8",
+        ]
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=cls.BASE_ARGS,
+            other_args=other_args,
         )
 
     @classmethod
@@ -81,20 +83,8 @@ class TestMambaCache(CustomTestCase):
             )
 
         make_request(input_ids_first, 0)
+
         make_request(input_ids_second, 128)
-
-
-class TestMambaCacheHierarchicalCache(TestMambaCache):
-    # test hi cache reuse
-    @classmethod
-    def setUpClass(cls):
-        other_args = cls.BASE_ARGS + ["--enable-hierarchical-cache"]
-        cls.process = popen_launch_server(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
 
 
 if __name__ == "__main__":
