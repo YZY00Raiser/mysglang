@@ -54,7 +54,7 @@ class TestSetForwardHooks(CustomTestCase):
             "--speculative-algorithm",
             "EAGLE3",
             "--speculative-draft-model-path",
-            "QWEN3_32B_EAGLE3_WEIGHTS_PATH",
+            QWEN3_32B_EAGLE3_WEIGHTS_PATH,
             "--speculative-num-steps",
             "3",
             "--speculative-eagle-topk",
