@@ -37,6 +37,7 @@ class TestConfig(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
+        # launch server with "--config" parameter
         parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
         host = parsed_url.hostname
         port = str(parsed_url.port)
@@ -51,9 +52,6 @@ class TestConfig(CustomTestCase):
             "--port",
             port,
         ]
-        print("-----------------------command-------------------------------------")
-        print(command)
-
         env = _create_clean_subprocess_env(os.environ.copy())
         cls.process = subprocess.Popen(command, stdout=None, stderr=None, env=env)
         _wait_for_server_health(cls.process, DEFAULT_URL_FOR_TEST, None, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH)
@@ -78,7 +76,6 @@ class TestConfig(CustomTestCase):
         self.assertIn("Paris", response.text)
 
 
-'''
 class TestConfigPriority(CustomTestCase):
     """Testcase: Verify set the parameter set in the command line have a higher priority than set in config.yaml,
     set false model path in the command, set right model path in the config.yaml,
@@ -117,7 +114,6 @@ class TestConfigPriority(CustomTestCase):
                 content = err_log_file.read()
                 self.assertIn(error_message, content)
 
-'''
 
 if __name__ == "__main__":
     unittest.main()
