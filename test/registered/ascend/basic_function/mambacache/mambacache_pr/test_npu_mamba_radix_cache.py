@@ -86,15 +86,29 @@ class TestMambaCache(CustomTestCase):
 
 class TestMambaCacheHierarchicalCache(TestMambaCache):
     # test hi cache reuse
-    @classmethod
-    def setUpClass(cls):
-        other_args = cls.BASE_ARGS + ["--enable-hierarchical-cache"]
-        cls.process = popen_launch_server(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
+    BASE_ARGS = [
+        "--trust-remote-code",
+        "--mem-fraction-static",
+        "0.5",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--device",
+        "npu",
+        "--tp-size",
+        "8",
+        "--mamba-ssm-dtype",
+        "float32",
+        "--mamba-full-memory-ratio",
+        "0.5",
+        "--mamba-scheduler-strategy",
+        "auto",
+        "--mamba-track-interval",
+        "256",
+        "--enable-hierarchical-cache",
+        "--hicache-ratio",
+        1.2,
+    ]
 
 
 if __name__ == "__main__":
