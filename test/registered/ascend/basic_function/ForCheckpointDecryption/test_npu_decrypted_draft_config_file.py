@@ -5,10 +5,10 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-# from sglang.test.ascend.test_ascend_utils import (
-#     QWEN3_32B_WEIGHTS_PATH,
-#     QWEN3_32B_EAGLE3_WEIGHTS_PATH
-# )
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_32B_WEIGHTS_PATH,
+    QWEN3_32B_EAGLE3_WEIGHTS_PATH
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -22,8 +22,8 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
-QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-32B"
-QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen3-32B-Eagle3"
+QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
+QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen3/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
@@ -61,8 +61,6 @@ class TestSetForwardHooks(CustomTestCase):
             "1",
             "--speculative-num-draft-tokens",
             "4",
-            "--base-gpu-id",
-            "12",
             "--tp-size",
             "2",
             "--mem-fraction-static",
@@ -70,9 +68,9 @@ class TestSetForwardHooks(CustomTestCase):
             "--disable-cuda-graph",
             "--dtype", "bfloat16",
             "--decrypted-config-file",
-            "/home/weights/Qwen3-32B/non_exist/config.json",
+            "Qwen3-8B/config.json",
             "--decrypted-draft-config-file",
-            "/home/weights/Qwen3-32B-Eagle3/non_exist/config.json"
+            "Qwen3-8B_eagle3/config.json"
         ]
         cls.process = popen_launch_server(
             cls.model,
