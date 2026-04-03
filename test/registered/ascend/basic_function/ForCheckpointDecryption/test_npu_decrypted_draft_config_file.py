@@ -70,7 +70,9 @@ class TestSetForwardHooks(CustomTestCase):
             "--decrypted-config-file",
             "Qwen3-8B/config.json",
             "--decrypted-draft-config-file",
-            "Qwen3-8B_eagle3/config.json"
+            "Qwen3-8B_eagle3/config.json",
+            "--base-gpu-id",
+            "4",
         ]
         cls.process = popen_launch_server(
             cls.model,
