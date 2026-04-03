@@ -39,7 +39,7 @@ class TestConfig(CustomTestCase):
     def setUpClass(cls):
         parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
         host = parsed_url.hostname
-        port = parsed_url.port
+        port = str(parsed_url.port)
         command = [
             "python3",
             "-m",
