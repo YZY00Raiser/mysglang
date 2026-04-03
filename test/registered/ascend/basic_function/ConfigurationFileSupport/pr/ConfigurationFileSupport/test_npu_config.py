@@ -23,7 +23,7 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
-CONFIG_YAML_PATH="test/registered/ascend/basic_function/ConfigurationFileSupport/config.yaml"
+CONFIG_YAML_PATH="../../../ConfigurationFileSupport/config.yaml"
 
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
