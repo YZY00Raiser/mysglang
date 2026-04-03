@@ -4,4 +4,4 @@ trust-remote-code: true
 disable-cuda-graph: true
 mem-fraction-static: 0.8
 tp-size: 4
-base-gpu-id:
+base-gpu-id: 2

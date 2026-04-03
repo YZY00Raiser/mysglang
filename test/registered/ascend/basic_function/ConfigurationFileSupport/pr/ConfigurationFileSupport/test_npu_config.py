@@ -51,6 +51,8 @@ class TestConfig(CustomTestCase):
             "--port",
             port,
         ]
+        print("-----------------------command-------------------------------------")
+        print(command)
 
         env = _create_clean_subprocess_env(os.environ.copy())
         cls.process = subprocess.Popen(command, stdout=None, stderr=None, env=env)
