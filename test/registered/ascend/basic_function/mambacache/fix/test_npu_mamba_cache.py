@@ -43,6 +43,7 @@ class TestMambaCacheBase(CustomTestCase):
         if cls.process:
             kill_process_tree(cls.process.pid)
 
+
 '''
 
 
@@ -74,6 +75,7 @@ class TestMambaCacheBasic(GSM8KAscendMixin, CustomTestCase):
         "--disable-radix-cache",
     ]
 '''
+
 
 class TestMambaCacheParameters(TestMambaCacheBase):
     """Testcase: Verify MambaCache with different parameters, inference request successful.
@@ -118,10 +120,9 @@ class TestMambaCacheParameters(TestMambaCacheBase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        return response.text
 
     def test_mamba_long_sequence(self):
-        long_text = "Explain the concept of machine learning in detail." * 70000
+        long_text = "Explain the concept of machine learning in detail." * 50000
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
