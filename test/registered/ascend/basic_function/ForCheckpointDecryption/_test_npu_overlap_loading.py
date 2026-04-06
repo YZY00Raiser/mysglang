@@ -24,9 +24,10 @@ LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/Fast
 unable_overlap_loading_time = 0
 enable_overlap_loading_time = 0
 
-'''
+
 class TestLoraOverlapLoadingDisabled(CustomTestCase):
-    """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading.
+    """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading, Switch lora TTFT < Switch lora TTFT with
+    --enable-lora-overlap-loading.
 
     [Test Category] Parameter
     [Test Target] --enable-lora-overlap-loading
@@ -46,8 +47,6 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         "--attention-backend",
         "ascend",
         "--disable-cuda-graph",
-        "--base-gpu-id",
-        "14",
     ]
 
     @classmethod
@@ -77,10 +76,6 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        print("--------------------e2e-latency-----lora-a-without-overlap---------------------------")
-        print(response.json())
-        print(response.json()["meta_info"]["e2e_latency"])
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -95,14 +90,12 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        print("--------------------e2e-latency-----lora-b-without-overlap---------------------------")
-        print(response.json()["meta_info"]["e2e_latency"])
-
-'''
+        unable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
 
 
 class TestLoraOverlapLoadingEnabled(CustomTestCase):
-    """Testcase：Verify --enable-lora-overlap-loading works properly, inference request succeeded.
+    """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading, Switch lora TTFT < Switch lora TTFT with
+    --enable-lora-overlap-loading.
 
     [Test Category] Parameter
     [Test Target] --enable-lora-overlap-loading
@@ -125,9 +118,6 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--enable-lora-overlap-loading",
-            "--disable-radix-cache",
-            "--base-gpu-id",
-            "14",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -154,8 +144,6 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        print("--------------------e2e-latency-----lora-a-with-overlap---------------------------")
-        print(response.json()["meta_info"]["e2e_latency"])
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -170,8 +158,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        print("--------------------e2e-latency-----lora-b-with-overlap---------------------------")
-        print(response.json()["meta_info"]["e2e_latency"])
+        enable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
+        self.assertGreaterEqual(unable_overlap_loading_time, enable_overlap_loading_time)
 
 
 if __name__ == "__main__":
