@@ -39,12 +39,10 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        '''
         run_command(
             f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
         run_command(
             f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
-        '''
 
         other_args = [
             "--trust-remote-code",
@@ -72,17 +70,35 @@ class TestSetForwardHooks(CustomTestCase):
             "--disable-cuda-graph",
             "--dtype",
             "bfloat16",
-            # "--decrypted-config-file",
-            # "Qwen3-8B/config.json",
-            # "--decrypted-draft-config-file",
-            # "Qwen3-8B_eagle3/config.json",
+            "--decrypted-config-file",
+            "Qwen3-8B/config.json",
+            "--decrypted-draft-config-file",
+            "Qwen3-8B_eagle3/config.json",
         ]
-        cls.process = popen_launch_server(
-            cls.model,
-            DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
-        )
+        # Service failed to start, restoring original file name
+        try:
+            cls.process = popen_launch_server(
+                cls.model,
+                DEFAULT_URL_FOR_TEST,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=other_args,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Failed to launch server: {e}") from e
+        finally:
+            for weights_path in [QWEN3_32B_WEIGHTS_PATH, QWEN3_32B_EAGLE3_WEIGHTS_PATH]:
+                old_path = os.path.join(weights_path, '_config.json')
+                new_path = os.path.join(weights_path, 'config.json')
+
+                if os.path.exists(old_path):
+                    try:
+                        run_command(f"mv {old_path} {new_path}")
+                    except Exception as e:
+                        print(f"Warning: Failed to rename {old_path}: {e}")
+                elif not os.path.exists(new_path):
+                    print(f"Warning: Neither {old_path} nor {new_path} exists")
+            if cls.process:
+                kill_process_tree(cls.process.pid)
 
     @classmethod
     def tearDownClass(cls):
@@ -90,7 +106,6 @@ class TestSetForwardHooks(CustomTestCase):
             f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')}")
         run_command(
             f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')}")
-
         kill_process_tree(cls.process.pid)
 
     def test_decrypted_draft_config_file(self):
