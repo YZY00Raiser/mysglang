@@ -4,9 +4,9 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.gsm8k_ascend_mixin import GSM8KAscendMixin
-from sglang.test.ascend.test_ascend_utils import (
-    QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
-)
+# from sglang.test.ascend.test_ascend_utils import (
+#     QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
+# )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -108,8 +108,8 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
     [Test Target] --mamba-scheduler-strategy, --mamba-full-memory-ratio, --mamba-track-interval
     """
 
-    model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path
-    accuracy = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.gsm8k_accuracy
+    model = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+    accuracy = 0.92
     other_args = [
         "--trust-remote-code",
         "--mem-fraction-static",
