@@ -46,7 +46,7 @@ class TestMambaCacheBase(CustomTestCase):
 '''
 
 
-class TestMambaCacheBasic(GSM8KAscendMixin, TestMambaCacheBase):
+class TestMambaCacheBasic(GSM8KAscendMixin, CustomTestCase):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
     The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
     on the GSM8K dataset is no less than 0.92.
