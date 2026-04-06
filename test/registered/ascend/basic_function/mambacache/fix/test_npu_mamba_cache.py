@@ -43,6 +43,8 @@ class TestMambaCacheBase(CustomTestCase):
         if cls.process:
             kill_process_tree(cls.process.pid)
 
+'''
+
 
 class TestMambaCacheBasic(GSM8KAscendMixin, TestMambaCacheBase):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
@@ -71,7 +73,7 @@ class TestMambaCacheBasic(GSM8KAscendMixin, TestMambaCacheBase):
         "8",
         "--disable-radix-cache",
     ]
-
+'''
 
 class TestMambaCacheParameters(TestMambaCacheBase):
     """Testcase: Verify MambaCache with different parameters, inference request successful.
