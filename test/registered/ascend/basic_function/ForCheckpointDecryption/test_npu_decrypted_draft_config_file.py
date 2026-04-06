@@ -48,8 +48,6 @@ class TestSetForwardHooks(CustomTestCase):
             "--trust-remote-code",
             "--attention-backend",
             "ascend",
-            "--device",
-            "npu",
             "--max-running-requests",
             "1",
             "--disable-radix-cache",
