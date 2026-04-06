@@ -50,8 +50,6 @@ class TestSetForwardHooks(CustomTestCase):
             "--trust-remote-code",
             "--attention-backend",
             "ascend",
-            "--max-running-requests",
-            "1",
             "--disable-radix-cache",
             "--chunked-prefill-size",
             "-1",
