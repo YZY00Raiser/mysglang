@@ -79,8 +79,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         self.assertIn("Paris", response.text)
         # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         print("--------------------e2e-latency-----lora-a-without-overlap---------------------------")
-        print(response.json())
-        # print(response.json()["e2e-latency"])
+        print(response.json()["meta_info"]["e2e-latency"])
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -96,12 +95,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
         print("--------------------e2e-latency-----lora-b-without-overlap---------------------------")
-        print(response.json())
-        # print(response.json()["e2e-latency"])
-        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        self.assertEqual(response.status_code, 200)
-
-'''
+        print(response.json()["meta_info"]["e2e-latency"])
 
 
 class TestLoraOverlapLoadingEnabled(CustomTestCase):
@@ -158,9 +152,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         print("--------------------e2e-latency-----lora-a-with-overlap---------------------------")
-        print(response.json()["e2e-latency"])
+        print(response.json()["meta_info"]["e2e-latency"])
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -176,10 +169,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
         print("--------------------e2e-latency-----lora-b-with-overlap---------------------------")
-        print(response.json()["e2e-latency"])
-        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
-        self.assertEqual(response.status_code, 200)
-'''
+        print(response.json()["meta_info"]["e2e-latency"])
+
 
 if __name__ == "__main__":
     unittest.main()
