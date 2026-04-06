@@ -21,6 +21,9 @@ LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-In
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
+unable_overlap_loading_time = 0
+enable_overlap_loading_time = 0
+
 
 class TestLoraOverlapLoadingDisabled(CustomTestCase):
     """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading.
@@ -43,7 +46,8 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         "--attention-backend",
         "ascend",
         "--disable-cuda-graph",
-        # Note: --enable-lora-overlap-loading is NOT set
+        "--base-gpu-id",
+        "14",
     ]
 
     @classmethod
@@ -122,6 +126,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
             "--disable-cuda-graph",
             "--enable-lora-overlap-loading",
             "--disable-radix-cache",
+            "--base-gpu-id",
+            "14",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
