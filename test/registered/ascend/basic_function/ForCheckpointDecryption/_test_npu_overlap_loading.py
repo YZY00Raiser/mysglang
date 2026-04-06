@@ -79,6 +79,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         self.assertIn("Paris", response.text)
         # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         print("--------------------e2e-latency-----lora-a-without-overlap---------------------------")
+        print(response.json())
         print(response.json()["meta_info"]["e2e_latency"])
 
         response = requests.post(
