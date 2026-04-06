@@ -48,6 +48,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--enable-lora-overlap-loading",
+            "--disable-radix-cache",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
