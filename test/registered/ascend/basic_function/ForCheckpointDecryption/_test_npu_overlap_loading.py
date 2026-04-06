@@ -108,16 +108,15 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
     [Test Target] --enable-lora-overlap-loading
     """
 
-    lora_a = LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH
-    lora_b = LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH
-
     @classmethod
     def setUpClass(cls):
         other_args = [
+            "--tp-size",
+            "2",
             "--enable-lora",
             "--lora-path",
-            f"lora_a={cls.lora_a}",
-            f"lora_b={cls.lora_b}",
+            f"lora_a={LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH}",
+            f"lora_b={LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH}",
             "--max-loaded-loras",
             "2",
             "--max-loras-per-batch",
