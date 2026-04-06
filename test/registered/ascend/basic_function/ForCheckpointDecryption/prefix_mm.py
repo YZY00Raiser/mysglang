@@ -10,7 +10,7 @@ from typing import Dict
 import requests
 
 from sglang.bench_serving import get_tokenizer
-from sglang.test.ascend.test_ascend_utils import QWEN3_VL_8B_INSTRUCT_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.server_fixtures.disaggregation_fixture import (
     PDDisaggregationServerBase,
@@ -24,19 +24,20 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=400, suite="nightly-4-npu-a3", nightly=True)
 
 
-class DisaggregationPrefixMMCacheBase(PDDisaggregationServerBase):
-    """Testcase: Test PD disaggregation with --enable-prefix-mm-cache parameter.
+class DisaggregationHiCacheBase(PDDisaggregationServerBase):
+    """Testcase: All parameters for testing the PD_disaggregation feature were configured, inference was successful, and cache_tokens continued to grow..
 
     [Test Category] Functional
-    [Test Target] PD disaggregation with prefix multimodal cache on NPU
-    --enable-prefix-mm-cache; vision model with hierarchical cache
+    [Test Target] PD disaggregatio on NPU
+    --disaggregation-mode; --disaggregation-transfer-backend; --disaggregation-decode-polling-interval;
+    --disaggregation-decode-enable-offload-kvcache; --num-reserved-decode-tokens; --disaggregation-bootstrap-port;
     """
 
     @classmethod
     def setUpClass(cls):
-        super(DisaggregationPrefixMMCacheBase, cls).setUpClass()
+        super(DisaggregationHiCacheBase, cls).setUpClass()
 
-        cls.model = QWEN3_VL_8B_INSTRUCT_WEIGHTS_PATH
+        cls.model = QWEN3_32B_WEIGHTS_PATH
 
         cls.tokenizer = get_tokenizer(cls.model)
         cls.temp_dir = tempfile.mkdtemp()
@@ -54,7 +55,7 @@ class DisaggregationPrefixMMCacheBase(PDDisaggregationServerBase):
 
     @classmethod
     def start_prefill(cls):
-        # Prefill with HiCache and prefix-mm-cache enabled
+        # Prefill with HiCache enabled (1 card)
         prefill_args = [
             "--trust-remote-code",
             "--attention-backend",
@@ -66,7 +67,7 @@ class DisaggregationPrefixMMCacheBase(PDDisaggregationServerBase):
             "--disaggregation-bootstrap-port",
             cls.bootstrap_port,
             "--tp-size",
-            "2",
+            "1",
             "--enable-hierarchical-cache",
             "--hicache-io-backend",
             "kernel_ascend",
@@ -79,7 +80,6 @@ class DisaggregationPrefixMMCacheBase(PDDisaggregationServerBase):
             "--mem-fraction-static",
             "0.9",
             "--disable-cuda-graph",
-            "--enable-prefix-mm-cache",
         ]
         env = {
             **os.environ,
@@ -158,13 +158,8 @@ class DisaggregationPrefixMMCacheBase(PDDisaggregationServerBase):
         requests.post(self.prefill_url + "/flush_cache")
 
 
-class TestDisaggregationDecodeWithPrefixMMCache(DisaggregationPrefixMMCacheBase):
-    """Decode startup parameters with --enable-prefix-mm-cache"""
-
-    ascend_devices = os.environ.get("ASCEND_RT_VISIBLE_DEVICES", "0,1,2,3")
-    base_gpu_id = (
-        ascend_devices.split(",")[2] if len(ascend_devices.split(",")) >= 3 else "2"
-    )
+class TestDisaggregationDecodeWithHiCache(DisaggregationHiCacheBase):
+    """Decode startup parameters (1 card)"""
 
     @classmethod
     def start_decode(cls):
@@ -177,11 +172,9 @@ class TestDisaggregationDecodeWithPrefixMMCache(DisaggregationPrefixMMCacheBase)
             "--disaggregation-transfer-backend",
             "ascend",
             "--tp-size",
-            2,
+            1,
             "--mem-fraction-static",
             "0.9",
-            "--base-gpu-id",
-            cls.base_gpu_id,
             "--disaggregation-decode-enable-offload-kvcache",
             "--hicache-io-backend",
             "kernel_ascend",
@@ -195,7 +188,6 @@ class TestDisaggregationDecodeWithPrefixMMCache(DisaggregationPrefixMMCacheBase)
             128,
             "--disaggregation-decode-polling-interval",
             2,
-            "--enable-prefix-mm-cache",
         ]
 
         env = {
