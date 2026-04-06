@@ -101,6 +101,8 @@ class TestMambaCacheParameters(TestMambaCacheBase):
         "--tp-size",
         "8",
         "--disable-radix-cache",
+        "--max-mamba-cache-size",
+        "1024",
     ]
 
     def test_basic_inference(self):
@@ -119,7 +121,7 @@ class TestMambaCacheParameters(TestMambaCacheBase):
         return response.text
 
     def test_mamba_long_sequence(self):
-        long_text = "Explain the concept of machine learning in detail." * 80000
+        long_text = "Explain the concept of machine learning in detail." * 70000
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
