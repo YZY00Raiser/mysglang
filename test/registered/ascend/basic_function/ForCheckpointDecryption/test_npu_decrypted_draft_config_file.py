@@ -39,8 +39,11 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        run_command("mv QWEN3_32B_WEIGHTS_PATH/config.json _config.json")
-        run_command("mv QWEN3_32B_EAGLE3_WEIGHTS_PATH/config.json _config.json")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+
         other_args = [
             "--trust-remote-code",
             "--attention-backend",
@@ -84,11 +87,13 @@ class TestSetForwardHooks(CustomTestCase):
             other_args=other_args,
         )
 
-
     @classmethod
     def tearDownClass(cls):
-        run_command("mv QWEN3_32B_WEIGHTS_PATH/_config.json config.json")
-        run_command("mv QWEN3_32B_EAGLE3_WEIGHTS_PATH/_config.json config.json")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')}")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')}")
+
         kill_process_tree(cls.process.pid)
 
     def test_decrypted_draft_config_file(self):
