@@ -39,10 +39,12 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
+        '''
         run_command(
             f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
         run_command(
             f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+        '''
 
         other_args = [
             "--trust-remote-code",
