@@ -18,15 +18,99 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=1100, suite="nightly-8-npu-a3", nightly=True)
 
 
-class TestMambaCacheBase(CustomTestCase):
-    """Base class for MambaCache tests with common setup and teardown.
 
-    Subclasses should define:
-        - model: model path
-        - other_args: list of server arguments
+
+
+
+
+class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
+    """Testcase: Test MambaCache basic functions using GSM8K dataset.
+    The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
+    on the GSM8K dataset is no less than 0.92.
+
+    [Test Category] Parameter
+    [Test Target] --mamba-scheduler-strategy, --mamba-full-memory-ratio, --mamba-track-interval
     """
 
-    other_args = []
+    model = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+    accuracy = 0.92
+    other_args = [
+        "--trust-remote-code",
+        "--mem-fraction-static",
+        "0.5",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--mamba-full-memory-ratio",
+        "0.9",
+        "--mamba-scheduler-strategy",
+        "auto",
+        "--mamba-track-interval",
+        "256",
+        "--tp-size",
+        "8",
+        "--disable-radix-cache",
+        "--base-gpu-id",
+        "6"
+    ]
+
+
+class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
+    """Testcase: Test MambaCache basic functions using GSM8K dataset.
+    The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
+    on the GSM8K dataset is no less than 0.92.
+
+    [Test Category] Parameter
+    [Test Target] --mamba-scheduler-strategy, --mamba-ssm-dtype, --max-mamba-cache-size, --mamba-track-interval
+    """
+
+    other_args = [
+        "--trust-remote-code",
+        "--mem-fraction-static",
+        "0.5",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--mamba-scheduler-strategy",
+        "no_buffer",
+        "--mamba-track-interval",
+        "512",
+        "--mamba-ssm-dtype",
+        "float32",
+        "--tp-size",
+        "8",
+        "--disable-radix-cache",
+        "--max-mamba-cache-size",
+        "1024",
+        "--base-gpu-id",
+        "6",
+    ]
+
+
+class TestMambaCacheRadix(CustomTestCase):
+    """Testcase: Verify Radix Cache reuse with mamba cache.
+
+    [Test Category] Parameter
+    [Test Target] Radix Cache reuse, --mamba-ssm-dtype, --mamba-full-memory-ratio
+    """
+
+    other_args = [
+        "--trust-remote-code",
+        "--mem-fraction-static",
+        "0.5",
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--tp-size",
+        "8",
+        "--mamba-ssm-dtype",
+        "bfloat16",
+        "--mamba-full-memory-ratio",
+        "0.3",
+        "--base-gpu-id",
+        "6",
+
+    ]
 
     @classmethod
     def setUpClass(cls):
@@ -99,90 +183,7 @@ class TestMambaCacheBase(CustomTestCase):
         self.assertGreater(len(response.text), 0)
 
 
-class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
-    """Testcase: Test MambaCache basic functions using GSM8K dataset.
-    The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
-    on the GSM8K dataset is no less than 0.92.
-
-    [Test Category] Parameter
-    [Test Target] --mamba-scheduler-strategy, --mamba-full-memory-ratio, --mamba-track-interval
-    """
-
-    model = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
-    accuracy = 0.92
-    other_args = [
-        "--trust-remote-code",
-        "--mem-fraction-static",
-        "0.5",
-        "--attention-backend",
-        "ascend",
-        "--disable-cuda-graph",
-        "--mamba-full-memory-ratio",
-        "0.9",
-        "--mamba-scheduler-strategy",
-        "auto",
-        "--mamba-track-interval",
-        "256",
-        "--tp-size",
-        "8",
-        "--disable-radix-cache",
-    ]
-
-
-class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
-    """Testcase: Test MambaCache basic functions using GSM8K dataset.
-    The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
-    on the GSM8K dataset is no less than 0.92.
-
-    [Test Category] Parameter
-    [Test Target] --mamba-scheduler-strategy, --mamba-ssm-dtype, --max-mamba-cache-size, --mamba-track-interval
-    """
-
-    other_args = [
-        "--trust-remote-code",
-        "--mem-fraction-static",
-        "0.5",
-        "--attention-backend",
-        "ascend",
-        "--disable-cuda-graph",
-        "--mamba-scheduler-strategy",
-        "no_buffer",
-        "--mamba-track-interval",
-        "512",
-        "--mamba-ssm-dtype",
-        "float32",
-        "--tp-size",
-        "8",
-        "--disable-radix-cache",
-        "--max-mamba-cache-size",
-        "1024",
-    ]
-
-
-class TestMambaCacheRadix(TestMambaCacheBase):
-    """Testcase: Verify Radix Cache reuse with mamba cache.
-
-    [Test Category] Parameter
-    [Test Target] Radix Cache reuse, --mamba-ssm-dtype, --mamba-full-memory-ratio
-    """
-
-    other_args = [
-        "--trust-remote-code",
-        "--mem-fraction-static",
-        "0.5",
-        "--attention-backend",
-        "ascend",
-        "--disable-cuda-graph",
-        "--tp-size",
-        "8",
-        "--mamba-ssm-dtype",
-        "bfloat16",
-        "--mamba-full-memory-ratio",
-        "0.3",
-    ]
-
-
-class TestMambaCacheHierarchicalCache(TestMambaCacheBase):
+class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
     """Testcase: Verify hierarchical cache reuse with mamba cache.
 
     [Test Category] Parameter
@@ -203,6 +204,9 @@ class TestMambaCacheHierarchicalCache(TestMambaCacheBase):
         1.2,
         "--max-mamba-cache-size",
         "512",
+        "--base-gpu-id",
+        "6",
+
     ]
 
 
