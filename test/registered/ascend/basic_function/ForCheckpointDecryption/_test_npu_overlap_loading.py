@@ -21,9 +21,6 @@ LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH = "/home/weights/LLM-Research/Llama-3.2-1B-In
 LLAMA_3_2_1B_INSTRUCT_TOOL_CALLING_LORA_WEIGHTS_PATH = "/home/weights/codelion/Llama-3.2-1B-Instruct-tool-calling-lora"
 LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/FastLlama-3.2-LoRA"
 
-unable_overlap_loading_time = 0
-enable_overlap_loading_time = 0
-
 
 class TestLoraOverlapLoadingDisabled(CustomTestCase):
     """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading, Switch lora TTFT < Switch lora TTFT with
@@ -33,6 +30,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
     [Test Target] --enable-lora-overlap-loading
     """
 
+    unable_overlap_loading_time = 0
     other_args = [
         "--tp-size",
         "2",
@@ -90,7 +88,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        unable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
+        TestLoraOverlapLoadingDisabled.unable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
 
 
 class TestLoraOverlapLoadingEnabled(CustomTestCase):
@@ -159,7 +157,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
         enable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
-        self.assertGreaterEqual(unable_overlap_loading_time, enable_overlap_loading_time)
+        self.assertGreaterEqual(TestLoraOverlapLoadingDisabled.unable_overlap_loading_time, enable_overlap_loading_time)
 
 
 if __name__ == "__main__":
