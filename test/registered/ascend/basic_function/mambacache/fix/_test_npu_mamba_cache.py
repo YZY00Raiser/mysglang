@@ -128,7 +128,7 @@ class TestMambaCacheRadix(CustomTestCase):
         "bfloat16",
         "--disable-radix-cache",
         "--mamba-full-memory-ratio",
-        "0.3",
+        "0.5",
         "--base-gpu-id",
         "6",
 
