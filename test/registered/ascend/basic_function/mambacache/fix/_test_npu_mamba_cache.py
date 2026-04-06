@@ -1,4 +1,5 @@
 import unittest
+from types import SimpleNamespace
 
 import requests
 
@@ -8,6 +9,7 @@ from sglang.test.ascend.gsm8k_ascend_mixin import GSM8KAscendMixin
 #     QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
+from sglang.test.few_shot_gsm8k import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -54,6 +56,25 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
         "6"
     ]
 
+    def test_gsm8k(self):
+        args = SimpleNamespace(
+            num_shots=self.gsm8k_num_shots,
+            # data_path="/test.jsonl",
+            # data_path="test.jsonl",
+            data_path="/home/y30082119/mysglang/test/registered/ascend/basic_function/mabacache/test.jsonl",
+
+            num_questions=200,
+            max_new_tokens=512,
+            parallel=128,
+            host="http://127.0.0.1",
+            port=int(self.base_url.split(":")[-1]),
+        )
+        metrics = run_eval(args)
+        self.assertGreaterEqual(
+            metrics["accuracy"],
+            self.accuracy,
+            f'Accuracy of {self.model} is {str(metrics["accuracy"])}, is lower than {self.accuracy}',
+        )
 
 class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
