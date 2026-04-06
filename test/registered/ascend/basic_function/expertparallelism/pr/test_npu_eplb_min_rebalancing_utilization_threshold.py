@@ -139,10 +139,4 @@ class TestEplbMinRebalancingUtilizationThreshold095(TestEplbMinRebalancingUtiliz
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    suite.addTest(TestEplbMinRebalancingUtilizationThreshold005("test_gsm8k"))
-    suite.addTest(TestEplbMinRebalancingUtilizationThreshold005("test_eplb_min_rebalancing_utilization_threshold"))
-    suite.addTest(TestEplbMinRebalancingUtilizationThreshold095("test_gsm8k"))
-    suite.addTest(TestEplbMinRebalancingUtilizationThreshold095("test_eplb_min_rebalancing_utilization_threshold"))
-    runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(suite)
+    unittest.main(verbosity=2)
