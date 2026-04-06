@@ -77,7 +77,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         print("--------------------e2e-latency-----lora-a-without-overlap---------------------------")
         print(response.json()["e2e-latency"])
 
@@ -96,7 +96,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         self.assertIn("Paris", response.text)
         print("--------------------e2e-latency-----lora-b-without-overlap---------------------------")
         print(response.json()["e2e-latency"])
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
 
 
@@ -154,7 +154,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         print("--------------------e2e-latency-----lora-a-with-overlap---------------------------")
         print(response.json()["e2e-latency"])
 
@@ -173,7 +173,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         self.assertIn("Paris", response.text)
         print("--------------------e2e-latency-----lora-b-with-overlap---------------------------")
         print(response.json()["e2e-latency"])
-        response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
+        # response = requests.get(DEFAULT_URL_FOR_TEST + "/server_info")
         self.assertEqual(response.status_code, 200)
 
 
