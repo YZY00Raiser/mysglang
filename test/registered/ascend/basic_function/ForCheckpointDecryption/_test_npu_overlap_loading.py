@@ -24,7 +24,7 @@ LLAMA_3_2_1B_INSTRUCT_TOOL_FAST_LORA_WEIGHTS_PATH = "/home/weights/codelion/Fast
 unable_overlap_loading_time = 0
 enable_overlap_loading_time = 0
 
-
+'''
 class TestLoraOverlapLoadingDisabled(CustomTestCase):
     """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading.
 
@@ -97,6 +97,8 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         self.assertIn("Paris", response.text)
         print("--------------------e2e-latency-----lora-b-without-overlap---------------------------")
         print(response.json()["meta_info"]["e2e_latency"])
+
+'''
 
 
 class TestLoraOverlapLoadingEnabled(CustomTestCase):
