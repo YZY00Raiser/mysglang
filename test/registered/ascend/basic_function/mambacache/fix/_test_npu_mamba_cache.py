@@ -61,7 +61,7 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
             num_shots=self.gsm8k_num_shots,
             # data_path="/test.jsonl",
             # data_path="test.jsonl",
-            data_path="/home/y30082119/mysglang/test/registered/ascend/basic_function/mabacache/test.jsonl",
+            data_path="/home/y30082119/test.jsonl",
 
             num_questions=200,
             max_new_tokens=512,
