@@ -28,8 +28,8 @@ QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
-    """Testcase: Verify set --decrypted-config-file, --decrypted-draft-config-file parameter, set non exist config.json,
-    will use the non exist config.json and the service startup failed
+    """Testcase: Verify set --decrypted-config-file, --decrypted-draft-config-file parameter,
+    will use the specified config.json and the inference request is successfully processed.
 
     [Test Category] Parameter
     [Test Target] --decrypted-config-file, --decrypted-draft-config-file
