@@ -24,8 +24,8 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
-QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
-QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
+QWEN3_8B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
+QWEN3_8B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
@@ -36,24 +36,24 @@ class TestSetForwardHooks(CustomTestCase):
     [Test Target] --decrypted-config-file, --decrypted-draft-config-file
     """
 
-    model = QWEN3_32B_WEIGHTS_PATH
+    model = QWEN3_8B_WEIGHTS_PATH
 
     @classmethod
     def setUpClass(cls):
         run_command(
-            f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
+            f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')}")
         run_command(
-            f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+            f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
 
-        # cls.extra_envs = {
-        #     "HCCL_BUFFSIZE": "1024",
-        #     "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
-        #     "SGLANG_NPU_USE_MLAPO": "1",
-        #     "SGLANG_NPU_USE_EINSUM_MM": "1",
-        #     "SLANG_ENABLE_SPEC_V2": "1",
-        #     "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-        # }
-        # os.environ.update(cls.extra_envs)
+        cls.extra_envs = {
+            "HCCL_BUFFSIZE": "1024",
+            "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
+            "SGLANG_NPU_USE_MLAPO": "1",
+            "SGLANG_NPU_USE_EINSUM_MM": "1",
+            "SLANG_ENABLE_SPEC_V2": "1",
+            "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
+        }
+        os.environ.update(cls.extra_envs)
 
         # Service failed to start, restoring original file name
         try:
@@ -73,7 +73,7 @@ class TestSetForwardHooks(CustomTestCase):
                     "--speculative-algorithm",
                     "EAGLE3",
                     "--speculative-draft-model-path",
-                    QWEN3_32B_EAGLE3_WEIGHTS_PATH,
+                    QWEN3_8B_EAGLE3_WEIGHTS_PATH,
                     "--speculative-num-steps",
                     "3",
                     "--speculative-eagle-topk",
@@ -102,7 +102,7 @@ class TestSetForwardHooks(CustomTestCase):
         except Exception as e:
             raise RuntimeError(f"Failed to launch server: {e}") from e
         finally:
-            for weights_path in [QWEN3_32B_WEIGHTS_PATH, QWEN3_32B_EAGLE3_WEIGHTS_PATH]:
+            for weights_path in [QWEN3_8B_WEIGHTS_PATH, QWEN3_8B_EAGLE3_WEIGHTS_PATH]:
                 old_path = os.path.join(weights_path, '_config.json')
                 new_path = os.path.join(weights_path, 'config.json')
 
@@ -195,7 +195,6 @@ class TestSetForwardHooks(CustomTestCase):
             if cls.process:
                 kill_process_tree(cls.process.pid)
     '''
-
 
     '''
     @classmethod
