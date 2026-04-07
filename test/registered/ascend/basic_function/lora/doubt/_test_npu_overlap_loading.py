@@ -45,6 +45,8 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         "--attention-backend",
         "ascend",
         "--disable-cuda-graph",
+        "--base-gpu-id",
+        "10",
     ]
 
     @classmethod
@@ -64,7 +66,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is"*5000,
+                "text": "The capital of France is" * 5000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -80,7 +82,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is"*5000,
+                "text": "The capital of France is" * 5000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -120,6 +122,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--enable-lora-overlap-loading",
+            "--base-gpu-id",
+            "10",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
@@ -136,7 +140,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is"*5000,
+                "text": "The capital of France is" * 5000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -151,7 +155,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is"*5000,
+                "text": "The capital of France is" * 5000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
