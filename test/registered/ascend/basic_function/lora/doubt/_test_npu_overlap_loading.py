@@ -64,7 +64,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -80,7 +80,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -93,6 +93,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         TestLoraOverlapLoadingDisabled.unable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
         print("--------------------e2e-latency------2--------------------------")
         print(response.json()["meta_info"]["e2e_latency"])
+
 
 class TestLoraOverlapLoadingEnabled(CustomTestCase):
     """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading, Switch lora TTFT < Switch lora TTFT with
@@ -135,7 +136,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -150,7 +151,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -164,6 +165,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         print("--------------------e2e-latency------4--------------------------")
         print(response.json()["meta_info"]["e2e_latency"])
         self.assertGreaterEqual(TestLoraOverlapLoadingDisabled.unable_overlap_loading_time, enable_overlap_loading_time)
+
 
 if __name__ == "__main__":
     unittest.main()
