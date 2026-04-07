@@ -46,7 +46,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         "ascend",
         "--disable-cuda-graph",
         "--base-gpu-id",
-        "8",
+        "2",
     ]
 
     @classmethod
@@ -123,7 +123,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
             "--disable-cuda-graph",
             "--enable-lora-overlap-loading",
             "--base-gpu-id",
-            "8",
+            "2",
         ]
         cls.process = popen_launch_server(
             LLAMA_3_2_1B_INSTRUCT_WEIGHTS_PATH,
