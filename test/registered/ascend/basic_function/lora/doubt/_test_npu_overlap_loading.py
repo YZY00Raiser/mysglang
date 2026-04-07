@@ -161,9 +161,9 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
         enable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
-        self.assertGreaterEqual(TestLoraOverlapLoadingDisabled.unable_overlap_loading_time, enable_overlap_loading_time)
         print("--------------------e2e-latency------4--------------------------")
         print(response.json()["meta_info"]["e2e_latency"])
+        self.assertGreaterEqual(TestLoraOverlapLoadingDisabled.unable_overlap_loading_time, enable_overlap_loading_time)
 
 if __name__ == "__main__":
     unittest.main()
