@@ -197,6 +197,7 @@ class TestSetForwardHooks(CustomTestCase):
             if cls.process:
                 kill_process_tree(cls.process.pid)
 
+    '''
     @classmethod
     def tearDownClass(cls):
         run_command(
@@ -204,6 +205,7 @@ class TestSetForwardHooks(CustomTestCase):
         run_command(
             f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')}")
         kill_process_tree(cls.process.pid)
+    '''
 
     def test_decrypted_draft_config_file(self):
         response = requests.post(
