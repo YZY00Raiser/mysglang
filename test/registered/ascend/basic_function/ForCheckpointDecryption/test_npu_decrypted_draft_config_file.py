@@ -5,10 +5,10 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import run_command
-from sglang.test.ascend.test_ascend_utils import (
-    QWEN3_32B_WEIGHTS_PATH,
-    QWEN3_32B_EAGLE3_WEIGHTS_PATH
-)
+# from sglang.test.ascend.test_ascend_utils import (
+#     QWEN3_32B_WEIGHTS_PATH,
+#     QWEN3_32B_EAGLE3_WEIGHTS_PATH
+# )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -22,6 +22,8 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
+QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
+QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
@@ -41,44 +43,59 @@ class TestSetForwardHooks(CustomTestCase):
         run_command(
             f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
 
-        other_args = [
-            "--trust-remote-code",
-            "--attention-backend",
-            "ascend",
-            "--disable-radix-cache",
-            "--chunked-prefill-size",
-            "-1",
-            "--max-prefill-tokens",
-            "1024",
-            "--speculative-algorithm",
-            "EAGLE3",
-            "--speculative-draft-model-path",
-            QWEN3_32B_EAGLE3_WEIGHTS_PATH,
-            "--speculative-num-steps",
-            "3",
-            "--speculative-eagle-topk",
-            "1",
-            "--speculative-num-draft-tokens",
-            "4",
-            "--tp-size",
-            "2",
-            "--mem-fraction-static",
-            "0.68",
-            "--disable-cuda-graph",
-            "--dtype",
-            "bfloat16",
-            "--decrypted-config-file",
-            "Qwen3-8B/config.json",
-            "--decrypted-draft-config-file",
-            "Qwen3-8B_eagle3/config.json",
-        ]
+        '''
+        cls.extra_envs = {
+            "HCCL_BUFFSIZE": "1024",
+            "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
+            "SGLANG_NPU_USE_MLAPO": "1",
+            "SGLANG_NPU_USE_EINSUM_MM": "1",
+            "SLANG_ENABLE_SPEC_V2": "1",
+            "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
+        }
+        os.environ.update(cls.extra_envs)
+        '''
+
         # Service failed to start, restoring original file name
         try:
             cls.process = popen_launch_server(
                 cls.model,
                 DEFAULT_URL_FOR_TEST,
                 timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-                other_args=other_args,
+                other_args=[
+                    "--trust-remote-code",
+                    "--attention-backend",
+                    "ascend",
+                    "--disable-radix-cache",
+                    "--chunked-prefill-size",
+                    "-1",
+                    "--max-prefill-tokens",
+                    "1024",
+                    "--speculative-algorithm",
+                    "EAGLE3",
+                    "--speculative-draft-model-path",
+                    QWEN3_32B_EAGLE3_WEIGHTS_PATH,
+                    "--speculative-num-steps",
+                    "3",
+                    "--speculative-eagle-topk",
+                    "1",
+                    "--speculative-num-draft-tokens",
+                    "4",
+                    "--tp-size",
+                    "2",
+                    "--mem-fraction-static",
+                    "0.68",
+                    "--disable-cuda-graph",
+                    "--dtype",
+                    "bfloat16",
+                    "--decrypted-config-file",
+                    "Qwen3-8B/config.json",
+                    "--decrypted-draft-config-file",
+                    "Qwen3-8B_eagle3/config.json",
+                ],
+                env={
+                    "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                    "HCCL_BUFFSIZE": "1024",
+                },
             )
         except Exception as e:
             raise RuntimeError(f"Failed to launch server: {e}") from e
