@@ -64,7 +64,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -78,7 +78,7 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -132,7 +132,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
@@ -146,7 +146,7 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
-                "text": "The capital of France is",
+                "text": "The capital of France is" * 10000,
                 "sampling_params": {
                     "temperature": 0,
                     "max_new_tokens": 1,
