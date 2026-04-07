@@ -50,6 +50,7 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
         "--mamba-ssm-dtype",
         "float32",
     ]
+
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=self.gsm8k_num_shots,
@@ -69,6 +70,7 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
             self.accuracy,
             f'Accuracy of {self.model} is {str(metrics["accuracy"])}, is lower than {self.accuracy}',
         )
+
 
 '''
 class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
