@@ -74,6 +74,8 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+        print("--------------------e2e-latency------1--------------------------")
+        print(response.json()["meta_info"]["e2e_latency"])
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -89,7 +91,8 @@ class TestLoraOverlapLoadingDisabled(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
         TestLoraOverlapLoadingDisabled.unable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
-
+        print("--------------------e2e-latency------2--------------------------")
+        print(response.json()["meta_info"]["e2e_latency"])
 
 class TestLoraOverlapLoadingEnabled(CustomTestCase):
     """Testcase：Verify LoRA works properly without --enable-lora-overlap-loading, Switch lora TTFT < Switch lora TTFT with
@@ -142,7 +145,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+        print("--------------------e2e-latency------3--------------------------")
+        print(response.json()["meta_info"]["e2e_latency"])
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -158,7 +162,8 @@ class TestLoraOverlapLoadingEnabled(CustomTestCase):
         self.assertIn("Paris", response.text)
         enable_overlap_loading_time = response.json()["meta_info"]["e2e_latency"]
         self.assertGreaterEqual(TestLoraOverlapLoadingDisabled.unable_overlap_loading_time, enable_overlap_loading_time)
-
+        print("--------------------e2e-latency------4--------------------------")
+        print(response.json()["meta_info"]["e2e_latency"])
 
 if __name__ == "__main__":
     unittest.main()
