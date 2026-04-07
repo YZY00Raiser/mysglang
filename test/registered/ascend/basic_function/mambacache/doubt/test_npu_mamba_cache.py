@@ -1,4 +1,5 @@
 import unittest
+from types import SimpleNamespace
 
 import requests
 
@@ -8,6 +9,7 @@ from sglang.test.ascend.gsm8k_ascend_mixin import GSM8KAscendMixin
 #     QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
 # )
 from sglang.test.ci.ci_register import register_npu_ci
+from sglang.test.few_shot_gsm8k import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
