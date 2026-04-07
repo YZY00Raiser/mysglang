@@ -93,8 +93,8 @@ class TestSetForwardHooks(CustomTestCase):
                     "Qwen3-8B_eagle3/config.json",
                 ],
                 env={
-                    "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
-                    "HCCL_BUFFSIZE": "1024",
+                    "SLANG_ENABLE_SPEC_V2": "1",
+                    "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
                 },
             )
         except Exception as e:
