@@ -55,7 +55,6 @@ class TestSetForwardHooks(CustomTestCase):
         # }
         # os.environ.update(cls.extra_envs)
 
-        '''
         # Service failed to start, restoring original file name
         try:
             cls.process = popen_launch_server(
@@ -89,9 +88,11 @@ class TestSetForwardHooks(CustomTestCase):
                     "--dtype",
                     "bfloat16",
                     "--decrypted-config-file",
-                    "Qwen3-8B/config.json",
+                    "/home/y30082119/Qwen3-8B/config.json",
                     "--decrypted-draft-config-file",
-                    "Qwen3-8B_eagle3/config.json",
+                    "/home/y30082119/Qwen3-8B_eagle3/config.json",
+                    "--base-gpu-id",
+                    "12",
                 ],
                 env={
                     "SLANG_ENABLE_SPEC_V2": "1",
@@ -116,7 +117,6 @@ class TestSetForwardHooks(CustomTestCase):
                 kill_process_tree(cls.process.pid)
 
         '''
-
         try:
             # launch server with "--config" parameter
             parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
@@ -194,6 +194,8 @@ class TestSetForwardHooks(CustomTestCase):
                     print(f"Warning: Neither {old_path} nor {new_path} exists")
             if cls.process:
                 kill_process_tree(cls.process.pid)
+    '''
+
 
     '''
     @classmethod
