@@ -163,6 +163,8 @@ class TestSetForwardHooks(CustomTestCase):
                 # "Qwen3-8B/config.json",
                 # "--decrypted-draft-config-file",
                 # "Qwen3-8B_eagle3/config.json",
+                "--base-gpu-id",
+                "12",
             ]
 
             env = _create_clean_subprocess_env(os.environ.copy())
