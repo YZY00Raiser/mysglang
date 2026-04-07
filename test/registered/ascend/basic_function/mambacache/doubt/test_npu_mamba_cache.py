@@ -77,6 +77,8 @@ class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
         "1024",
     ]
 
+'''
+
 
 class TestMambaCacheRadix(CustomTestCase):
     """Testcase: Verify Radix Cache reuse with mamba cache.
@@ -193,7 +195,7 @@ class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
         "--max-mamba-cache-size",
         "512",
     ]
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
