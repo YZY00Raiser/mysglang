@@ -159,10 +159,10 @@ class TestSetForwardHooks(CustomTestCase):
                 "--disable-cuda-graph",
                 "--dtype",
                 "bfloat16",
-                "--decrypted-config-file",
-                "Qwen3-8B/config.json",
-                "--decrypted-draft-config-file",
-                "Qwen3-8B_eagle3/config.json",
+                # "--decrypted-config-file",
+                # "Qwen3-8B/config.json",
+                # "--decrypted-draft-config-file",
+                # "Qwen3-8B_eagle3/config.json",
             ]
 
             env = _create_clean_subprocess_env(os.environ.copy())
