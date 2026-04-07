@@ -40,22 +40,20 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        # run_command(
-        #     f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
-        # run_command(
-        #     f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
 
-
-        cls.extra_envs = {
-            "HCCL_BUFFSIZE": "1024",
-            "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
-            "SGLANG_NPU_USE_MLAPO": "1",
-            "SGLANG_NPU_USE_EINSUM_MM": "1",
-            "SLANG_ENABLE_SPEC_V2": "1",
-            "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-        }
-        os.environ.update(cls.extra_envs)
-
+        # cls.extra_envs = {
+        #     "HCCL_BUFFSIZE": "1024",
+        #     "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
+        #     "SGLANG_NPU_USE_MLAPO": "1",
+        #     "SGLANG_NPU_USE_EINSUM_MM": "1",
+        #     "SLANG_ENABLE_SPEC_V2": "1",
+        #     "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
+        # }
+        # os.environ.update(cls.extra_envs)
 
         '''
         # Service failed to start, restoring original file name
