@@ -1,4 +1,3 @@
-import os
 import unittest
 
 import requests
@@ -28,16 +27,6 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.extra_envs = {
-            "HCCL_BUFFSIZE": "1024",
-            "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
-            "SGLANG_NPU_USE_MLAPO": "1",
-            "SGLANG_NPU_USE_EINSUM_MM": "1",
-            "SLANG_ENABLE_SPEC_V2": "1",
-            "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-        }
-        os.environ.update(cls.extra_envs)
-
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
@@ -65,10 +54,10 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "--moe-runner-backend",
                 cls.moe_runner_backend,
             ],
-            # env={
-            #     "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
-            #     "HCCL_BUFFSIZE": "1024",
-            # },
+            env={
+                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                "HCCL_BUFFSIZE": "1024",
+            },
         )
 
     @classmethod
