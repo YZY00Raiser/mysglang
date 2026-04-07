@@ -173,9 +173,9 @@ class TestSetForwardHooks(CustomTestCase):
 
             os.environ.update(cls.extra_envs)
             cls.process = subprocess.Popen(command, stdout=None, stderr=None, env=env)
-            # _wait_for_server_health(
-            #     cls.process, DEFAULT_URL_FOR_TEST, None, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
-            # )
+            _wait_for_server_health(
+                cls.process, DEFAULT_URL_FOR_TEST, None, DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH
+            )
 
         except Exception as e:
             raise RuntimeError(f"Failed to launch server: {e}") from e
