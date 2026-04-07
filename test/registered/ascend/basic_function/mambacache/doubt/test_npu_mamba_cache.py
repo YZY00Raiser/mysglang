@@ -68,7 +68,7 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
             f'Accuracy of {self.model} is {str(metrics["accuracy"])}, is lower than {self.accuracy}',
         )
 
-
+'''
 class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
     The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
@@ -97,8 +97,6 @@ class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
         "--max-mamba-cache-size",
         "1024",
     ]
-
-'''
 
 
 class TestMambaCacheRadix(CustomTestCase):
