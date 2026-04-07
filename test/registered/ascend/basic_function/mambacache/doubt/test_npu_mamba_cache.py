@@ -47,6 +47,8 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
         "--tp-size",
         "8",
         "--disable-radix-cache",
+        "--mamba-ssm-dtype",
+        "float32",
     ]
     def test_gsm8k(self):
         args = SimpleNamespace(
