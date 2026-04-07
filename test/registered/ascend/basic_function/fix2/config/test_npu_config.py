@@ -46,7 +46,7 @@ class TestConfig(CustomTestCase):
             "-m",
             "sglang.launch_server",
             "--config",
-            "config.yaml",
+            CONFIG_YAML_PATH,
             "--host",
             host,
             "--port",
