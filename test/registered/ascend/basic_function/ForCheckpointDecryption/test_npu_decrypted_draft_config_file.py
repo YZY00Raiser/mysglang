@@ -1,4 +1,3 @@
-import json
 import os
 import unittest
 
@@ -6,10 +5,10 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import run_command
-# from sglang.test.ascend.test_ascend_utils import (
-#     QWEN3_32B_WEIGHTS_PATH,
-#     QWEN3_32B_EAGLE3_WEIGHTS_PATH
-# )
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_32B_WEIGHTS_PATH,
+    QWEN3_32B_EAGLE3_WEIGHTS_PATH
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -23,8 +22,6 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
-QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
-QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
@@ -39,10 +36,10 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        # run_command(
-        #     f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
-        # run_command(
-        #     f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
+        run_command(
+            f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
 
         other_args = [
             "--trust-remote-code",
