@@ -46,6 +46,25 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
         "8",
         "--disable-radix-cache",
     ]
+    def test_gsm8k(self):
+        args = SimpleNamespace(
+            num_shots=self.gsm8k_num_shots,
+            # data_path="/test.jsonl",
+            # data_path="test.jsonl",
+            data_path="/home/y30082119/test.jsonl",
+
+            num_questions=200,
+            max_new_tokens=512,
+            parallel=128,
+            host="http://127.0.0.1",
+            port=int(self.base_url.split(":")[-1]),
+        )
+        metrics = run_eval(args)
+        self.assertGreaterEqual(
+            metrics["accuracy"],
+            self.accuracy,
+            f'Accuracy of {self.model} is {str(metrics["accuracy"])}, is lower than {self.accuracy}',
+        )
 
 
 class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
