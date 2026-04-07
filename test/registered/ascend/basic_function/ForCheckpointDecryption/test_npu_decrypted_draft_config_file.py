@@ -45,7 +45,7 @@ class TestSetForwardHooks(CustomTestCase):
         # run_command(
         #     f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
 
-        '''
+
         cls.extra_envs = {
             "HCCL_BUFFSIZE": "1024",
             "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
@@ -55,7 +55,7 @@ class TestSetForwardHooks(CustomTestCase):
             "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
         }
         os.environ.update(cls.extra_envs)
-        '''
+
 
         '''
         # Service failed to start, restoring original file name
@@ -159,10 +159,10 @@ class TestSetForwardHooks(CustomTestCase):
                 "--disable-cuda-graph",
                 "--dtype",
                 "bfloat16",
-                # "--decrypted-config-file",
-                # "/home/y30082119/Qwen3-8B/config.json",
-                # "--decrypted-draft-config-file",
-                # "/home/y30082119/Qwen3-8B_eagle3/config.json",
+                "--decrypted-config-file",
+                "/home/y30082119/Qwen3-8B/config.json",
+                "--decrypted-draft-config-file",
+                "/home/y30082119/Qwen3-8B_eagle3/config.json",
                 "--base-gpu-id",
                 "12",
             ]
