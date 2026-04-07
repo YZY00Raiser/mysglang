@@ -44,7 +44,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "2",
                 "--enable-eplb",
                 "--moe-a2a-backend",
-                "deepep",
+                "ascend_fuseep",
                 # "--deepep-mode",
                 # "normal",
                 # "--ep-num-redundant-experts",
