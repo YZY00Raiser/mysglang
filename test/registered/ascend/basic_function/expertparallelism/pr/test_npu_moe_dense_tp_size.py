@@ -68,10 +68,10 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
             data_path="/home/y30082119/test.jsonl",
             num_questions=200,
             max_new_tokens=512,
-            api="completion",
             parallel=128,
             base_url=DEFAULT_URL_FOR_TEST,
             eval_name="gsm8k",
+            api="completion",
         )
         metrics = run_eval(args)
         self.assertGreater(metrics["score"], 0.79)
