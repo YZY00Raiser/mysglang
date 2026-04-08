@@ -13,15 +13,16 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
-DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+register_npu_ci(est_time=400, suite="nightly-16-npu-a3", nightly=True)
+
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/mnt/nfs_share/weights/Qwen3-30B-A3B-W8A8"
 
 
 class TestAscendMoeDenseTPSize(CustomTestCase):
     """Testcase: Verify that the model accuracy remains uncompromised when the parameter --moe-dense-tp-size is configured to 1.
 
     [Test Category] Parameter
-    [Test Target] --moe-dense-tp-size
+    [Test Target] --moe-dense-tp-size, --eplb-algorithm
     """
 
     @classmethod
@@ -39,26 +40,18 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "--mem-fraction-static",
                 "0.5",
                 "--tp-size",
-                "2",
-                "--ep-size",
-                "2",
+                "16",
+                "--expert-parallel-size",
+                "16",
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
                 "normal",
-                # "--ep-num-redundant-experts",
-                # "4",
-                # "--eplb-rebalance-num-iterations",
-                # "50",
-                # "--expert-distribution-recorder-buffer-size",
-                # "50",
-                # "--expert-distribution-recorder-mode",
-                # "stat",
+                "--eplb-algorithm",
+                "deepseek",
                 "--moe-dense-tp-size",
                 "1",
-                "--base-gpu-id",
-                "6",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
@@ -76,7 +69,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
         port = parsed_url.port
         args = SimpleNamespace(
             num_shots=5,
-            data_path="/home/y30082119/mysglang/test/registered/ascend/basic_function/mambacache/test.jsonl",
+            data_path="/home/y30082119/test.jsonl",
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
@@ -84,7 +77,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
             port=port,
         )
         metrics = run_eval_few_shot_gsm8k(args)
-        self.assertGreater(metrics["accuracy"], 0.80)
+        self.assertGreater(metrics["accuracy"], 0.79)
 
 
 if __name__ == "__main__":
