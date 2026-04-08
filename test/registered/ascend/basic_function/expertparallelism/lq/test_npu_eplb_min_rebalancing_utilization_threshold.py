@@ -55,6 +55,8 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
+        "--eplb-rebalance-layers-per-chunk",
+        "1",
     ]
     test_args = []
     out_file = None
@@ -87,15 +89,15 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        if hasattr(cls, 'out_file') and cls.out_file:
-            cls.out_file.close()
-        if hasattr(cls, 'err_file') and cls.err_file:
-            cls.err_file.close()
+        # if hasattr(cls, 'out_file') and cls.out_file:
+        #     cls.out_file.close()
+        # if hasattr(cls, 'err_file') and cls.err_file:
+        #     cls.err_file.close()
 
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=5,
-            data_path=None,
+            data_path="/home/y30082119/test.jsonl",
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
