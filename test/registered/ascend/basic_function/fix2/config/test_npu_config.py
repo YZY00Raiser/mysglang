@@ -114,7 +114,7 @@ class TestConfigPriority(CustomTestCase):
             finally:
                 err_log_file.seek(0)
                 content = err_log_file.read()
-                self.assertIn(error_message, content)
+                self.assertIn(error_message, content,"model path error: /nonexistent/Qwen/Qwen3-32B.")
 
 
 if __name__ == "__main__":
