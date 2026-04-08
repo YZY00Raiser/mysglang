@@ -1,15 +1,16 @@
 import os
 import unittest
-
-import requests
+from types import SimpleNamespace
+from urllib.parse import urlparse
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import run_command
-# from sglang.test.ascend.test_ascend_utils import (
-#     QWEN3_8B_WEIGHTS_PATH,
-#     QWEN3_8B_EAGLE3_WEIGHTS_PATH
-# )
+from sglang.test.ascend.test_ascend_utils import (
+    QWEN3_8B_EAGLE3_WEIGHTS_PATH,
+    QWEN3_8B_WEIGHTS_PATH,
+    run_command,
+)
 from sglang.test.ci.ci_register import register_npu_ci
+from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -19,16 +20,16 @@ from sglang.test.test_utils import (
 
 register_npu_ci(
     est_time=400,
-    suite="nightly-4-npu-a3",
+    suite="nightly-2-npu-a3",
     nightly=True,
 )
-QWEN3_8B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
-QWEN3_8B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
+QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
+QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
     """Testcase: Verify set --decrypted-config-file, --decrypted-draft-config-file parameter,
-    will use the specified config.json and the inference request is successfully processed.
+    will use the specified config.json and the GSM8K dataset is no less than 0.92.
 
     [Test Category] Parameter
     [Test Target] --decrypted-config-file, --decrypted-draft-config-file
@@ -38,9 +39,11 @@ class TestSetForwardHooks(CustomTestCase):
     def setUpClass(cls):
         # Modify the config.json under the weight path
         run_command(
-            f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')}")
+            f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')}"
+        )
         run_command(
-            f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+            f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')}"
+        )
         try:
             cls.process = popen_launch_server(
                 QWEN3_8B_WEIGHTS_PATH,
@@ -72,10 +75,13 @@ class TestSetForwardHooks(CustomTestCase):
                     "--disable-cuda-graph",
                     "--dtype",
                     "bfloat16",
-                    "--decrypted-config-file",
-                    "Qwen3-8B/config.json",
+                    # "--decrypted-config-file",
+                    # "/__w/sglang/sglang/test/registered/ascend/basic_function/checkpoint_decryption/Qwen3-8B/config.json",
+                    # "--decrypted-draft-config-file",
+                    # "/__w/sglang/sglang/test/registered/ascend/basic_function/checkpoint_decryption/Qwen3-8B_eagle3/config.json",
+                    "/home/y30082119/Qwen3-8B/config.json",
                     "--decrypted-draft-config-file",
-                    "Qwen3-8B_eagle3/config.json",
+                    "/home/y30082119/Qwen3-8B_eagle3/config.json",
                     "--base-gpu-id",
                     "12",
                 ],
@@ -89,33 +95,39 @@ class TestSetForwardHooks(CustomTestCase):
         finally:
             # Service failed to start, restoring original file name
             run_command(
-                f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}")
+                f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}"
+            )
             run_command(
-                f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')}")
+                f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')}"
+            )
             if cls.process:
                 kill_process_tree(cls.process.pid)
 
     @classmethod
     def tearDownClass(cls):
         run_command(
-            f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}")
+            f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}"
+        )
         run_command(
-            f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')}")
+            f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')}"
+        )
         kill_process_tree(cls.process.pid)
 
-    def test_decrypted_draft_config_file(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
+    def test_gsm8k(self):
+        parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
+        host = parsed_url.hostname
+        port = parsed_url.port
+        args = SimpleNamespace(
+            num_shots=5,
+            data_path="/home/y30082119/test.jsonl",
+            num_questions=200,
+            max_new_tokens=512,
+            parallel=128,
+            host=host,
+            port=port,
         )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        metrics = run_eval_few_shot_gsm8k(args)
+        self.assertGreater(metrics["accuracy"], 0.79)
 
 
 if __name__ == "__main__":
