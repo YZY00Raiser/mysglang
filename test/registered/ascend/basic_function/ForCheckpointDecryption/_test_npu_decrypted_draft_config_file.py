@@ -40,10 +40,10 @@ class TestSetForwardHooks(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        run_command(
-            f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
-        run_command(
-            f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
+        # run_command(
+        #     f"mv {os.path.join(QWEN3_32B_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_WEIGHTS_PATH, '_config.json')}")
+        # run_command(
+        #     f"mv {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_32B_EAGLE3_WEIGHTS_PATH, '_config.json')}")
 
         # cls.extra_envs = {
         #     "HCCL_BUFFSIZE": "1024",
@@ -56,6 +56,8 @@ class TestSetForwardHooks(CustomTestCase):
         # os.environ.update(cls.extra_envs)
 
         # Service failed to start, restoring original file name
+        '''
+
         try:
             cls.process = popen_launch_server(
                 cls.model,
@@ -115,8 +117,8 @@ class TestSetForwardHooks(CustomTestCase):
                     print(f"Warning: Neither {old_path} nor {new_path} exists")
             if cls.process:
                 kill_process_tree(cls.process.pid)
-
         '''
+
         try:
             # launch server with "--config" parameter
             parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
@@ -181,20 +183,20 @@ class TestSetForwardHooks(CustomTestCase):
             raise RuntimeError(f"Failed to launch server: {e}") from e
 
         finally:
-            for weights_path in [QWEN3_32B_WEIGHTS_PATH, QWEN3_32B_EAGLE3_WEIGHTS_PATH]:
-                old_path = os.path.join(weights_path, '_config.json')
-                new_path = os.path.join(weights_path, 'config.json')
-
-                if os.path.exists(old_path):
-                    try:
-                        run_command(f"mv {old_path} {new_path}")
-                    except Exception as e:
-                        print(f"Warning: Failed to rename {old_path}: {e}")
-                elif not os.path.exists(new_path):
-                    print(f"Warning: Neither {old_path} nor {new_path} exists")
+            # for weights_path in [QWEN3_32B_WEIGHTS_PATH, QWEN3_32B_EAGLE3_WEIGHTS_PATH]:
+            #     old_path = os.path.join(weights_path, '_config.json')
+            #     new_path = os.path.join(weights_path, 'config.json')
+            #
+            #     if os.path.exists(old_path):
+            #         try:
+            #             run_command(f"mv {old_path} {new_path}")
+            #         except Exception as e:
+            #             print(f"Warning: Failed to rename {old_path}: {e}")
+            #     elif not os.path.exists(new_path):
+            #         print(f"Warning: Neither {old_path} nor {new_path} exists")
             if cls.process:
                 kill_process_tree(cls.process.pid)
-    '''
+
 
 
     '''
