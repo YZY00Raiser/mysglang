@@ -5,7 +5,7 @@ from abc import ABC
 from types import SimpleNamespace
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import QWEN3_30B_A3B_W8A8_WEIGHTS_PATH
+# from sglang.test.ascend.test_ascend_utils import QWEN3_30B_A3B_W8A8_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.few_shot_gsm8k import run_eval
 from sglang.test.test_utils import (
@@ -20,6 +20,8 @@ SKIP_OUT_LOG = "./skip_out_log.txt"
 SKIP_ERR_LOG = "./skip_err_log.txt"
 REBALANCE_OUT_LOG = "./rebalance_out_log.txt"
 REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
+
+QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-30B-A3B-W8A8"
 
 
 class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
@@ -55,6 +57,8 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
+        "--eplb-rebalance-layers-per-chunk",
+        "1",
     ]
     test_args = []
     out_file = None
@@ -95,7 +99,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=5,
-            data_path=None,
+            data_path="/home/y30082119/test.jsonl",
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
@@ -126,7 +130,6 @@ class TestEplbMinRebalancingUtilizationThreshold005(TestEplbMinRebalancingUtiliz
     test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.05]
 
 
-@unittest.skip("Temporarily skipped due to execution failure. Issue #49 has been filed for investigation.")
 class TestEplbMinRebalancingUtilizationThreshold095(TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase):
     """
     Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.95, if load balancing
