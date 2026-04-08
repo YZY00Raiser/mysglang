@@ -95,6 +95,10 @@ class TestSetForwardHooks(CustomTestCase):
                     "12",
                 ],
                 env={
+                    "HCCL_BUFFSIZE": "1024",
+                    "SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK": "32",
+                    "SGLANG_NPU_USE_MLAPO": "1",
+                    "SGLANG_NPU_USE_EINSUM_MM": "1",
                     "SLANG_ENABLE_SPEC_V2": "1",
                     "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
                 },
@@ -102,17 +106,17 @@ class TestSetForwardHooks(CustomTestCase):
         except Exception as e:
             raise RuntimeError(f"Failed to launch server: {e}") from e
         finally:
-            for weights_path in [QWEN3_8B_WEIGHTS_PATH, QWEN3_8B_EAGLE3_WEIGHTS_PATH]:
-                old_path = os.path.join(weights_path, '_config.json')
-                new_path = os.path.join(weights_path, 'config.json')
-
-                if os.path.exists(old_path):
-                    try:
-                        run_command(f"mv {old_path} {new_path}")
-                    except Exception as e:
-                        print(f"Warning: Failed to rename {old_path}: {e}")
-                elif not os.path.exists(new_path):
-                    print(f"Warning: Neither {old_path} nor {new_path} exists")
+            # for weights_path in [QWEN3_8B_WEIGHTS_PATH, QWEN3_8B_EAGLE3_WEIGHTS_PATH]:
+            #     old_path = os.path.join(weights_path, '_config.json')
+            #     new_path = os.path.join(weights_path, 'config.json')
+            #
+            #     if os.path.exists(old_path):
+            #         try:
+            #             run_command(f"mv {old_path} {new_path}")
+            #         except Exception as e:
+            #             print(f"Warning: Failed to rename {old_path}: {e}")
+            #     elif not os.path.exists(new_path):
+            #         print(f"Warning: Neither {old_path} nor {new_path} exists")
             if cls.process:
                 kill_process_tree(cls.process.pid)
 
@@ -132,7 +136,7 @@ class TestSetForwardHooks(CustomTestCase):
             json={
                 "text": "The capital of France is",
                 "sampling_params": {
-                    "temperature": 0.8,
+                    "temperature": 0,
                     "max_new_tokens": 32,
                 },
             },
