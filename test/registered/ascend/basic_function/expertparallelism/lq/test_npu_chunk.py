@@ -16,7 +16,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(
     est_time=400,
-    suite="nightly-4-npu-a3",
+    suite="nightly-2-npu-a3",
     nightly=True,
 )
 DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
@@ -64,6 +64,8 @@ class TestSetForwardHooks(CustomTestCase):
                 "static",
                 "--eplb-rebalance-layers-per-chunk",
                 "1",
+                "--base-gpu-id",
+                "10",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
