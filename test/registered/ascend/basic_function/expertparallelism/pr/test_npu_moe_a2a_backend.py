@@ -42,7 +42,6 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "2",
                 "--ep",
                 "2",
-                "--enable-eplb",
                 # "--moe-a2a-backend",
                 # "ascend_fuseep",
                 "--moe-a2a-backend",
@@ -55,11 +54,13 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 # "50",
                 # "--moe-runner-backend",
                 # cls.moe_runner_backend,
+                "--base-gpu-id",
+                "2"
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                "SGLANG_NPU_FUSED_MOE_MODE":"1",#必须设置 SGLANG_NPU_FUSED_MOE_MODE 环境变量：
+                # "SGLANG_NPU_FUSED_MOE_MODE":"1",#必须设置 SGLANG_NPU_FUSED_MOE_MODE 环境变量：
             },
         )
 
