@@ -13,7 +13,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-16-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/mnt/nfs_share/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
@@ -40,9 +40,9 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "--mem-fraction-static",
                 "0.5",
                 "--tp-size",
-                "16",
+                "2",
                 "--expert-parallel-size",
-                "16",
+                "2",
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "deepep",
