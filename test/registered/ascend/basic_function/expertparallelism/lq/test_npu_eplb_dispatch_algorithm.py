@@ -1,6 +1,8 @@
 import unittest
 from types import SimpleNamespace
 
+import requests
+
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
