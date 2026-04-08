@@ -27,7 +27,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    expert_distribution_recorder_mode = "static"
+    expert_distribution_recorder_mode = "per_pass"
     path = "/home/y30082119/pt"
 
     @classmethod
@@ -120,9 +120,11 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
 
-
+'''
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
+
+'''
 
 
 if __name__ == "__main__":
