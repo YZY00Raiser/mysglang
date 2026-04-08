@@ -79,11 +79,11 @@ class TestSetForwardHooks(CustomTestCase):
                     # "/__w/sglang/sglang/test/registered/ascend/basic_function/checkpoint_decryption/Qwen3-8B/config.json",
                     # "--decrypted-draft-config-file",
                     # "/__w/sglang/sglang/test/registered/ascend/basic_function/checkpoint_decryption/Qwen3-8B_eagle3/config.json",
+                    "--decrypted-config-file",
                     "/home/y30082119/Qwen3-8B/config.json",
                     "--decrypted-draft-config-file",
                     "/home/y30082119/Qwen3-8B_eagle3/config.json",
                     "--base-gpu-id",
-                    "12",
                 ],
                 env={
                     "SLANG_ENABLE_SPEC_V2": "1",
