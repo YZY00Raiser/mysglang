@@ -48,8 +48,8 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "deepep",
                 "--deepep-mode",
                 "normal",
-                "--eplb-algorithm"
-                "auto"
+                "--eplb-algorithm",
+                "auto",
                 "--moe-dense-tp-size",
                 "1",
             ],
