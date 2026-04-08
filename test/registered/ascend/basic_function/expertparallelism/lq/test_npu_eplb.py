@@ -36,42 +36,48 @@ class _BaseTestDynamicEPLB(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-        cls.base_url = DEFAULT_URL_FOR_TEST
-        cls.process = popen_launch_server(
-            cls.model,
-            cls.base_url,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=[
-                "--trust-remote-code",
-                "--tp-size",
-                "2",
-                "--attention-backend",
-                "ascend",
-                "--mem-fraction-static",
-                "0.5",
-                "--moe-a2a-backend",
-                "deepep",
-                "--deepep-mode",
-                "normal",
-                "--disable-cuda-graph",
-                "--enable-eplb",
-                "--ep-num-redundant-experts",
-                "4",
-                "--eplb-rebalance-num-iterations",
-                "50",
-                "--expert-distribution-recorder-buffer-size",
-                "50",
-                "--enable-expert-distribution-metrics",
-                "--ep-dispatch-algorithm",
-                "static",
-                *cls.extra_args,
-            ],
-            env={
-                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
-                "HCCL_BUFFSIZE": "1024",
-            },
-        )
+        with tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as out_log_file, tempfile.NamedTemporaryFile(
+            mode="w+", delete=True, suffix="out.log"
+        ) as err_log_file:
+            cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+            cls.base_url = DEFAULT_URL_FOR_TEST
+            cls.process = popen_launch_server(
+                cls.model,
+                cls.base_url,
+                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                other_args=[
+                    "--trust-remote-code",
+                    "--tp-size",
+                    "2",
+                    "--attention-backend",
+                    "ascend",
+                    "--mem-fraction-static",
+                    "0.5",
+                    "--moe-a2a-backend",
+                    "deepep",
+                    "--deepep-mode",
+                    "normal",
+                    "--disable-cuda-graph",
+                    "--enable-eplb",
+                    "--ep-num-redundant-experts",
+                    "4",
+                    "--eplb-rebalance-num-iterations",
+                    "50",
+                    "--expert-distribution-recorder-buffer-size",
+                    "50",
+                    "--enable-expert-distribution-metrics",
+                    "--ep-dispatch-algorithm",
+                    "static",
+                    *cls.extra_args,
+                ],
+                env={
+                    "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                    "HCCL_BUFFSIZE": "1024",
+                },
+                return_stdout_stderr=(out_log_file, err_log_file),
+            )
 
     @classmethod
     def tearDownClass(cls):
@@ -93,12 +99,15 @@ class _BaseTestDynamicEPLB(CustomTestCase):
 '''
 class TestDynamicEPLBSimple(_BaseTestDynamicEPLB):
     pass
+'''
 
 
 class TestDynamicEPLBMultiChunk(_BaseTestDynamicEPLB):
     extra_args = ["--eplb-rebalance-layers-per-chunk", "1"]
 
 
+
+'''
 class TestStaticEPLB(CustomTestCase):
     def test_save_expert_distribution_and_init_expert_location(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

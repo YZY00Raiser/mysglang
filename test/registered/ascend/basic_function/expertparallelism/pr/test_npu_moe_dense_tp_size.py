@@ -20,7 +20,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
     """Testcase: Verify that the model accuracy remains uncompromised when the parameter --moe-dense-tp-size is configured to 1.
 
     [Test Category] Parameter
-    [Test Target] --moe-dense-tp-size
+    [Test Target] --moe-dense-tp-size, --eplb-algorithm
     """
 
     @classmethod
@@ -46,6 +46,8 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "deepep",
                 "--deepep-mode",
                 "normal",
+                "--eplb-algorithm"
+                "auto"
                 "--moe-dense-tp-size",
                 "1",
             ],
