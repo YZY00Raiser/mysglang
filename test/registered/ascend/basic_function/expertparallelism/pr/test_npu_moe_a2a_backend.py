@@ -61,7 +61,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                "SGLANG_NPU_FUSED_MOE_MODE":"1",#必须设置 SGLANG_NPU_FUSED_MOE_MODE 环境变量：
+                # "SGLANG_NPU_FUSED_MOE_MODE":"1",#必须设置 SGLANG_NPU_FUSED_MOE_MODE 环境变量：
             },
         )
 
