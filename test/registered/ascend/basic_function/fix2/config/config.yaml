@@ -1,4 +1,4 @@
-model-path: /home/weights/Qwen/Qwen3-32B
+model-path: /root/.cache/modelscope/hub/models/Qwen/Qwen3-32B
 attention-backend: ascend
 trust-remote-code: true
 disable-cuda-graph: true

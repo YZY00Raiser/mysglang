@@ -25,8 +25,9 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
-config="config.yaml"
-CONFIG_YAML_PATH = os.path.join(os.path.dirname(__file__), "config.yaml")
+
+CONFIG_YAML_PATH = "/home/y30082119/config.yaml"
+
 
 class TestConfig(CustomTestCase):
     """Testcase: Verify set --config parameter, can identify the set config and inference request is successfully processed.
