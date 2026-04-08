@@ -42,7 +42,6 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "2",
                 "--ep",
                 "2",
-                "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
                 # "--moe-a2a-backend",
