@@ -61,20 +61,27 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-
     def test_gsm8k(self):
-        args = SimpleNamespace(
-            num_shots=5,
-            data_path="/home/y30082119/test.jsonl",
-            num_questions=200,
-            max_new_tokens=512,
-            parallel=128,
-            base_url=DEFAULT_URL_FOR_TEST,
-            eval_name="gsm8k",
-            api="completion",
-        )
-        metrics = run_eval(args)
-        self.assertGreater(metrics["score"], 0.79)
+        scores = []
+        for i in range(5):
+            args = SimpleNamespace(
+                num_shots=5,
+                data_path="/home/y30082119/test.jsonl",
+                num_questions=200,
+                max_new_tokens=512,
+                parallel=128,
+                base_url=DEFAULT_URL_FOR_TEST,
+                eval_name="gsm8k",
+                api="completion",
+            )
+            metrics = run_eval(args)
+            score = metrics["score"]
+            scores.append(score)
+            print(f"Run {i + 1}/5: accuracy = {score}")
+        avg_score = sum(scores) / len(scores)
+        print(f"Average accuracy over 5 runs: {avg_score}")
+        print(f"All scores: {scores}")
+        self.assertGreater(avg_score, 0.79)
 
 
 if __name__ == "__main__":
