@@ -108,7 +108,6 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
             num_examples=200,
             num_threads=128,
             num_shots=5,
-            max_new_tokens=512,
         )
         metrics = run_eval(args)
         self.assertGreaterEqual(
