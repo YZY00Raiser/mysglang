@@ -7,8 +7,7 @@ from types import SimpleNamespace
 import sglang as sgl
 from sglang.srt.utils import kill_process_tree
 from sglang.test.run_eval import run_eval
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-
+# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_R1_0528_W8A8_WEIGHTS_PATH as MODEL_PATH
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -19,7 +18,6 @@ from sglang.test.test_utils import (
 from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(est_time=200, suite="nightly-16-npu-a3", nightly=True)
-
 
 class _BaseTestDynamicEPLB(CustomTestCase):
     """
@@ -36,7 +34,8 @@ class _BaseTestDynamicEPLB(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+        # cls.model = MODEL_PATH
+        cls.model = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8"
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -113,7 +112,7 @@ class TestStaticEPLB(CustomTestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             engine_kwargs = dict(
-                model_path=DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH,
+                model_path=MODEL_PATH,
                 trust_remote_code=True,
                 attention_backend="ascend",
                 quantization="modelslim",
