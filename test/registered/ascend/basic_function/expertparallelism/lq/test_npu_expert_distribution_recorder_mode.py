@@ -29,7 +29,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
 
     # expert_distribution_recorder_mode = "per_pass"
     expert_distribution_recorder_mode = "stat_approx"
-    path = "/home/y30082119/pt"
+    # path = "/home/y30082119/pt"
 
 
     @classmethod
