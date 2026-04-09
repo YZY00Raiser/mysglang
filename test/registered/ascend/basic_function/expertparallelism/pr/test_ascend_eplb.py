@@ -60,8 +60,8 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
-                "normal",
-                # "low_latency",
+                # "normal",
+                "low_latency",
                 "--disable-cuda-graph",
                 "--enable-two-batch-overlap",
                 "--enable-eplb",
@@ -82,7 +82,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "SGL_ENABLE_JIT_DEEPGEMM": "0",
                 "SGLANG_EXPERT_LOCATION_UPDATE_CANARY": "1",
                 "SGLANG_DEEPEP_BF16_DISPATCH": "1",
-                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                # "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
                 "MOE_ENABLE_TOPK_ENG_ONE": "1",
                 **os.environ,
@@ -119,7 +119,7 @@ class TestStaticEPLB(CustomTestCase):
         os.environ["SGL_ENABLE_JIT_DEEPGEMM"] = "0"
         os.environ["SGLANG_EXPERT_LOCATION_UPDATE_CANARY"] = "1"
         os.environ["SGLANG_DEEPEP_BF16_DISPATCH"] = "1"
-        os.environ["SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT"] = "1"
+        # os.environ["SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT"] = "1"
         os.environ["HCCL_BUFFSIZE"] = "1024"
         os.environ["MOE_ENABLE_TOPK_ENG_ONE"] = "1"
 
