@@ -22,6 +22,8 @@ REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
 
 # QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-30B-A3B-W8A8"
 QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen3-30B-A3B-W8A8"
+
+
 class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     """
     Testcase：Validates that rebalancing operations are triggered or skipped based on the configured
@@ -110,7 +112,6 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
             f'Accuracy of {self.model} is {str(metrics["accuracy"])}, is lower than {self.accuracy}',
         )
 
-    def test_eplb_min_rebalancing_utilization_threshold(self):
         """
         Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.05, if the load balance
         exceeds this threshold, rebalancing operations are skipped.
