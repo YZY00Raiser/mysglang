@@ -101,14 +101,14 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
 
     def test_gsm8k(self):
         args = SimpleNamespace(
-            num_shots=5,
-            data_path="/home/y30082119/test.jsonl",
-            num_examples=200,
-            max_new_tokens=512,
-            parallel=128,
             base_url=DEFAULT_URL_FOR_TEST,
+            model=self.model,
             eval_name="gsm8k",
             api="completion",
+            num_examples=200,
+            num_threads=128,
+            num_shots=5,
+            max_new_tokens=512,
         )
         metrics = run_eval(args)
         self.assertGreaterEqual(
