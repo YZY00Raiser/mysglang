@@ -188,4 +188,10 @@ class TestStaticEPLB(CustomTestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    loader = unittest.TestLoader()
+    suite = unittest.TestSuite()
+    suite.addTests(loader.loadTestsFromTestCase(TestStaticEPLB))
+
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
