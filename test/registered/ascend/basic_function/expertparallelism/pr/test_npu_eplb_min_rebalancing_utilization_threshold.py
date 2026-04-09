@@ -32,7 +32,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     --eplb-min-rebalancing-utilization-threshold value and current load balance.
 
     [Test Category] Parameter
-    [Test Target] --eplb-min-rebalancing-utilization-threshold
+    [Test Target] --eplb-min-rebalancing-utilization-threshold, --eplb-rebalance-layers-per-chunk
     """
 
     model = QWEN3_30B_A3B_W8A8_WEIGHTS_PATH
