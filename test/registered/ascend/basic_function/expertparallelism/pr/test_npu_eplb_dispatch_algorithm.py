@@ -57,6 +57,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
+                "SGLANG_NPU_FUSED_MOE_MODE":"1",
             },
         )
 
