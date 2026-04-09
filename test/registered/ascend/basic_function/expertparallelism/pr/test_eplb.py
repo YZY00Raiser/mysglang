@@ -58,6 +58,8 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                     "--ep-dispatch-algorithm",
                     "static",
                     *cls.extra_args,
+                    "--base-gpu-id",
+                    "10",
                 ],
             )
 
