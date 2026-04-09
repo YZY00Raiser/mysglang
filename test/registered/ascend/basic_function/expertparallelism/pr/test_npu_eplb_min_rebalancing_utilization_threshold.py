@@ -1,7 +1,6 @@
 import os
 import unittest
 from types import SimpleNamespace
-from abc import ABC
 
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import QWEN3_30B_A3B_W8A8_WEIGHTS_PATH
@@ -20,10 +19,10 @@ SKIP_OUT_LOG = "./skip_out_log.txt"
 SKIP_ERR_LOG = "./skip_err_log.txt"
 REBALANCE_OUT_LOG = "./rebalance_out_log.txt"
 REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
+
 QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-30B-A3B-W8A8"
 
-
-class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
+class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
     """
     Testcase：Validates that rebalancing operations are triggered or skipped based on the configured
     --eplb-min-rebalancing-utilization-threshold value and current load balance.
@@ -58,10 +57,10 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         50,
         "--enable-expert-distribution-metrics",
     ]
-    test_args = []
-    out_file = None
-    err_file = None
-    log_info = ""
+    log_info = "Skipped ep rebalancing: current GPU utilization"
+    out_file_path = SKIP_OUT_LOG
+    err_file_path = SKIP_ERR_LOG
+    test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.05]
 
     @classmethod
     def setUpClass(cls):
@@ -97,7 +96,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=5,
-            data_path="/home/y30082119/test.jsonl",
+            data_path=None,
             num_questions=200,
             max_new_tokens=512,
             parallel=128,
@@ -112,27 +111,17 @@ class TestEplbMinRebalancingUtilizationThresholdBase(ABC):
         )
 
     def test_eplb_min_rebalancing_utilization_threshold(self):
+        """
+        Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.05, if the load balance
+        exceeds this threshold, rebalancing operations are skipped.
+        """
         self.err_file.seek(0)
         content = self.err_file.read()
         self.assertIn(self.log_info, content)
 
 
-class TestEplbMinRebalancingUtilizationThreshold005(
-    TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase
-):
-    """
-    Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.05, if the load balance
-    exceeds this threshold, rebalancing operations are skipped.
-    """
-
-    log_info = "Skipped ep rebalancing: current GPU utilization"
-    out_file_path = SKIP_OUT_LOG
-    err_file_path = SKIP_ERR_LOG
-    test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.05]
-
-
 class TestEplbMinRebalancingUtilizationThreshold095(
-    TestEplbMinRebalancingUtilizationThresholdBase, CustomTestCase
+    TestEplbMinRebalancingUtilizationThresholdBase
 ):
     """
     Testcase：When the configuration --eplb-min-rebalancing-utilization-threshold is set to 0.95, if load balancing
