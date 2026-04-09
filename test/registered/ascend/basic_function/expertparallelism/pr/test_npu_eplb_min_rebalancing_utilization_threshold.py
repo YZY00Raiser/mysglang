@@ -21,6 +21,8 @@ REBALANCE_OUT_LOG = "./rebalance_out_log.txt"
 REBALANCE_ERR_LOG = "./rebalance_err_log.txt"
 
 QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-30B-A3B-W8A8"
+
+
 # QWEN3_30B_A3B_W8A8_WEIGHTS_PATH = "/home/weights/Qwen3-30B-A3B-W8A8"
 
 
@@ -101,7 +103,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         args = SimpleNamespace(
             num_shots=5,
             data_path="/home/y30082119/test.jsonl",
-            num_questions=200,
+            num_examples=200,
             max_new_tokens=512,
             parallel=128,
             base_url=DEFAULT_URL_FOR_TEST,
