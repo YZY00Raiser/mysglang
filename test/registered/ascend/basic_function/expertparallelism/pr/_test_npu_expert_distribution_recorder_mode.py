@@ -6,6 +6,7 @@ from types import SimpleNamespace
 import requests
 
 from sglang.srt.utils import kill_process_tree
+from sglang.test.ascend.test_ascend_utils import run_command
 # from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.run_eval import run_eval
@@ -28,9 +29,9 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     """
 
     # expert_distribution_recorder_mode = "per_pass"
-    expert_distribution_recorder_mode = "stat_approx"
-    # path = "/home/y30082119/pt"
+    expert_distribution_recorder_mode = "stat"
 
+    path = "/tmp/pt"
 
     @classmethod
     def setUpClass(cls):
@@ -59,18 +60,19 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "--expert-distribution-recorder-mode",
                 cls.expert_distribution_recorder_mode,
                 "--base-gpu-id",
-                "4",
+                "12",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                # "SGLANG_EXPERT_DISTRIBUTION_RECORDER_DIR": f"{cls.path}",
+                "SGLANG_EXPERT_DISTRIBUTION_RECORDER_DIR": f"{cls.path}",
             },
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+        run_command(f"rm -rf {cls.path}")
 
     '''
     def test_gsm8k(self):
@@ -90,23 +92,14 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     '''
 
     def test_moe(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(
-            response.status_code, 200, "The request status code is not 200."
-        )
-        self.assertIn(
-            "Paris", response.text, "The inference result does not include Paris."
-        )
-        '''
+        requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
+
+        # 4. 停止记录（可选）
+        requests.post(f"{DEFAULT_URL_FOR_TEST}/stop_expert_distribution_record")
+
+        # 5. 导出 .pt 文件
+        requests.post(f"{DEFAULT_URL_FOR_TEST}/dump_expert_distribution_record")
+
         # check distribution_recorder_files
         distribution_recorder_suffixes = "*.pt"
         distribution_recorder_files = []
@@ -117,10 +110,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         self.assertGreater(
             len(distribution_recorder_files),
             0,
-            msg=f"path: {self.path} No distribution_recorder",
+            msg=f"No distribution_recorder",
         )
-        '''
-
 
 '''
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
@@ -130,8 +121,10 @@ class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorde
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
 
-'''
+class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
+    expert_distribution_recorder_mode = "per_token"
 
+'''
 
 if __name__ == "__main__":
     unittest.main()
