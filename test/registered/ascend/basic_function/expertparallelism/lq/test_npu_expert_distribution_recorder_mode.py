@@ -58,6 +58,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "4",
                 "--expert-distribution-recorder-mode",
                 cls.expert_distribution_recorder_mode
+                "--base-gpu-id",
+                "4",
             ],
             env={
                 "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
