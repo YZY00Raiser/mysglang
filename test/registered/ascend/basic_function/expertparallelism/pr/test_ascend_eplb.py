@@ -55,7 +55,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "--quantization",
                 "modelslim",
                 "--mem-fraction-static",
-                "0.9",
+                "0.5",
                 "--enable-dp-attention",
                 "--moe-a2a-backend",
                 "deepep",
@@ -139,6 +139,7 @@ class TestStaticEPLB(CustomTestCase):
                 tp_size=2,
                 dp_size=2,
                 log_level="info",
+                base_gpu_id=4
                 # enable_expert_distribution_metrics=True,
             )
 
