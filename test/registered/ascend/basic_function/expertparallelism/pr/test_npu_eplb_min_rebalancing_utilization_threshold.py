@@ -121,7 +121,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         self.err_file.seek(0)
         content = self.err_file.read()
         self.assertIn(self.log_info, content)
-        self.assertIn("[EPLBManger] rebalance start", content)
+        self.assertIn("[EPLBManager] rebalance start", content)
 
 
 class TestEplbMinRebalancingUtilizationThreshold095(
