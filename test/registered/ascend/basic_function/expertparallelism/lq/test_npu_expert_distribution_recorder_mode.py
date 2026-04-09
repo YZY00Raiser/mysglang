@@ -57,7 +57,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "--ep-num-redundant-experts",
                 "4",
                 "--expert-distribution-recorder-mode",
-                cls.expert_distribution_recorder_mode
+                cls.expert_distribution_recorder_mode,
                 "--base-gpu-id",
                 "4",
             ],
