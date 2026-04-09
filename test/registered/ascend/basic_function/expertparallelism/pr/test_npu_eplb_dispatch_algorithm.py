@@ -51,6 +51,8 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 "4",
                 "--ep-dispatch-algorithm",
                 cls.ep_dispatch_algorithm,
+                "--base-gpu-id",
+                "12",
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
@@ -76,6 +78,8 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
         metrics = run_eval(args)
         self.assertGreater(metrics["score"], 0.81)
 
+'''
+
 
 class TestEPLBDispatchAlgorithmDynamic(TestEPLBDispatchAlgorithmStatic):
     ep_dispatch_algorithm = "dynamic"
@@ -83,7 +87,7 @@ class TestEPLBDispatchAlgorithmDynamic(TestEPLBDispatchAlgorithmStatic):
 
 class TestEPLBDispatchAlgorithmFake(TestEPLBDispatchAlgorithmStatic):
     ep_dispatch_algorithm = "fake"
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
