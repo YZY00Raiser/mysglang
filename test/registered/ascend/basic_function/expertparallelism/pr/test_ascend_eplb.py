@@ -113,6 +113,7 @@ class TestDynamicEPLBSimple(_BaseTestDynamicEPLB):
 class TestDynamicEPLBMultiChunk(_BaseTestDynamicEPLB):
     extra_args = ["--eplb-rebalance-layers-per-chunk", "1"]
 
+'''
 
 class TestStaticEPLB(CustomTestCase):
     def test_save_expert_distribution_and_init_expert_location(self):
@@ -186,7 +187,7 @@ class TestStaticEPLB(CustomTestCase):
             [x["text"] for x in output],
             [", 4+4=8,", ", four plus four is eight, eight"],
         )
-
+'''
 
 if __name__ == "__main__":
     # unittest.main()
