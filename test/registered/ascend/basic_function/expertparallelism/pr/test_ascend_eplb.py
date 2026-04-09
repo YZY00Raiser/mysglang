@@ -1,5 +1,6 @@
 import os
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -17,7 +18,9 @@ from sglang.test.test_utils import (
 
 from sglang.test.ci.ci_register import register_npu_ci
 
-register_npu_ci(est_time=200, suite="nightly-16-npu-a3", nightly=True)
+register_npu_ci(est_time=200, suite="nightly-2-npu-a3", nightly=True)
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+
 
 class _BaseTestDynamicEPLB(CustomTestCase):
     """
@@ -35,7 +38,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         # cls.model = MODEL_PATH
-        cls.model = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+        cls.model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
         cls.base_url = DEFAULT_URL_FOR_TEST
         cls.process = popen_launch_server(
             cls.model,
@@ -68,7 +71,7 @@ class _BaseTestDynamicEPLB(CustomTestCase):
                 "50",
                 "--expert-distribution-recorder-buffer-size",
                 "50",
-                "--enable-expert-distribution-metrics",
+                # "--enable-expert-distribution-metrics",
                 "--expert-distribution-recorder-mode",
                 "stat",
                 "--ep-dispatch-algorithm",
@@ -77,7 +80,11 @@ class _BaseTestDynamicEPLB(CustomTestCase):
             ],
             env={
                 "SGL_ENABLE_JIT_DEEPGEMM": "0",
-                "HCCL_BUFFSIZE": "500",
+                "SGLANG_EXPERT_LOCATION_UPDATE_CANARY": "1",
+                "SGLANG_DEEPEP_BF16_DISPATCH": "1",
+                # "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                "HCCL_BUFFSIZE": "1024",
+                "MOE_ENABLE_TOPK_ENG_ONE": "1",
                 **os.environ,
             },
         )
@@ -110,25 +117,29 @@ class TestDynamicEPLBMultiChunk(_BaseTestDynamicEPLB):
 class TestStaticEPLB(CustomTestCase):
     def test_save_expert_distribution_and_init_expert_location(self):
         os.environ["SGL_ENABLE_JIT_DEEPGEMM"] = "0"
-        os.environ["HCCL_BUFFSIZE"] = "500"
+        os.environ["SGLANG_EXPERT_LOCATION_UPDATE_CANARY"] = "1"
+        os.environ["SGLANG_DEEPEP_BF16_DISPATCH"] = "1"
+        # "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+        os.environ["HCCL_BUFFSIZE"] = "1024"
+        os.environ["MOE_ENABLE_TOPK_ENG_ONE"] = "1"
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             engine_kwargs = dict(
-                model_path=MODEL_PATH,
+                model_path=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
                 trust_remote_code=True,
-                attention_backend="ascend",
-                quantization="modelslim",
-                mem_fraction_static=0.9,
-                deepep_mode="normal",
-                ep_num_redundant_experts=16,
+                # attention_backend="ascend",
+                # quantization="modelslim",
+                # mem_fraction_static=0.9,
+                # deepep_mode="normal",
+                ep_num_redundant_experts=4,
                 enable_dp_attention=True,
                 moe_a2a_backend="deepep",
                 disable_cuda_graph=True,
                 expert_distribution_recorder_mode="stat",
-                tp_size=16,
-                dp_size=1,
+                tp_size=2,
+                dp_size=2,
                 log_level="info",
-                enable_expert_distribution_metrics=True,
+                # enable_expert_distribution_metrics=True,
             )
 
             print(f"Action: start engine")
@@ -149,7 +160,8 @@ class TestStaticEPLB(CustomTestCase):
             print(f"Action: shutdown engine")
             engine.shutdown()
             del engine
-
+            print("sleeping ...")
+            # time.sleep(30)
             print(f"Action: start engine with init_expert_location")
             engine = sgl.Engine(
                 **engine_kwargs,
@@ -161,6 +173,7 @@ class TestStaticEPLB(CustomTestCase):
             print(f"Action: shutdown engine")
             engine.shutdown()
             del engine
+            print(f"sleeping twice")
 
     def _assert_engine_generate_correct(self, engine: sgl.Engine):
         output = engine.generate(
