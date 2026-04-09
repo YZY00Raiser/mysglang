@@ -28,7 +28,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     """
 
     # expert_distribution_recorder_mode = "per_pass"
-    expert_distribution_recorder_mode = "stat_approx"
+    expert_distribution_recorder_mode = "stat"
     # path = "/home/y30082119/pt"
 
 
@@ -62,7 +62,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "4",
             ],
             env={
-                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
                 # "SGLANG_EXPERT_DISTRIBUTION_RECORDER_DIR": f"{cls.path}",
             },
