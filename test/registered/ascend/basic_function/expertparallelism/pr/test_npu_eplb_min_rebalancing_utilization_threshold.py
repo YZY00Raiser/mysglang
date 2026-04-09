@@ -58,6 +58,8 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
+        "--eplb-rebalance-layers-per-chunk",
+        "1",
     ]
     log_info = "Skipped ep rebalancing: current GPU utilization"
     out_file_path = SKIP_OUT_LOG
@@ -119,6 +121,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         self.err_file.seek(0)
         content = self.err_file.read()
         self.assertIn(self.log_info, content)
+        self.assertIn("[EPLBManger] rebalance start", content)
 
 
 class TestEplbMinRebalancingUtilizationThreshold095(
