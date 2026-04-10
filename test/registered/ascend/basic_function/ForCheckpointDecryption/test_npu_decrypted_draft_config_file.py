@@ -79,7 +79,7 @@ class TestSetForwardHooks(CustomTestCase):
                     "--decrypted-draft-config-file",
                     "/home/y30082119/Qwen3-8B_eagle3/config.json",
                     "--base-gpu-id",
-                    "12",
+                    "4",
                 ],
                 env={
                     "SGLANG_ENABLE_SPEC_V2": "1",
