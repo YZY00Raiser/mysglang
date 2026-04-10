@@ -46,9 +46,8 @@ class TestDraftConfigFile(CustomTestCase):
             f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')}"
         )
         try:
-            cls.model = QWEN3_8B_WEIGHTS_PATH
             cls.process = popen_launch_server(
-                cls.model,
+                QWEN3_8B_WEIGHTS_PATH,
                 DEFAULT_URL_FOR_TEST,
                 DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
                 other_args=[
@@ -116,11 +115,11 @@ class TestDraftConfigFile(CustomTestCase):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
-            model=self.model,
+            model=QWEN3_8B_WEIGHTS_PATH,
             eval_name="gsm8k",
             api="completion",
             num_examples=200,
-            num_threads=8,
+            num_threads=128,
             num_shots=5,
         )
         metrics = run_eval(args)
