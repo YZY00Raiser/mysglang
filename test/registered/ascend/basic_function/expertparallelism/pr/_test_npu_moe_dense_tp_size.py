@@ -14,8 +14,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
-DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/mnt/nfs_share/weights/DeepSeek-Coder-V2-Lite-Instruct"
-
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 class TestAscendMoeDenseTPSize(CustomTestCase):
     """Testcase: Verify that the model accuracy remains uncompromised when the parameter --moe-dense-tp-size is configured to 1.
@@ -53,7 +52,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
                 "1",
             ],
             env={
-                "SGLANG_NPUDISABLE_ACL_FORMAT_WEIGHT": "1",
+                "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
             },
         )
@@ -61,27 +60,20 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+
     def test_gsm8k(self):
-        scores = []
-        for i in range(5):
-            args = SimpleNamespace(
-                num_shots=5,
-                data_path="/home/y30082119/test.jsonl",
-                num_examples=200,
-                max_new_tokens=512,
-                parallel=128,
-                base_url=DEFAULT_URL_FOR_TEST,
-                eval_name="gsm8k",
-                api="completion",
-            )
-            metrics = run_eval(args)
-            score = metrics["score"]
-            scores.append(score)
-            print(f"Run {i + 1}/5: accuracy = {score}")
-        avg_score = sum(scores) / len(scores)
-        print(f"Average accuracy over 5 runs: {avg_score}")
-        print(f"All scores: {scores}")
-        self.assertGreater(avg_score, 0.79)
+        args = SimpleNamespace(
+            max_new_tokens=512,
+            base_url=DEFAULT_URL_FOR_TEST,
+            model=self.model,
+            eval_name="gsm8k",
+            api="completion",
+            num_examples=200,
+            num_threads=128,
+            num_shots=5,
+        )
+        metrics = run_eval(args)
+        self.assertGreater(metrics["score"], 0.79)
 
 
 if __name__ == "__main__":

@@ -45,7 +45,7 @@ class TestSetForwardHooks(CustomTestCase):
         try:
             cls.model=QWEN3_8B_WEIGHTS_PATH
             cls.process = popen_launch_server(
-                QWEN3_8B_WEIGHTS_PATH,
+                cls.model,
                 DEFAULT_URL_FOR_TEST,
                 DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
                 other_args=[
