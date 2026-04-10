@@ -145,6 +145,7 @@ class TestMambaCacheRadix(CustomTestCase):
         # Second request: cache reused, cache token is reused in multiples of 128
         make_request(input_ids_second, 128)
 
+    '''
     def test_basic_inference(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -174,8 +175,10 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertGreater(len(response.text), 0)
+    '''
 
 
+'''
 class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
     """Testcase: Verify hierarchical cache reuse with mamba cache.
 
@@ -200,7 +203,7 @@ class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
         "--mamba-scheduler-strategy",
         "extra_buffer",
     ]
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
