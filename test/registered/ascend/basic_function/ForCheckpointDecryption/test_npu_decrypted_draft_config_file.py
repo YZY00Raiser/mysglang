@@ -91,8 +91,6 @@ class TestDraftConfigFile(CustomTestCase):
             )
 
         except Exception as e:
-            raise RuntimeError(f"Failed to launch server: {e}") from e
-        finally:
             # Service failed to start, restoring original file name
             run_command(
                 f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}"
@@ -102,6 +100,7 @@ class TestDraftConfigFile(CustomTestCase):
             )
             if cls.process:
                 kill_process_tree(cls.process.pid)
+            raise RuntimeError(f"Failed to launch server: {e}") from e
 
     @classmethod
     def tearDownClass(cls):
@@ -113,25 +112,6 @@ class TestDraftConfigFile(CustomTestCase):
         )
         kill_process_tree(cls.process.pid)
 
-    def test(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(
-            response.status_code, 200, "The request status code is not 200."
-        )
-        self.assertIn(
-            "Paris", response.text, "The inference result does not include Paris."
-        )
-
-    '''
     def test_gsm8k(self):
         args = SimpleNamespace(
             max_new_tokens=512,
@@ -145,8 +125,6 @@ class TestDraftConfigFile(CustomTestCase):
         )
         metrics = run_eval(args)
         self.assertGreater(metrics["score"], 0.95)
-
-    '''
 
 
 if __name__ == "__main__":
