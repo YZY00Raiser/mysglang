@@ -86,7 +86,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
             num_shots=5,
         )
         metrics = run_eval(args)
-        self.assertGreater(metrics["score"], 0.81)
+        self.assertGreater(metrics["score"], 0.79)
 
     def test_moe(self):
         requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")

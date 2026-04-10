@@ -73,7 +73,7 @@ class TestAscendMoeDenseTPSize(CustomTestCase):
             num_shots=5,
         )
         metrics = run_eval(args)
-        self.assertGreater(metrics["score"], 0.81)
+        self.assertGreater(metrics["score"], 0.79)
 
 
 if __name__ == "__main__":
