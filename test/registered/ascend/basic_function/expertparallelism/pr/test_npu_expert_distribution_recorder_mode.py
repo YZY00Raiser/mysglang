@@ -28,8 +28,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    expert_distribution_recorder_mode = "per_token"
-    # expert_distribution_recorder_mode = "stat"
+    # expert_distribution_recorder_mode = "per_token"
+    expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
 
