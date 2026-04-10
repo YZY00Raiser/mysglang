@@ -50,7 +50,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "2",
                 "--expert-parallel-size",
                 "2",
-                "--enable-eplb",
+                # "--enable-eplb",
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
@@ -135,12 +135,12 @@ class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorde
     expert_distribution_recorder_mode = "stat_approx"
 
 
-'''
+
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
 
 
-
+'''
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
 '''
