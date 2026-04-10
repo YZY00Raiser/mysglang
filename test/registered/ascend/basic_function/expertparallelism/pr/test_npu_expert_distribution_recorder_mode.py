@@ -72,24 +72,21 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        # run_command(f"rm -rf {cls.path}")
+        run_command(f"rm -rf {cls.path}")
 
-    '''
     def test_gsm8k(self):
         args = SimpleNamespace(
-            num_shots=5,
-            data_path="/home/y30082119/test.jsonl",
-            num_questions=200,
             max_new_tokens=512,
-            parallel=128,
             base_url=DEFAULT_URL_FOR_TEST,
+            model=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
             eval_name="gsm8k",
             api="completion",
+            num_examples=200,
+            num_threads=128,
+            num_shots=5,
         )
         metrics = run_eval(args)
-
-        self.assertGreater(metrics["score"], 0.79)
-    '''
+        self.assertGreater(metrics["score"], 0.81)
 
     def test_moe(self):
         requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
@@ -113,7 +110,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
             msg=f"No distribution_recorder",
         )
 
-'''
+
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
 
@@ -121,10 +118,10 @@ class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorde
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
 
+
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
 
-'''
 
 if __name__ == "__main__":
     unittest.main()
