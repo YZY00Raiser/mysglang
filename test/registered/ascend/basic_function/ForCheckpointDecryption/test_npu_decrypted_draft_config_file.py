@@ -111,6 +111,7 @@ class TestDraftConfigFile(CustomTestCase):
         )
         kill_process_tree(cls.process.pid)
 
+    '''
     def test(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -128,8 +129,8 @@ class TestDraftConfigFile(CustomTestCase):
         self.assertIn(
             "Paris", response.text, "The inference result does not include Paris."
         )
-    '''
-        def test_gsm8k(self):
+
+    def test_gsm8k(self):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
