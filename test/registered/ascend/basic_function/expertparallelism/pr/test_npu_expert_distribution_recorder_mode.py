@@ -72,7 +72,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        run_command(f"rm -rf {cls.path}")
+        # run_command(f"rm -rf {cls.path}")
 
     def test_gsm8k(self):
         args = SimpleNamespace(
@@ -119,9 +119,9 @@ class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeSt
     expert_distribution_recorder_mode = "per_pass"
 
 
+
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
-
 
 if __name__ == "__main__":
     unittest.main()
