@@ -111,6 +111,10 @@ class TestDraftConfigFile(CustomTestCase):
         )
         kill_process_tree(cls.process.pid)
 
+    def testprint(self):
+        print("sssssssssssssssssssssssssssssssssssssssssss")
+
+
     '''
     def test(self):
         response = requests.post(
