@@ -108,7 +108,7 @@ class TestMambaCacheRadix(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
-            QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path,
+            QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=cls.other_args,
