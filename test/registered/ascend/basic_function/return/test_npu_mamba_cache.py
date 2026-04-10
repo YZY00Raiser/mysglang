@@ -145,7 +145,7 @@ class TestMambaCacheRadix(CustomTestCase):
         # Second request: cache reused, cache token is reused in multiples of 128
         make_request(input_ids_second, 128)
 
-    '''
+
     def test_basic_inference(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -159,7 +159,7 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-    '''
+
 
     def test_mamba_long_sequence(self):
         long_text = "Explain the concept of machine learning in detail." * 4000
