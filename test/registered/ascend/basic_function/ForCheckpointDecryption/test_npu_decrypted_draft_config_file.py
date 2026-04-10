@@ -117,7 +117,7 @@ class TestSetForwardHooks(CustomTestCase):
             eval_name="gsm8k",
             api="completion",
             num_examples=200,
-            num_threads=128,
+            num_threads=64,
             num_shots=5,
         )
         metrics = run_eval(args)
