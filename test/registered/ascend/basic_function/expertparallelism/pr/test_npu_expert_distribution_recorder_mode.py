@@ -112,7 +112,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         '''
 
         # Stop recording
-        requests.post(f"{DEFAULT_URL_FOR_TEST}/stop_expert_distribution_record")
+        # requests.post(f"{DEFAULT_URL_FOR_TEST}/stop_expert_distribution_record")
 
         # Export the .pt file
         requests.post(f"{DEFAULT_URL_FOR_TEST}/dump_expert_distribution_record")
