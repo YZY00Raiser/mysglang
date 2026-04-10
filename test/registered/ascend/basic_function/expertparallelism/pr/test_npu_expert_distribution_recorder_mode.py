@@ -74,7 +74,10 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         kill_process_tree(cls.process.pid)
         # run_command(f"rm -rf {cls.path}")
 
-    def test_gsm8k(self):
+    def test_recorder_mode(self):
+        # Start recording
+        requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
+
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
@@ -88,16 +91,13 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         metrics = run_eval(args)
         self.assertGreater(metrics["score"], 0.79)
 
-    def test_moe(self):
-        requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
-
-        # 4. 停止记录（可选）
+        # Stop recording
         requests.post(f"{DEFAULT_URL_FOR_TEST}/stop_expert_distribution_record")
 
-        # 5. 导出 .pt 文件
+        # Export the .pt file
         requests.post(f"{DEFAULT_URL_FOR_TEST}/dump_expert_distribution_record")
 
-        # check distribution_recorder_files
+        # Check distribution_recorder_files
         distribution_recorder_suffixes = "*.pt"
         distribution_recorder_files = []
         for suffix in distribution_recorder_suffixes:
@@ -107,12 +107,13 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         self.assertGreater(
             len(distribution_recorder_files),
             0,
-            msg=f"No distribution_recorder",
+            msg=f"No distribution recorder",
         )
 
 
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
+
 
 '''
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
@@ -123,7 +124,6 @@ class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeSt
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
 '''
-
 
 if __name__ == "__main__":
     unittest.main()
