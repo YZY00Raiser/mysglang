@@ -130,6 +130,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
             msg=f"No distribution recorder",
         )
 
+'''
+
 
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
@@ -138,12 +140,10 @@ class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorde
 
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
-
-
 '''
+
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
-'''
 
 if __name__ == "__main__":
     unittest.main()
