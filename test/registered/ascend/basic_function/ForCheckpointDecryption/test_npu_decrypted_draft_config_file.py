@@ -111,7 +111,7 @@ class TestDraftConfigFile(CustomTestCase):
         )
         kill_process_tree(cls.process.pid)
 
-    def test_moe_runner_backend(self):
+    def test(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
