@@ -24,8 +24,8 @@ register_npu_ci(
     suite="nightly-4-npu-a3",
     nightly=True,
 )
-QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
-QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
+QWEN3_8B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
+QWEN3_8B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 
 class TestSetForwardHooks(CustomTestCase):
