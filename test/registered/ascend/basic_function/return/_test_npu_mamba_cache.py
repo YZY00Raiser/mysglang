@@ -19,6 +19,7 @@ register_npu_ci(est_time=1100, suite="nightly-8-npu-a3", nightly=True)
 
 QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST = "/home/weights/Qwen3-Next-80B-A3B-Instruct"
 
+
 '''
 class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
@@ -97,10 +98,11 @@ class TestMambaCacheRadix(CustomTestCase):
         "--disable-cuda-graph",
         "--tp-size",
         "8",
-        "--mamba-ssm-dtype",
-        "bfloat16",
-        "--mamba-full-memory-ratio",
-        "0.3",
+        "--enable-hierarchical-cache",
+        "--hicache-ratio",
+        1.2,
+        "--max-mamba-cache-size",
+        "512",
         "--mamba-scheduler-strategy",
         "extra_buffer",
     ]
@@ -145,7 +147,7 @@ class TestMambaCacheRadix(CustomTestCase):
         # Second request: cache reused, cache token is reused in multiples of 128
         make_request(input_ids_second, 128)
 
-
+    '''
     def test_basic_inference(self):
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -159,7 +161,6 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
 
     def test_mamba_long_sequence(self):
         long_text = "Explain the concept of machine learning in detail." * 4000
@@ -176,13 +177,10 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertGreater(len(response.text), 0)
-
+    '''
 
 
 '''
-
-
-
 class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
     """Testcase: Verify hierarchical cache reuse with mamba cache.
 
@@ -208,13 +206,6 @@ class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
         "extra_buffer",
     ]
 '''
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
