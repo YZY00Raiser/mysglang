@@ -178,7 +178,7 @@ class TestMambaCacheRadix(CustomTestCase):
     '''
 
 
-'''
+
 class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
     """Testcase: Verify hierarchical cache reuse with mamba cache.
 
@@ -203,7 +203,7 @@ class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
         "--mamba-scheduler-strategy",
         "extra_buffer",
     ]
-'''
+
 
 if __name__ == "__main__":
     unittest.main()
