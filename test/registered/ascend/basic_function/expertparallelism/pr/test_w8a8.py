@@ -48,7 +48,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "--deepep-mode",
                 "normal",
                 "--ep-num-redundant-experts",
-                "4",
+                "16",
                 "--expert-distribution-recorder-buffer-size",
                 "50",
                 "--moe-runner-backend",
