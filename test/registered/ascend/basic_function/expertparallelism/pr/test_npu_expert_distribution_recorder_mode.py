@@ -28,8 +28,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    # expert_distribution_recorder_mode = "per_pass"
-    expert_distribution_recorder_mode = "stat"
+    expert_distribution_recorder_mode = "per_token"
+    # expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
 
@@ -141,9 +141,9 @@ class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorde
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
 '''
-
+'''
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
-
+'''
 if __name__ == "__main__":
     unittest.main()
