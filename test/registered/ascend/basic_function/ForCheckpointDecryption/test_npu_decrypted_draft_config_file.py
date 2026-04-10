@@ -44,62 +44,62 @@ class TestDraftConfigFile(CustomTestCase):
         run_command(
             f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')}"
         )
-        try:
-            cls.model=QWEN3_8B_WEIGHTS_PATH
-            cls.process = popen_launch_server(
-                cls.model,
-                DEFAULT_URL_FOR_TEST,
-                DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-                other_args=[
-                    "--trust-remote-code",
-                    "--attention-backend",
-                    "ascend",
-                    "--disable-radix-cache",
-                    "--chunked-prefill-size",
-                    "-1",
-                    "--max-prefill-tokens",
-                    "1024",
-                    "--speculative-algorithm",
-                    "EAGLE3",
-                    "--speculative-draft-model-path",
-                    QWEN3_8B_EAGLE3_WEIGHTS_PATH,
-                    "--speculative-num-steps",
-                    "3",
-                    "--speculative-eagle-topk",
-                    "1",
-                    "--speculative-num-draft-tokens",
-                    "4",
-                    "--tp-size",
-                    "2",
-                    "--mem-fraction-static",
-                    "0.68",
-                    "--disable-cuda-graph",
-                    "--dtype",
-                    "bfloat16",
-                    "--decrypted-config-file",
-                    "/home/y30082119/Qwen3-8B/config.json",
-                    "--decrypted-draft-config-file",
-                    "/home/y30082119/Qwen3-8B_eagle3/config.json",
-                    "--base-gpu-id",
-                    "2",
-                ],
-                env={
-                    "SGLANG_ENABLE_SPEC_V2": "1",
-                    "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
-                },
-            )
-        except Exception as e:
-            raise RuntimeError(f"Failed to launch server: {e}") from e
-        finally:
-            # Service failed to start, restoring original file name
-            run_command(
-                f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}"
-            )
-            run_command(
-                f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')}"
-            )
-            if cls.process:
-                kill_process_tree(cls.process.pid)
+        # try:
+        cls.model=QWEN3_8B_WEIGHTS_PATH
+        cls.process = popen_launch_server(
+            cls.model,
+            DEFAULT_URL_FOR_TEST,
+            DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=[
+                "--trust-remote-code",
+                "--attention-backend",
+                "ascend",
+                "--disable-radix-cache",
+                "--chunked-prefill-size",
+                "-1",
+                "--max-prefill-tokens",
+                "1024",
+                "--speculative-algorithm",
+                "EAGLE3",
+                "--speculative-draft-model-path",
+                QWEN3_8B_EAGLE3_WEIGHTS_PATH,
+                "--speculative-num-steps",
+                "3",
+                "--speculative-eagle-topk",
+                "1",
+                "--speculative-num-draft-tokens",
+                "4",
+                "--tp-size",
+                "2",
+                "--mem-fraction-static",
+                "0.68",
+                "--disable-cuda-graph",
+                "--dtype",
+                "bfloat16",
+                "--decrypted-config-file",
+                "/home/y30082119/Qwen3-8B/config.json",
+                "--decrypted-draft-config-file",
+                "/home/y30082119/Qwen3-8B_eagle3/config.json",
+                "--base-gpu-id",
+                "2",
+            ],
+            env={
+                "SGLANG_ENABLE_SPEC_V2": "1",
+                "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
+            },
+        )
+        # except Exception as e:
+        #     raise RuntimeError(f"Failed to launch server: {e}") from e
+        # finally:
+        #     # Service failed to start, restoring original file name
+        #     run_command(
+        #         f"mv {os.path.join(QWEN3_8B_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_WEIGHTS_PATH, 'config.json')}"
+        #     )
+        #     run_command(
+        #         f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')}"
+        #     )
+        #     if cls.process:
+        #         kill_process_tree(cls.process.pid)
 
     @classmethod
     def tearDownClass(cls):
