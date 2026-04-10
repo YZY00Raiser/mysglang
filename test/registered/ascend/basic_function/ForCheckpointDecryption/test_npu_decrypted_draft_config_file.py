@@ -27,7 +27,7 @@ register_npu_ci(
 QWEN3_8B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
 QWEN3_8B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
-class TestSetForwardHooks(CustomTestCase):
+class TestDraftConfigFile(CustomTestCase):
     """Testcase: Verify set --decrypted-config-file, --decrypted-draft-config-file parameter,
     will use the specified config.json and the GSM8K dataset is no less than 0.95.
 
