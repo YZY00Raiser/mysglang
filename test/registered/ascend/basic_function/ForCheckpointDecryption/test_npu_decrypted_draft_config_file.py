@@ -43,10 +43,11 @@ class TestSetForwardHooks(CustomTestCase):
             f"mv {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, 'config.json')} {os.path.join(QWEN3_8B_EAGLE3_WEIGHTS_PATH, '_config.json')}"
         )
         try:
+            cls.model=QWEN3_8B_WEIGHTS_PATH
             cls.process = popen_launch_server(
                 QWEN3_8B_WEIGHTS_PATH,
                 DEFAULT_URL_FOR_TEST,
-                timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+                DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
                 other_args=[
                     "--trust-remote-code",
                     "--attention-backend",
@@ -112,7 +113,7 @@ class TestSetForwardHooks(CustomTestCase):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
-            model=QWEN3_8B_WEIGHTS_PATH,
+            model=self.model,
             eval_name="gsm8k",
             api="completion",
             num_examples=200,
