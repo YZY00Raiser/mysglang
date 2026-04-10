@@ -17,7 +17,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=1100, suite="nightly-8-npu-a3", nightly=True)
 
-QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST = "/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST = "/home/weights/Qwen3-Next-80B-A3B-Instruct"
 
 '''
 class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
