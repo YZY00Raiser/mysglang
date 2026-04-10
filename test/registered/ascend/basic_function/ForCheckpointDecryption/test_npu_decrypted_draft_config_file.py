@@ -1,16 +1,15 @@
 import os
 import unittest
 from types import SimpleNamespace
-from urllib.parse import urlparse
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
-    QWEN3_8B_EAGLE3_WEIGHTS_PATH,
-    QWEN3_8B_WEIGHTS_PATH,
+    # QWEN3_8B_EAGLE3_WEIGHTS_PATH,
+    # QWEN3_8B_WEIGHTS_PATH,
     run_command,
 )
 from sglang.test.ci.ci_register import register_npu_ci
-from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
+from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -23,13 +22,12 @@ register_npu_ci(
     suite="nightly-2-npu-a3",
     nightly=True,
 )
-QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
-QWEN3_32B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
-
+QWEN3_8B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B"
+QWEN3_8B_EAGLE3_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-8B_eagle3"
 
 class TestSetForwardHooks(CustomTestCase):
     """Testcase: Verify set --decrypted-config-file, --decrypted-draft-config-file parameter,
-    will use the specified config.json and the GSM8K dataset is no less than 0.92.
+    will use the specified config.json and the GSM8K dataset is no less than 0.95.
 
     [Test Category] Parameter
     [Test Target] --decrypted-config-file, --decrypted-draft-config-file
@@ -75,18 +73,15 @@ class TestSetForwardHooks(CustomTestCase):
                     "--disable-cuda-graph",
                     "--dtype",
                     "bfloat16",
-                    # "--decrypted-config-file",
-                    # "/__w/sglang/sglang/test/registered/ascend/basic_function/checkpoint_decryption/Qwen3-8B/config.json",
-                    # "--decrypted-draft-config-file",
-                    # "/__w/sglang/sglang/test/registered/ascend/basic_function/checkpoint_decryption/Qwen3-8B_eagle3/config.json",
                     "--decrypted-config-file",
                     "/home/y30082119/Qwen3-8B/config.json",
                     "--decrypted-draft-config-file",
                     "/home/y30082119/Qwen3-8B_eagle3/config.json",
                     "--base-gpu-id",
+                    "12",
                 ],
                 env={
-                    "SLANG_ENABLE_SPEC_V2": "1",
+                    "SGLANG_ENABLE_SPEC_V2": "1",
                     "SGLANG_ENABLE_OVERLAP_PLAN_STREAM": "1",
                 },
             )
@@ -114,20 +109,18 @@ class TestSetForwardHooks(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
     def test_gsm8k(self):
-        parsed_url = urlparse(DEFAULT_URL_FOR_TEST)
-        host = parsed_url.hostname
-        port = parsed_url.port
         args = SimpleNamespace(
-            num_shots=5,
-            data_path="/home/y30082119/test.jsonl",
-            num_questions=200,
             max_new_tokens=512,
-            parallel=128,
-            host=host,
-            port=port,
+            base_url=DEFAULT_URL_FOR_TEST,
+            model=QWEN3_8B_WEIGHTS_PATH,
+            eval_name="gsm8k",
+            api="completion",
+            num_examples=200,
+            num_threads=128,
+            num_shots=5,
         )
-        metrics = run_eval_few_shot_gsm8k(args)
-        self.assertGreater(metrics["accuracy"], 0.79)
+        metrics = run_eval(args)
+        self.assertGreater(metrics["score"], 0.95)
 
 
 if __name__ == "__main__":
