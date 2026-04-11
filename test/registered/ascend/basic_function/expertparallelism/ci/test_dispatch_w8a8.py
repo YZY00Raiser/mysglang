@@ -59,13 +59,13 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 # "16",
                 "--ep-dispatch-algorithm",
                 cls.ep_dispatch_algorithm,
-                # "--quantization",
-                # "modelslim",
+                "--quantization",
+                "modelslim",
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                "SGLANG_NPU_FUSED_MOE_MODE": "1",
+                "SGLANG_NPU_FUSED_MOE_MODE": "2",
             },
         )
 
