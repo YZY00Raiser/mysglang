@@ -1,0 +1,13 @@
+# 1) 创建独立虚拟环境
+python -m venv /workspace/vllm_bench_venv
+source /workspace/vllm_bench_venv/bin/activate
+
+# 2) 升级 pip（只在 venv 内）
+pip install -U pip
+
+# 3) 安装 vllm（只影响 venv）
+pip install vllm
+
+# 4) 验证
+vllm --help
+vllm bench --help
