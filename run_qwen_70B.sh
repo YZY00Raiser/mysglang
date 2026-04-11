@@ -8,8 +8,8 @@ export SGLANG_SET_CPU_AFFINITY=1
 
 #export PYTHONPATH=/home/c30058706/code/sglang/python:$PYTHONPATH
 
-source /usr/local/Ascend/ascend-toolkit/set_env.sh
-source /usr/local/Ascend/nnal/atb/set_env.sh
+#source /usr/local/Ascend/ascend-toolkit/set_env.sh
+#source /usr/local/Ascend/nnal/atb/set_env.sh
 # 内存碎片
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 export STREAMS_PER_DEVICE=32
@@ -47,11 +47,11 @@ python -m sglang.launch_server \
     --cuda-graph-bs 96 \
     --mm-enable-dp-encoder \
     --tokenizer-worker-num 4 \
-    --skip-server-warmup 
+    --skip-server-warmup
 
 #    --base-gpu-id 8
 #2>&1 | tee fy_log.log &
 #--enable-broadcast-mm-inputs-process \
-#    --mm-enable-dp-encoder --enable-dp-attention --dp-size 8 
+#    --mm-enable-dp-encoder --enable-dp-attention --dp-size 8
 #    --speculative-algorithm EAGLE3 --speculative-draft-model-path /home/c30058706/Qwen2.5-VL-72B-Instruct-eagle3-sgl --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4 \
 
