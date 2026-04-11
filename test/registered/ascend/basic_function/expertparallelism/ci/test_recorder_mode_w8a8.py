@@ -32,8 +32,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    expert_distribution_recorder_mode = "per_token"
-    # expert_distribution_recorder_mode = "stat"
+    # expert_distribution_recorder_mode = "per_token"
+    expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
     model=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
