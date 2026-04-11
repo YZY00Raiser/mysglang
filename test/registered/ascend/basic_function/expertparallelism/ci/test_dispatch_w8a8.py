@@ -1,15 +1,8 @@
-import glob
-import os
 import unittest
 from types import SimpleNamespace
 
-import requests
-
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import run_command
-# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
-
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
@@ -23,22 +16,19 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 # DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
-class TestExpertDistributionRecorderModeStatic(CustomTestCase):
+class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
     """Testcase: Verify that the model accuracy remains uncompromised when the parameter --moe-dense-tp-size is configured to 1.
 
     [Test Category] Parameter
-    [Test Target] --expert-distribution-recorder-mode
+    [Test Target] --ep-dispatch-algorithm, --moe-a2a-backend
     """
 
-    # expert_distribution_recorder_mode = "per_token"
-    expert_distribution_recorder_mode = "stat"
-
-    path = "/tmp/pt"
+    ep_dispatch_algorithm = "static"
 
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
-            DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH,
+            DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
@@ -54,51 +44,28 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "16",
                 "--enable-eplb",
                 "--moe-a2a-backend",
-                "deepep",
-                "--deepep-mode",
-                "normal",
+                "ascend_fuseep",
+                # "--deepep-mode",
+                # "normal",
                 "--ep-num-redundant-experts",
                 "4",
-                "--expert-distribution-recorder-mode",
-                cls.expert_distribution_recorder_mode,
-                "--base-gpu-id",
-                "4",
+                "--ep-dispatch-algorithm",
+                cls.ep_dispatch_algorithm,
+                # "--base-gpu-id",
+                # "12",
             ],
             env={
                 # "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                "SGLANG_EXPERT_DISTRIBUTION_RECORDER_DIR": f"{cls.path}",
+                "SGLANG_NPU_FUSED_MOE_MODE":"1",
             },
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
-        # run_command(f"rm -rf {cls.path}")
 
-    def test_recorder_mode(self):
-        # Start recording
-        requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
-
-
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(
-            response.status_code, 200, "The request status code is not 200."
-        )
-        self.assertIn(
-            "Paris", response.text, "The inference result does not include Paris."
-        )
-
-        '''
+    def test_gsm8k(self):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
@@ -111,41 +78,17 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         )
         metrics = run_eval(args)
         self.assertGreater(metrics["score"], 0.79)
-        '''
-
-        # Stop recording
-        # requests.post(f"{DEFAULT_URL_FOR_TEST}/stop_expert_distribution_record")
-
-        # Export the .pt file
-        requests.post(f"{DEFAULT_URL_FOR_TEST}/dump_expert_distribution_record")
-
-        # Check distribution_recorder_files
-        distribution_recorder_suffixes = "*.pt"
-        distribution_recorder_files = []
-        for suffix in distribution_recorder_suffixes:
-            distribution_recorder_files.extend(
-                glob.glob(os.path.join(self.path, "**", suffix), recursive=True)
-            )
-        self.assertGreater(
-            len(distribution_recorder_files),
-            0,
-            msg=f"No distribution recorder",
-        )
 
 '''
 
 
-class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
-    expert_distribution_recorder_mode = "stat_approx"
+class TestEPLBDispatchAlgorithmDynamic(TestEPLBDispatchAlgorithmStatic):
+    ep_dispatch_algorithm = "dynamic"
 
 
+class TestEPLBDispatchAlgorithmFake(TestEPLBDispatchAlgorithmStatic):
+    ep_dispatch_algorithm = "fake"
+'''
 
-class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
-    expert_distribution_recorder_mode = "per_pass"
-'''
-'''
-class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
-    expert_distribution_recorder_mode = "per_token"
-'''
 if __name__ == "__main__":
     unittest.main()
