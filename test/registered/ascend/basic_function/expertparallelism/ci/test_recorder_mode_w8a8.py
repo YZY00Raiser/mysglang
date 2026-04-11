@@ -135,14 +135,13 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         )
 
 
-
-
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
 
 
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
+
 
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
