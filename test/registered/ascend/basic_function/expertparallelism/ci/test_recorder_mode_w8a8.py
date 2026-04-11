@@ -18,6 +18,8 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
+
+
 # DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
@@ -28,8 +30,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    # expert_distribution_recorder_mode = "per_token"
-    expert_distribution_recorder_mode = "stat"
+    expert_distribution_recorder_mode = "per_token"
+    # expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
 
@@ -63,7 +65,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "4",
             ],
             env={
-                # "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
+                "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
                 "SGLANG_EXPERT_DISTRIBUTION_RECORDER_DIR": f"{cls.path}",
             },
@@ -77,7 +79,6 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     def test_recorder_mode(self):
         # Start recording
         requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
-
 
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
@@ -130,6 +131,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
             msg=f"No distribution recorder",
         )
 
+
 '''
 
 
@@ -141,6 +143,7 @@ class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorde
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
 '''
+
 '''
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
