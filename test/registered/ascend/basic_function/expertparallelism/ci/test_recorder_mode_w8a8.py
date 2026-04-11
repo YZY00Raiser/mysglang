@@ -47,7 +47,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "ascend",
                 "--disable-cuda-graph",
                 "--mem-fraction-static",
-                "0.5",
+                "0.8",
                 "--tp-size",
                 "16",
                 "--expert-parallel-size",
