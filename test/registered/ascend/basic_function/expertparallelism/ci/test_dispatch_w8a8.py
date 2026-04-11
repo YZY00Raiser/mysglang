@@ -51,6 +51,8 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
+                # "--moe-a2a-backend",
+                # "deepep",
                 # "--deepep-mode",
                 # "normal",
                 # "--ep-num-redundant-experts",
