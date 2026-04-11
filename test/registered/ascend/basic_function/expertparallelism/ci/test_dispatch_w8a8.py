@@ -53,8 +53,6 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 # "16",
                 # "--ep-dispatch-algorithm",
                 # cls.ep_dispatch_algorithm,
-                # "--base-gpu-id",
-                # "12",
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
