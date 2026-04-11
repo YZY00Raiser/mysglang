@@ -29,7 +29,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
     """
 
     ep_dispatch_algorithm = "static"
-    model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+    model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
 
     @classmethod
     def setUpClass(cls):
