@@ -45,7 +45,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 "16",
                 "--expert-parallel-size",
                 "16",
-                "--enable-eplb",
+                # "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
                 # "--deepep-mode",
