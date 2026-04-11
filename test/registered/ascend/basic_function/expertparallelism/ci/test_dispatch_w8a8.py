@@ -48,7 +48,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 # "--deepep-mode",
                 # "normal",
                 "--ep-num-redundant-experts",
-                "4",
+                "16",
                 "--ep-dispatch-algorithm",
                 cls.ep_dispatch_algorithm,
                 # "--base-gpu-id",
