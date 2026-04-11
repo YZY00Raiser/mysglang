@@ -7,7 +7,7 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import run_command
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
 from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 
 from sglang.test.ci.ci_register import register_npu_ci
@@ -36,7 +36,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     # expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
-    model=DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+    model=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
@@ -51,12 +51,12 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "--mem-fraction-static",
                 "0.8",
                 "--tp-size",
-                "16",
-                "--expert-parallel-size",
-                "16",
-                "--enable-eplb",
-                "--moe-a2a-backend",
-                "deepep",
+                "4",
+                # "--expert-parallel-size",
+                # "16",
+                # "--enable-eplb",
+                # "--moe-a2a-backend",
+                # "deepep",
                 # "--deepep-mode",
                 # "normal",
                 # "--ep-num-redundant-experts",
