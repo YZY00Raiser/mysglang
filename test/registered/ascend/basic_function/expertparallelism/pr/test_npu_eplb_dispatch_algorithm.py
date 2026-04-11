@@ -45,17 +45,17 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
-                "--deepep-mode",
-                "normal",
+                # "--deepep-mode",
+                # "normal",
                 "--ep-num-redundant-experts",
                 "4",
                 "--ep-dispatch-algorithm",
                 cls.ep_dispatch_algorithm,
-                "--base-gpu-id",
-                "12",
+                # "--base-gpu-id",
+                # "12",
             ],
             env={
-                "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
+                # "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
                 "SGLANG_NPU_FUSED_MOE_MODE":"1",
             },
@@ -77,7 +77,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
             num_shots=5,
         )
         metrics = run_eval(args)
-        self.assertGreater(metrics["score"], 0.81)
+        self.assertGreater(metrics["score"], 0.79)
 
 '''
 

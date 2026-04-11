@@ -23,7 +23,7 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
     """
 
     model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
-    moe_runner_backend = "triton"
+    moe_runner_backend = "auto"
 
     @classmethod
     def setUpClass(cls):
@@ -81,6 +81,8 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         self.assertIn(
             "Paris", response.text, "The inference result does not include Paris."
         )
+        print("------------------ response------------------------")
+        print(response.json())
 
 
 '''
