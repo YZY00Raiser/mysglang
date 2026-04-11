@@ -26,11 +26,11 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
     """
 
     ep_dispatch_algorithm = "static"
-
+    model=DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
-            DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH,
+            cls.model,
             DEFAULT_URL_FOR_TEST,
             DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
