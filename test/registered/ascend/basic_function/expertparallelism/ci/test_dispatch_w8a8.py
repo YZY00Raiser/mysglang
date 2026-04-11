@@ -29,7 +29,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
     """
 
     ep_dispatch_algorithm = "static"
-    model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+    model = DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 
     @classmethod
     def setUpClass(cls):
@@ -59,13 +59,13 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 # "16",
                 # "--ep-dispatch-algorithm",
                 # cls.ep_dispatch_algorithm,
-                "--quantization",
-                "modelslim",
+                # "--quantization",
+                # "modelslim",
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                "SGLANG_NPU_FUSED_MOE_MODE": "2",
+                "SGLANG_NPU_FUSED_MOE_MODE": "1",
             },
         )
 
