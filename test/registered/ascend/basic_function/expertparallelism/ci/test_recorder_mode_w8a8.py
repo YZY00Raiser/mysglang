@@ -32,8 +32,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    expert_distribution_recorder_mode = "per_token"
-    # expert_distribution_recorder_mode = "stat"
+    # expert_distribution_recorder_mode = "per_token"
+    expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
     model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
@@ -56,10 +56,10 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 # "--ep",
                 # "16",
                 # "--enable-eplb",
-                "--moe-a2a-backend",
-                "deepep",
-                "--deepep-mode",
-                "normal",
+                # "--moe-a2a-backend",
+                # "deepep",
+                # "--deepep-mode",
+                # "normal",
                 # "--ep-num-redundant-experts",
                 # "16",
                 "--expert-distribution-recorder-mode",
@@ -135,7 +135,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         )
 
 
-'''
+
 
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
@@ -147,6 +147,6 @@ class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeSt
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
 
-'''
+
 if __name__ == "__main__":
     unittest.main()
