@@ -48,7 +48,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 "16",
                 "--expert-parallel-size",
                 "16",
-                # "--enable-eplb",
+                "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
                 # "--deepep-mode",
@@ -57,7 +57,8 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 # "16",
                 # "--ep-dispatch-algorithm",
                 # cls.ep_dispatch_algorithm,
-
+                "--quantization",
+                "modelslim",
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
