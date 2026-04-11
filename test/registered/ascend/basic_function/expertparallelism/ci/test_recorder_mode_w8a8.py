@@ -73,7 +73,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        kill_process_tree(cls.process.pid)
+        pass
+        # kill_process_tree(cls.process.pid)
         # run_command(f"rm -rf {cls.path}")
 
     def test_recorder_mode(self):
@@ -124,6 +125,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         for suffix in distribution_recorder_suffixes:
             distribution_recorder_files.extend(
                 glob.glob(os.path.join(self.path, "**", suffix), recursive=True)
+
             )
         self.assertGreater(
             len(distribution_recorder_files),
