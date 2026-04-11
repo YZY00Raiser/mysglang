@@ -11,3 +11,15 @@ pip install vllm
 # 4) 验证
 vllm --help
 vllm bench --help
+
+
+# 通用最快命令（阿里云源，最稳）
+pip install 你要装的包 -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+
+# 例子：安装 numpy
+pip install numpy -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+
+备用国内源（任选一个）
+阿里云（推荐）：https://mirrors.aliyun.com/pypi/simple/
+清华源：https://pypi.tuna.tsinghua.edu.cn/simple/
+豆瓣源：https://pypi.doubanio.com/simple/
