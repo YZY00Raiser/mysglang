@@ -32,7 +32,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     [Test Target] --expert-distribution-recorder-mode
     """
 
-    expert_distribution_recorder_mode = "per_token"
+    # expert_distribution_recorder_mode = "per_token"
     # expert_distribution_recorder_mode = "stat"
 
     path = "/tmp/pt"
@@ -55,7 +55,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 "16",
                 # "--ep",
                 # "16",
-                "--enable-eplb",
+                # "--enable-eplb",
                 # "--moe-a2a-backend",
                 # "deepep",
                 # "--deepep-mode",
@@ -135,21 +135,16 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         )
 
 
-'''
-
 
 class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "stat_approx"
 
 
-
 class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_pass"
-'''
 
-'''
 class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
     expert_distribution_recorder_mode = "per_token"
-'''
+
 if __name__ == "__main__":
     unittest.main()
