@@ -61,8 +61,8 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
                 # "normal",
                 # "--ep-num-redundant-experts",
                 # "16",
-                # "--expert-distribution-recorder-mode",
-                # cls.expert_distribution_recorder_mode,
+                "--expert-distribution-recorder-mode",
+                cls.expert_distribution_recorder_mode,
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
