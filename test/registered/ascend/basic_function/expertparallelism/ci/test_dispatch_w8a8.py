@@ -16,6 +16,8 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
+
+
 # DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
@@ -27,7 +29,8 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
     """
 
     ep_dispatch_algorithm = "static"
-    model=DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+    model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
@@ -45,7 +48,7 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 "16",
                 "--expert-parallel-size",
                 "16",
-                "--enable-eplb",
+                # "--enable-eplb",
                 "--moe-a2a-backend",
                 "ascend_fuseep",
                 # "--deepep-mode",
@@ -54,17 +57,19 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
                 # "16",
                 # "--ep-dispatch-algorithm",
                 # cls.ep_dispatch_algorithm,
+
             ],
             env={
                 "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
-                "SGLANG_NPU_FUSED_MOE_MODE":"2",
+                "SGLANG_NPU_FUSED_MOE_MODE": "2",
             },
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+
     '''
     def test_gsm8k(self):
         args = SimpleNamespace(
@@ -82,7 +87,6 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
     '''
 
     def test_recorder_mode(self):
-
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -99,7 +103,6 @@ class TestEPLBDispatchAlgorithmStatic(CustomTestCase):
         self.assertIn(
             "Paris", response.text, "The inference result does not include Paris."
         )
-
 
 
 '''
