@@ -7,7 +7,7 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import run_command
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
@@ -36,7 +36,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
-            DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+            DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
@@ -100,7 +100,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
-            model=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+            model=DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH,
             eval_name="gsm8k",
             api="completion",
             num_examples=200,
