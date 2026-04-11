@@ -1,10 +1,15 @@
+import glob
+import os
 import unittest
+from types import SimpleNamespace
 
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import run_command
+# from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
+from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -13,22 +18,25 @@ from sglang.test.test_utils import (
 )
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
+DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
-class TestMoreRunnerBackendTriton(CustomTestCase):
-    """Testcase：Verify set --moe-runner-backend, the inference request is successfully processed.
+class TestExpertDistributionRecorderModeStatic(CustomTestCase):
+    """Testcase: Verify that the model accuracy remains uncompromised when the parameter --moe-dense-tp-size is configured to 1.
 
     [Test Category] Parameter
-    [Test Target] --moe-runner-backend
+    [Test Target] --expert-distribution-recorder-mode
     """
 
-    model = DEEPSEEK_V3_2_W8A8_WEIGHTS_PATH
-    moe_runner_backend = "auto"
+    # expert_distribution_recorder_mode = "per_token"
+    expert_distribution_recorder_mode = "stat"
+
+    path = "/tmp/pt"
 
     @classmethod
     def setUpClass(cls):
         cls.process = popen_launch_server(
-            cls.model,
+            DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=[
@@ -37,34 +45,40 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
                 "ascend",
                 "--disable-cuda-graph",
                 "--mem-fraction-static",
-                "0.8",
+                "0.5",
                 "--tp-size",
-                "16",
-                "--ep",
-                "16",
+                "2",
+                "--expert-parallel-size",
+                "2",
                 "--enable-eplb",
                 "--moe-a2a-backend",
                 "deepep",
                 "--deepep-mode",
                 "normal",
                 "--ep-num-redundant-experts",
-                "16",
-                "--expert-distribution-recorder-buffer-size",
-                "50",
-                "--moe-runner-backend",
-                cls.moe_runner_backend,
+                "4",
+                "--expert-distribution-recorder-mode",
+                cls.expert_distribution_recorder_mode,
+                "--base-gpu-id",
+                "4",
             ],
             env={
                 # "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 "HCCL_BUFFSIZE": "1024",
+                "SGLANG_EXPERT_DISTRIBUTION_RECORDER_DIR": f"{cls.path}",
             },
         )
 
     @classmethod
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
+        # run_command(f"rm -rf {cls.path}")
 
-    def test_moe_runner_backend(self):
+    def test_recorder_mode(self):
+        # Start recording
+        requests.post(f"{DEFAULT_URL_FOR_TEST}/start_expert_distribution_record")
+
+
         response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
@@ -81,14 +95,55 @@ class TestMoreRunnerBackendTriton(CustomTestCase):
         self.assertIn(
             "Paris", response.text, "The inference result does not include Paris."
         )
-        print("------------------ response------------------------")
-        print(response.json())
 
+        '''
+        args = SimpleNamespace(
+            max_new_tokens=512,
+            base_url=DEFAULT_URL_FOR_TEST,
+            model=DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+            eval_name="gsm8k",
+            api="completion",
+            num_examples=200,
+            num_threads=128,
+            num_shots=5,
+        )
+        metrics = run_eval(args)
+        self.assertGreater(metrics["score"], 0.79)
+        '''
+
+        # Stop recording
+        # requests.post(f"{DEFAULT_URL_FOR_TEST}/stop_expert_distribution_record")
+
+        # Export the .pt file
+        requests.post(f"{DEFAULT_URL_FOR_TEST}/dump_expert_distribution_record")
+
+        # Check distribution_recorder_files
+        distribution_recorder_suffixes = "*.pt"
+        distribution_recorder_files = []
+        for suffix in distribution_recorder_suffixes:
+            distribution_recorder_files.extend(
+                glob.glob(os.path.join(self.path, "**", suffix), recursive=True)
+            )
+        self.assertGreater(
+            len(distribution_recorder_files),
+            0,
+            msg=f"No distribution recorder",
+        )
 
 '''
-class TestMoreRunnerBackendTritonDefault(TestMoreRunnerBackendTriton):
-    moe_runner_backend = "auto"
-'''
 
+
+class TestExpertDistributionRecorderModeStatApprox(TestExpertDistributionRecorderModeStatic):
+    expert_distribution_recorder_mode = "stat_approx"
+
+
+
+class TestExpertDistributionRecorderPerPass(TestExpertDistributionRecorderModeStatic):
+    expert_distribution_recorder_mode = "per_pass"
+'''
+'''
+class TestExpertDistributionRecorderPerToken(TestExpertDistributionRecorderModeStatic):
+    expert_distribution_recorder_mode = "per_token"
+'''
 if __name__ == "__main__":
     unittest.main()
