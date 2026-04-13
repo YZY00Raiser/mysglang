@@ -23,8 +23,8 @@ export HCCL_BUFFSIZE=1000
 export HCCL_OP_EXPANSION_MODE=AIV
 
 # Run command ifconfig on two nodes, find out which inet addr has same IP with your node IP. That is your public interface, which should be added here
-export HCCL_SOCKET_IFNAME=8001
-export GLOO_SOCKET_IFNAME=8001
+export HCCL_SOCKET_IFNAME=enp196s0f0
+export GLOO_SOCKET_IFNAME=enp196s0f0
 
 
 P_IP=('61.47.19.75' '61.47.19.76')
