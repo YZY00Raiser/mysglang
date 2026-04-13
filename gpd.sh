@@ -42,7 +42,7 @@ do
     then
         echo "${P_IP[$i]}"
         python3 -m sglang.launch_server \
-        --model-path /home/weights/DeepSeek-R1-0528-w4a8-per-channel \
+        --model-path /home/weights/GLM-5-w4a8 \
         --attention-backend ascend \
         --device npu \
         --tp-size 32 --nnodes 2 --node-rank $i --dist-init-addr $P_MASTER \
