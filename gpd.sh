@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 sysctl -w vm.swappiness=0
 sysctl -w kernel.numa_balancing=0
@@ -29,10 +31,6 @@ export GLOO_SOCKET_IFNAME=enp196s0f0
 
 P_IP=('61.47.19.75' '61.47.19.76')
 P_MASTER="${P_IP[0]}:8000"
-export SGLANG_DISAGGREGATION_BOOTSTRAP_TIMEOUT=600
-
-export SGLANG_ENABLE_SPEC_V2=1
-export SGLANG_ENABLE_OVERLAP_PLAN_STREAM=1
 
 LOCAL_HOST1=`hostname -I|awk -F " " '{print$1}'`
 LOCAL_HOST2=`hostname -I|awk -F " " '{print$2}'`
@@ -49,12 +47,12 @@ do
         --chunked-prefill-size 16384 --max-prefill-tokens 131072 \
         --trust-remote-code \
         --host 127.0.0.1 \
-        --mem-fraction-static 0.8\
+        --mem-fraction-static 0.8 \
         --port 8000 \
         --served-model-name glm-5 \
         --cuda-graph-max-bs 16 \
         --disable-radix-cache
-        NODE_RANK=$i
+        export NODE_RANK=$i
         break
     fi
 done
