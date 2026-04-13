@@ -3,7 +3,7 @@ export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 export STREAMS_PER_DEVICE=32
 
 #memfabric config store
-export ASCEND_MF_STORE_URL="tcp://<PREFILL_HOST_IP>:<PORT>"
+export ASCEND_MF_STORE_URL="tcp://172.22.3.154:6688"
 
 #Deepep communication settings
 export DEEP_NORMAL_MODE_USE_INT8_QUANT=1
