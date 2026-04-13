@@ -26,7 +26,7 @@ export HCCL_SOCKET_IFNAME=lo
 export GLOO_SOCKET_IFNAME=lo
 
 python3 -m sglang.launch_server \
-        --model-path /home/weights/GLM-5-w4a8 \
+        --model-path /data/ascend-ci-share-pkking-sglang/modelscope/hub/models/Eco-Tech/GLM-5-w4a8 \
         --attention-backend ascend \
         --device npu \
         --tp-size 16 --nnodes 1 --node-rank 0 \
