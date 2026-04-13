@@ -28,3 +28,7 @@ pip install numpy -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirr
 pip install git+https://github.com/huggingface/transformers.git
 
 https://gh-proxy.org/https://github.com/huggingface/transformers.git
+
+
+docker pull swr.cn-southwest-2.myhuaweicloud.com/base_image/dockerhub/lmsysorg/sglang:cann8.5.0-a3-glm5
+
