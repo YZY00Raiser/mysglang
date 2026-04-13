@@ -2,7 +2,7 @@ export MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/Deep
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 export STREAMS_PER_DEVICE=32
 export PREFILL_HOST_IP=172.22.3.154
-export PORT=8000
+export PORT=8003
 export DECODE_HOST_IP=172.22.3.71
 #memfabric config store
 #export ASCEND_MF_STORE_URL="tcp://<PREFILL_HOST_IP>:<PORT>"
