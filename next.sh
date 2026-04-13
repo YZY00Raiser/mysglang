@@ -9,9 +9,9 @@ unset http_proxy
 unset HTTPS_PROXY
 unset HTTP_PROXY
 unset ASCEND_LAUNCH_BLOCKING
-source /usr/local/Ascend/ascend-toolkit/set_env.sh
-source /usr/local/Ascend/nnal/atb/set_env.sh
-source /home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend/bin/set_env.bash
+#source /usr/local/Ascend/ascend-toolkit/set_env.sh
+#source /usr/local/Ascend/nnal/atb/set_env.sh
+#source /home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend/bin/set_env.bash
 # export ASCEND_CUSTOM_OPP_PATH=/home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend:${ASCEND_CUSTOM_OPP_PATH}
 # export LD_LIBRARY_PATH=/home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend/op_api/lib/:${LD_LIBRARY_PATH}
 # export SGLANG_SCHEDULER_DECREASE_PREFILL_IDLE=1
