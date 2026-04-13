@@ -11,11 +11,11 @@ export PATH=/usr/local/Ascend/8.5.0/compiler/bishengir/bin:$PATH
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 export STREAMS_PER_DEVICE=32
 
-export ASCEND_MF_STORE_URL="tcp://your prefill ip1:24669"
+export ASCEND_MF_STORE_URL="tcp://172.22.3.154:24669"
 
-P_IP=('your prefill ip1' 'your prefill ip2')
+P_IP=('172.22.3.154' '172.22.3.181')
 
-D_IP=('your decode ip1' 'your decode ip2')
+D_IP=('172.22.3.71' '172.22.3.166')
 
 MODEL_PATH=xxx
 
