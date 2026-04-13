@@ -1,4 +1,5 @@
 echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+export MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8 # 设置模型路径
 sysctl -w vm.swappiness=0
 sysctl -w kernel.numa_balancing=0
 sysctl -w kernel.sched_migration_cost_ns=50000
