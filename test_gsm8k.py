@@ -9,7 +9,7 @@ def gsm8k():
         max_new_tokens=512,
         parallel=32,
         host=f"http://127.0.0.1",
-        port=30000,
+        port=6688,
     )
     metrics = run_eval(args)
     print(f"{metrics=}")
