@@ -1,4 +1,4 @@
-export MODEL_PATH=/data/models/Qwen2.5-72B-Instruct  # 设置模型路径
+export MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/DeepSeek-R1-0528-w4a8-per-channel  # 设置模型路径
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 export STREAMS_PER_DEVICE=32
 
