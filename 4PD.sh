@@ -18,7 +18,7 @@ P_IP=('172.22.3.154' '172.22.3.181')
 D_IP=('172.22.3.71' '172.22.3.166')
 
 
-MODEL_PATH=xxx
+MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8 # 设置模型路径
 
 export SGLANG_NPU_USE_MLAPO=1
 export SGLANG_USE_FIA_NZ=1
