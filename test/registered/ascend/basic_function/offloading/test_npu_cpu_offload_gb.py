@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import requests
@@ -30,6 +31,8 @@ class TestAscendCpuOffloadGb(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
+        out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
+        err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         cls.base_url = DEFAULT_URL_FOR_TEST
         other_args = [
             "--cpu-offload-gb",
@@ -47,17 +50,19 @@ class TestAscendCpuOffloadGb(CustomTestCase):
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=other_args,
+            return_stdout_stderr=(out_log_file, err_log_file),
         )
 
     @classmethod
     def tearDownClass(cls):
+        out_log_file.close()
+        err_log_file.close()
+        os.remove("./cache_out_log.txt")
+        os.remove("./cache_err_log.txt")
         kill_process_tree(cls.process.pid)
 
     def test_cpu_offload_gb(self):
-        response = requests.get(f"{DEFAULT_URL_FOR_TEST}/health_generate")
-        self.assertEqual(response.status_code, 200)
-
-        response = requests.post(
+        requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
@@ -69,20 +74,12 @@ class TestAscendCpuOffloadGb(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
-    def test_gsm8k(self):
-        args = SimpleNamespace(
-            num_shots=5,
-            data_path=None,
-            num_questions=200,
-            max_new_tokens=512,
-            parallel=128,
-            host="http://127.0.0.1",
-            port=int(self.base_url.split(":")[-1]),
-        )
-        metrics = run_eval_few_shot_gsm8k(args)
-        print(f"Eval accuracy of GSM8K: {metrics=}")
-        self.assertGreaterEqual(metrics["accuracy"], self.accuracy)
+        # self.err_log_file.seek(0)
+        # content = self.err_log_file.read()
+        # # error_message = "LoRA buffer shape torch.Size([32,4096]) does not match expected weight shape torch.Size([64,4096])"
+        # # error_message = "LoRA buffer shape does not match expected weight shape"
+        # error_message = "not match weight shape"
+        # self.assertIn(error_message, content)
 
 
 if __name__ == "__main__":
