@@ -84,8 +84,8 @@ python3 -m sglang.launch_server --model-path ${MODEL_PATH} \--page-size 128 \
     --disable-radix-cache --max-prefill-tokens 14080 --context-length 26384 \
     --dp-size 2 --enable-dp-attention --enable-dp-lm-head \
     --speculative-algorithm NEXTN --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4  --speculative-draft-model-quantization  unquant \
-    --chunked-prefill-size -1 --max-running-requests 312 \
-    --cuda-graph-bs 2 4 16 32 48 64 80 96 128 140 156 \
+    --chunked-prefill-size -1 --max-running-requests 280 \
+    --cuda-graph-bs 2 4 16 32 48 64 80 96 128 140 \
     --mamba-ssm-dtype bfloat16 \
     --base-gpu-id 0 \
     --speculative-draft-model-path /home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct \
