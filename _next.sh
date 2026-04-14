@@ -89,6 +89,6 @@ python3 -m sglang.launch_server --model-path ${MODEL_PATH} \--page-size 128 \
     --cuda-graph-bs 2 4 16 32 48 64 80 96 128 140 156 \
     --mamba-ssm-dtype bfloat16 \
     --base-gpu-id 0 \
-    --speculative-draft-model-path /data/ascend-ci-share-pkking-sglang/modelscope/hub/models/Qwen3-Next-80B-A3B-Instruct \
+    --speculative-draft-model-path ${MODEL_PATH} \
     --quantization modelslim \
     --moe-a2a-backend deepep --deepep-mode auto \
