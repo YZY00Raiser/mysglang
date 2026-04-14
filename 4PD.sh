@@ -11,11 +11,11 @@ export PATH=/usr/local/Ascend/8.5.0/compiler/bishengir/bin:$PATH
 export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
 export STREAMS_PER_DEVICE=32
 
-export ASCEND_MF_STORE_URL="tcp://172.22.3.181:24669"
+export ASCEND_MF_STORE_URL="tcp://172.22.3.71:24669"
 
-P_IP=('172.22.3.181' '172.22.3.154')
+P_IP=('172.22.3.71' '172.22.3.154')
 
-D_IP=('172.22.3.71' '172.22.3.166')
+D_IP=('172.22.3.181' '172.22.3.166')
 
 
 #MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8 # 设置模型路径
