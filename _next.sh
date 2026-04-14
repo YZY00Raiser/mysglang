@@ -43,7 +43,7 @@ export TASK_QUEUE_ENABLE=1
 
 export ASCEND_USE_FIA=1
 # export TRITON_ALL_BLOCKS_PARALLEL=1  # 影响精度
-export SGLANG_NPU_USE_MULTI_STREAM=0  # dp conflict
+export SGLANG_NPU_USE_MULTI_STREAM=1  # dp conflict
 # export ENABLE_ASCEND_MOE_NZ=1
 export ENABLE_PROFILING=0
 
