@@ -87,7 +87,7 @@ python3 -m sglang.launch_server --model-path ${MODEL_PATH} \--page-size 128 \
     --chunked-prefill-size -1 --max-running-requests 280 \
     --cuda-graph-bs 2 4 16 32 48 64 80 96 128 140 \
     --mamba-ssm-dtype bfloat16 \
-    --base-gpu-id 0 \
+    --base-gpu-id 12 \
     --speculative-draft-model-path /home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct \
     --quantization modelslim \
     --moe-a2a-backend deepep --deepep-mode auto \
