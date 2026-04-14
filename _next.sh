@@ -47,8 +47,8 @@ export SGLANG_NPU_USE_MULTI_STREAM=0  # dp conflict
 # export ENABLE_ASCEND_MOE_NZ=1
 export ENABLE_PROFILING=0
 
-MODEL_PATH=/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct-W8A8
-# MODEL_PATH=/home/weights/Qwen3-Coder-Next_W8A8
+#MODEL_PATH=/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct-W8A8
+MODEL_PATH=/home/weights/Qwen3-Coder-Next_W8A8
 # MODEL_PATH=/home/weights/Qwen3-Coder-Next
 # MODEL_PATH=/home/weights/Qwen3-Next-80B-A3B-Instruct
 
