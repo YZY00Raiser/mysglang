@@ -19,7 +19,9 @@ D_IP=('172.22.3.181' '172.22.3.166')
 
 
 #MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-R1-0528-W8A8 # 设置模型路径
-export MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-R1-W8A8 # 设置模型路径
+#MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-R1-W8A8 # 设置模型路径
+MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-V3.2-W8A8 # 设置模型路径
+#MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/vllm-ascend/DeepSeek-V3.2-Exp-W8A8 # 设置模型路径
 
 export SGLANG_NPU_USE_MLAPO=1
 export SGLANG_USE_FIA_NZ=1
