@@ -1,0 +1,93 @@
+echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+sysctl -w vm.swappiness=0
+sysctl -w kernel.numa_balancing=0
+sysctl -w kernel.sched_migration_cost_ns=50000
+# 绑核
+export SGLANG_SET_CPU_AFFINITY=1
+unset https_proxy
+unset http_proxy
+unset HTTPS_PROXY
+unset HTTP_PROXY
+unset ASCEND_LAUNCH_BLOCKING
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
+source /usr/local/Ascend/nnal/atb/set_env.sh
+source /home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend/bin/set_env.bash
+# export ASCEND_CUSTOM_OPP_PATH=/home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend:${ASCEND_CUSTOM_OPP_PATH}
+# export LD_LIBRARY_PATH=/home/rjw/vllm-ascend/vllm_ascend/_cann_ops_custom/vendors/vllm-ascend/op_api/lib/:${LD_LIBRARY_PATH}
+# export SGLANG_SCHEDULER_DECREASE_PREFILL_IDLE=1
+# export SGLANG_PREFILL_DELAYER_MAX_DELAY_PASSES=200
+# 内存碎片
+export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
+export STREAMS_PER_DEVICE=32
+# 网卡
+export HCCL_SOCKET_IFNAME=lo
+export GLOO_SOCKET_IFNAME=lo
+# 通信buffer
+# export SGLANG_DEEPEP_BF16_DISPATCH=1
+export DEEP_NORMAL_MODE_USE_INT8_QUANT=1
+export SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK=330    # 16
+# export SGLANG_DEEPEP_NUM_MAX_DISPATCH_TOKENS_PER_RANK=320000
+# export SGLANG_NPU_FUSED_MOE_MODE=2
+# export HCCL_BUFFSIZE=2000  # 2000
+
+export DEEPEP_NORMAL_LONG_SEQ_ROUND=5
+export DEEPEP_NORMAL_LONG_SEQ_PER_ROUND_TOKENS=3000
+export DEEPEP_NORMAL_COMBINE_ENABLE_LONG_SEQ=1
+
+#--------------------------------------------------------------------
+export HCCL_OP_EXPANSION_MODE=AIV
+# export HCCL_OP_EXPANSION_MODE=HOST
+# export HCCL_DETERMINISTIC=true
+# export CLOSE_MATMUL_K_SHIFT=1
+export TASK_QUEUE_ENABLE=1
+
+export ASCEND_USE_FIA=1
+# export TRITON_ALL_BLOCKS_PARALLEL=1  # 影响精度
+export SGLANG_NPU_USE_MULTI_STREAM=0  # dp conflict
+# export ENABLE_ASCEND_MOE_NZ=1
+export ENABLE_PROFILING=0
+
+#MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/Qwen3-Next-80B-A3B-Instruct
+# MODEL_PATH=/home/weights/Qwen3-Coder-Next_W8A8
+# MODEL_PATH=/home/weights/Qwen3-Coder-Next
+MODEL_PATH=/home/weights/Qwen3-Next-80B-A3B-Instruct
+
+# export ASCEND_LAUNCH_BLOCKING=1
+# export INF_NAN_MODE_FORCE_DISABLE=1
+
+export SGLANG_WARMUP_TIMEOUT=3600
+export SGLANG_ENABLE_SPEC_V2=1
+export SGLANG_ENABLE_OVERLAP_PLAN_STREAM=1export FORCE_DRAFT_MODEL_NON_QUANT=1
+
+# zbccl
+export HCCL_BUFFSIZE=2000
+unset PYTORCH_NPU_ALLOC_CONF
+export ZBCCL_LOCAL_MEM_SIZE=60416
+export SGLANG_ENABLE_TP_MEMORY_INBALANCE_CHECK=0
+export ZBCCL_BOOTSTRAP_URL="tcp://127.0.0.1:24669"
+
+# zbccl if use mix alloc
+export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
+export ZBCCL_NPU_ALLOC_CONF=use_vmm_for_static_memory:True
+
+# zbccl if support graph（need custom pta）
+export ZBCCL_ENABLE_GRAPH=1
+
+python3 -m sglang.launch_server --model-path ${MODEL_PATH} \--page-size 128 \
+    --tp-size 4 \
+    --trust-remote-code \
+    --attention-backend ascend \
+    --device npu \
+    --watchdog-timeout 9000 \
+    --host 127.0.0.1 --port 6699 \
+    --mem-fraction-static 0.75 \
+    --disable-radix-cache --max-prefill-tokens 14080 --context-length 26384 \
+    --dp-size 2 --enable-dp-attention --enable-dp-lm-head \
+    --speculative-algorithm NEXTN --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4  --speculative-draft-model-quantization  unquant \
+    --chunked-prefill-size -1 --max-running-requests 312 \
+    --cuda-graph-bs 2 4 16 32 48 64 80 96 128 140 156 \
+    --mamba-ssm-dtype bfloat16 \
+    --base-gpu-id 0 \
+    --speculative-draft-model-path /data/ascend-ci-share-pkking-sglang/modelscope/hub/models/Qwen3-Next-80B-A3B-Instruct \
+    --quantization modelslim \
+    --moe-a2a-backend deepep --deepep-mode auto \
