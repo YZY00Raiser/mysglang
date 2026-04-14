@@ -50,7 +50,8 @@ export ENABLE_PROFILING=0
 #MODEL_PATH=/data/ascend-ci-share-pkking-sglang/modelscope/hub/models/Qwen3-Next-80B-A3B-Instruct
 # MODEL_PATH=/home/weights/Qwen3-Coder-Next_W8A8
 # MODEL_PATH=/home/weights/Qwen3-Coder-Next
-MODEL_PATH=/home/weights/Qwen3-Next-80B-A3B-Instruct
+#MODEL_PATH=/home/weights/Qwen3-Next-80B-A3B-Instruct
+MODEL_PATH=/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct
 
 # export ASCEND_LAUNCH_BLOCKING=1
 # export INF_NAN_MODE_FORCE_DISABLE=1
