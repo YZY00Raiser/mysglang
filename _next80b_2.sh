@@ -1,1 +1,1 @@
-python -m sglang.bench_serving --dataset-name random --backend sglang --host 127.0.0.1 --port 8000 --max-concurrency 9 --random-input-len 64000 --random-output-len 1000 --num-prompts 36 --random-range-ratio 1 --dataset-path /home/y30082119/ShareGPT_V3_unfiltered_cleaned_split.json
+python -m sglang.bench_serving --dataset-name random --backend sglang --host 127.0.0.1 --port 6699 --max-concurrency 16 --random-input-len 3500 --random-output-len 1500 --num-prompts 64 --random-range-ratio 1 --dataset-path /home/y30082119/ShareGPT_V3_unfiltered_cleaned_split.json
