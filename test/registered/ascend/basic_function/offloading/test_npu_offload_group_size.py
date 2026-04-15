@@ -71,7 +71,7 @@ class TestOffloadGroupSize(CustomTestCase):
         if self.process:
             kill_process_tree(self.process.pid)
 
-class TestOffload(CustomTestCase):
+class TestOffload1(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
 
@@ -129,7 +129,7 @@ class TestOffload(CustomTestCase):
         if self.process:
             kill_process_tree(self.process.pid)
 
-class TestOffload(CustomTestCase):
+class TestOffload2(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
 
