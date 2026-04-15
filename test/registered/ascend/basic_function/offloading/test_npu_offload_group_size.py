@@ -83,7 +83,7 @@ class TestOffload1(CustomTestCase):
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
 
     [Test Category] Parameter
-    [Test Target] --cpu-offload-gb
+    [Test Target] --offload-mode
     """
 
     def test_max_loaded_loras_error(self):
