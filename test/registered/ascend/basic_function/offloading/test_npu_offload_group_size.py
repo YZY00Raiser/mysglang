@@ -128,7 +128,8 @@ class TestOffload1(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertNotIn("France", response.text)
-
+        print("--------------response.text----------------------")
+        print(response.text)
         err_log_file.seek(0)
         content = err_log_file.read()
         offload_message = "[offloader]"
@@ -141,7 +142,9 @@ class TestOffload1(CustomTestCase):
         kill_process_tree(self.process.pid)
 
 
-'''
+
+
+
 class TestOffload2(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
@@ -201,7 +204,6 @@ class TestOffload2(CustomTestCase):
         os.remove("./cache_err_log.txt")
 
         kill_process_tree(self.process.pid)
-'''
 
 if __name__ == "__main__":
     unittest.main()
