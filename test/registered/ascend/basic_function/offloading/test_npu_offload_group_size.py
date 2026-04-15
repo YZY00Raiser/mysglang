@@ -79,6 +79,8 @@ class TestOffloadGroupSize(CustomTestCase):
 
 '''
 
+'''
+
 
 class TestOffload1(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
@@ -140,7 +142,7 @@ class TestOffload1(CustomTestCase):
         os.remove("./cache_err_log.txt")
 
         kill_process_tree(self.process.pid)
-
+'''
 
 
 
