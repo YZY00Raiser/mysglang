@@ -1,10 +1,12 @@
 import unittest
+from types import SimpleNamespace
 
 import requests
 
 from sglang.srt.utils import kill_process_tree
 # from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
+from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
@@ -63,6 +65,19 @@ class TestNpuCpuOffloadGb(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
+
+        args = SimpleNamespace(
+            max_new_tokens=512,
+            base_url=DEFAULT_URL_FOR_TEST,
+            model=self.model,
+            eval_name="gsm8k",
+            api="completion",
+            num_examples=200,
+            num_threads=128,
+            num_shots=5,
+        )
+        metrics = run_eval(args)
+        self.assertGreater(metrics["score"], 0.86)
 
 
 if __name__ == "__main__":
