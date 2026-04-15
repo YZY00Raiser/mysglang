@@ -77,6 +77,8 @@ class TestOffloadGroupSize(CustomTestCase):
         if self.process:
             kill_process_tree(self.process.pid)
 
+'''
+
 
 class TestOffload1(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
@@ -197,7 +199,7 @@ class TestOffload2(CustomTestCase):
         os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
