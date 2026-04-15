@@ -18,9 +18,9 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
-# DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-V2-Lite-W8A8"
+DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-V2-Lite-W8A8"
 
-DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH="/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+# DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH="/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 class TestOffloadGroupSize(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
@@ -64,22 +64,16 @@ class TestOffloadGroupSize(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        # err_log_file.seek(0)
-        # content = err_log_file.read()
-        # offload_message = "[offloader]"
-        # self.assertIn(offload_message, content)
+        err_log_file.seek(0)
+        content = err_log_file.read()
+        offload_message = "[offloader]"
+        self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
-        # os.remove("./cache_out_log.txt")
-        # os.remove("./cache_err_log.txt")
+        os.remove("./cache_out_log.txt")
+        os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
-
-
-'''
-
-
-
 class TestOffload1(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
@@ -127,15 +121,15 @@ class TestOffload1(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-        # err_log_file.seek(0)
-        # content = err_log_file.read()
-        # offload_message = "not match weight shape"
-        # self.assertIn(offload_message, content)
+        self.assertIn("France", response.text)
+        err_log_file.seek(0)
+        content = err_log_file.read()
+        offload_message = "not match weight shape"
+        self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
-        # os.remove("./cache_out_log.txt")
-        # os.remove("./cache_err_log.txt")
+        os.remove("./cache_out_log.txt")
+        os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
 
@@ -189,17 +183,16 @@ class TestOffload2(CustomTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
 
-        # err_log_file.seek(0)
-        # content = err_log_file.read()
-        # offload_message = "post_init nbytes"
-        # self.assertIn(offload_message, content)
+        err_log_file.seek(0)
+        content = err_log_file.read()
+        offload_message = "post_init nbytes"
+        self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
-        # os.remove("./cache_out_log.txt")
-        # os.remove("./cache_err_log.txt")
+        os.remove("./cache_out_log.txt")
+        os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
-'''
 
 if __name__ == "__main__":
     unittest.main()
