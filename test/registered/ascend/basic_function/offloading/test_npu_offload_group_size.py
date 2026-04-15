@@ -39,7 +39,7 @@ class TestOffloadGroupSize(CustomTestCase):
             "--offload-group-size",
             "-1",
             "--base-gpu-id",
-            "12",
+            "14",
         ]
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
@@ -102,7 +102,7 @@ class TestOffload1(CustomTestCase):
             "--offload-mode",
             "meta",
             "--base-gpu-id",
-            "12",
+            "14",
         ]
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
@@ -162,7 +162,7 @@ class TestOffload2(CustomTestCase):
             "--offload-mode",
             "sharded_gpu",
             "--base-gpu-id",
-            "12",
+            "14",
         ]
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
