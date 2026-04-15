@@ -127,7 +127,8 @@ class TestOffload1(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertNoIn("France", response.text)
+        self.assertNotIn("France", response.text)
+
         err_log_file.seek(0)
         content = err_log_file.read()
         offload_message = "[offloader]"
