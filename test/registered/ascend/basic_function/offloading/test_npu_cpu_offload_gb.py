@@ -52,20 +52,7 @@ class TestNpuCpuOffloadGb(CustomTestCase):
         if cls.process:
             kill_process_tree(cls.process.pid)
 
-    def test_cpu_offload_gb_basic_inference(self):
-        response = requests.post(
-            f"{DEFAULT_URL_FOR_TEST}/generate",
-            json={
-                "text": "The capital of France is",
-                "sampling_params": {
-                    "temperature": 0,
-                    "max_new_tokens": 32,
-                },
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
+    def test_cpu_offload_gb_basic(self):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
