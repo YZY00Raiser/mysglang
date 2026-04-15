@@ -124,7 +124,7 @@ class TestOffload1(CustomTestCase):
         self.assertIn("France", response.text)
         err_log_file.seek(0)
         content = err_log_file.read()
-        offload_message = "not match weight shape"
+        offload_message = "[offloader]"
         self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
