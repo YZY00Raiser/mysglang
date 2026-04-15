@@ -16,7 +16,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-V2-Lite-W8A8"
 
@@ -35,7 +35,7 @@ class TestOffloadGroupSize(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--tp-size",
-            1,
+            2,
             "--offload-group-size",
             "2",
             "--base-gpu-id",
