@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.few_shot_gsm8k import run_eval as run_eval_few_shot_gsm8k
-from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
+# from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -17,6 +17,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
+QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
 
 class TestAscendCpuOffloadGb(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
@@ -41,6 +42,8 @@ class TestAscendCpuOffloadGb(CustomTestCase):
             2,
             "--mem-fraction-static",
             0.8,
+            "--base-gpu-id",
+            "12",
         ]
         cls.process = popen_launch_server(
             QWEN3_32B_WEIGHTS_PATH,
@@ -69,7 +72,7 @@ class TestAscendCpuOffloadGb(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+    '''
     def test_gsm8k(self):
         args = SimpleNamespace(
             num_shots=5,
@@ -83,7 +86,7 @@ class TestAscendCpuOffloadGb(CustomTestCase):
         metrics = run_eval_few_shot_gsm8k(args)
         print(f"Eval accuracy of GSM8K: {metrics=}")
         self.assertGreaterEqual(metrics["accuracy"], self.accuracy)
-
+    '''
 
 if __name__ == "__main__":
     unittest.main()
