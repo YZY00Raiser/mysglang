@@ -14,7 +14,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-32B"
 
@@ -38,6 +38,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             2,
             "--mem-fraction-static",
             0.8,
+            "--base-gpu-id",
+            "12",
         ]
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
@@ -49,7 +51,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
             other_args=other_args,
             return_stdout_stderr=(out_log_file, err_log_file),
         )
-        requests.post(
+
+        response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
@@ -59,7 +62,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
                 },
             },
         )
-
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
         # err_log_file.seek(0)
         # content = err_log_file.read()
         # error_message = "not match weight shape"
