@@ -51,7 +51,7 @@ class TestOffloadGroupSize(CustomTestCase):
             other_args=other_args,
             return_stdout_stderr=(out_log_file, err_log_file),
         )
-        requests.post(
+        response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
@@ -61,6 +61,8 @@ class TestOffloadGroupSize(CustomTestCase):
                 },
             },
         )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
 
         # err_log_file.seek(0)
         # content = err_log_file.read()
@@ -174,7 +176,7 @@ class TestOffload2(CustomTestCase):
             other_args=other_args,
             return_stdout_stderr=(out_log_file, err_log_file),
         )
-        requests.post(
+        response = requests.post(
             f"{DEFAULT_URL_FOR_TEST}/generate",
             json={
                 "text": "The capital of France is",
@@ -184,6 +186,8 @@ class TestOffload2(CustomTestCase):
                 },
             },
         )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
 
         # err_log_file.seek(0)
         # content = err_log_file.read()
