@@ -97,7 +97,7 @@ class TestOffload1(CustomTestCase):
             "4",
             "--offload-num-in-group",
             "2",
-            "--offload-prefetch-step"
+            "--offload-prefetch-step",
             "2",
             "--offload-mode",
             "meta",
