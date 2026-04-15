@@ -68,8 +68,8 @@ class TestLoraMaxLoraRankErr(CustomTestCase):
         # content = err_log_file.read()
         # error_message = "not match weight shape"
         # self.assertIn(error_message, content)
-        # out_log_file.close()
-        # err_log_file.close()
+        out_log_file.close()
+        err_log_file.close()
         # os.remove("./cache_out_log.txt")
         # os.remove("./cache_err_log.txt")
         if self.process:
