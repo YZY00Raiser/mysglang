@@ -69,7 +69,7 @@ class TestNpuCpuOffloadGb(CustomTestCase):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
-            model=self.model,
+            model=QWEN3_32B_WEIGHTS_PATH,
             eval_name="gsm8k",
             api="completion",
             num_examples=200,
