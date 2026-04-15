@@ -18,8 +18,7 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
 class TestNpuCpuOffloadGb(CustomTestCase):
-    """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
-    and the inference accuracy using the GSM8K dataset is no less than 0.86.
+    """Testcase: Tests --cpu-offload-gb parameter, inference accuracy using the GSM8K dataset is no less than 0.86.
 
     [Test Category] Parameter
     [Test Target] --cpu-offload-gb
