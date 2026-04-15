@@ -66,8 +66,8 @@ class TestOffloadGroupSize(CustomTestCase):
 
         # err_log_file.seek(0)
         # content = err_log_file.read()
-        # error_message = "not match weight shape"
-        # self.assertIn(error_message, content)
+        # offload_message = "[offloader]"
+        # self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
         # os.remove("./cache_out_log.txt")
@@ -130,8 +130,8 @@ class TestOffload1(CustomTestCase):
         self.assertIn("Paris", response.text)
         # err_log_file.seek(0)
         # content = err_log_file.read()
-        # error_message = "not match weight shape"
-        # self.assertIn(error_message, content)
+        # offload_message = "not match weight shape"
+        # self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
         # os.remove("./cache_out_log.txt")
@@ -191,8 +191,8 @@ class TestOffload2(CustomTestCase):
 
         # err_log_file.seek(0)
         # content = err_log_file.read()
-        # error_message = "not match weight shape"
-        # self.assertIn(error_message, content)
+        # offload_message = "post_init nbytes"
+        # self.assertIn(offload_message, content)
         out_log_file.close()
         err_log_file.close()
         # os.remove("./cache_out_log.txt")
