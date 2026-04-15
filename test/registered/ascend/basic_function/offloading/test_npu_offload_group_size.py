@@ -74,8 +74,8 @@ class TestOffloadGroupSize(CustomTestCase):
         err_log_file.close()
         os.remove("./cache_out_log.txt")
         os.remove("./cache_err_log.txt")
-        if self.process:
-            kill_process_tree(self.process.pid)
+
+        kill_process_tree(self.process.pid)
 
 '''
 
@@ -136,8 +136,8 @@ class TestOffload1(CustomTestCase):
         err_log_file.close()
         os.remove("./cache_out_log.txt")
         os.remove("./cache_err_log.txt")
-        if self.process:
-            kill_process_tree(self.process.pid)
+
+        kill_process_tree(self.process.pid)
 
 
 class TestOffload2(CustomTestCase):
@@ -197,8 +197,8 @@ class TestOffload2(CustomTestCase):
         err_log_file.close()
         os.remove("./cache_out_log.txt")
         os.remove("./cache_err_log.txt")
-        if self.process:
-            kill_process_tree(self.process.pid)
+
+        kill_process_tree(self.process.pid)
 '''
 
 if __name__ == "__main__":
