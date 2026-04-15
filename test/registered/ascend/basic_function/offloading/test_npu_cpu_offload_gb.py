@@ -36,8 +36,6 @@ class TestNpuCpuOffloadGb(CustomTestCase):
             2,
             "--mem-fraction-static",
             0.8,
-            "--base-gpu-id",
-            "12",
         ]
         cls.process = popen_launch_server(
             QWEN3_32B_WEIGHTS_PATH,
