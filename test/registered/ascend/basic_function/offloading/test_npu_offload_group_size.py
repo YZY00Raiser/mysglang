@@ -181,7 +181,7 @@ class TestOffload2(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        self.assertIn("France", response.text)
 
         err_log_file.seek(0)
         content = err_log_file.read()
