@@ -37,7 +37,7 @@ class TestOffloadGroupSize(CustomTestCase):
             "--tp-size",
             1,
             "--offload-group-size",
-            "-1",
+            "2",
             "--base-gpu-id",
             "14",
         ]
