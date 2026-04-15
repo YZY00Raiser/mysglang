@@ -16,9 +16,11 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
-QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
+QWEN3_32B_WEIGHTS_PATH = "/home/weights/Qwen/Qwen3-32B"
+
+
 class TestNpuCpuOffloadGb(CustomTestCase):
-    """Testcase: Tests --cpu-offload-gb parameter, inference accuracy using the GSM8K dataset is no less than 0.86.
+    """Testcase: Tests --cpu-offload-gb Parameter, inference accuracy using the GSM8K dataset is no less than 0.86.
 
     [Test Category] Parameter
     [Test Target] --cpu-offload-gb
@@ -36,6 +38,8 @@ class TestNpuCpuOffloadGb(CustomTestCase):
             2,
             "--mem-fraction-static",
             0.8,
+            "--base-gpu-id",
+            "12",
         ]
         cls.process = popen_launch_server(
             QWEN3_32B_WEIGHTS_PATH,
@@ -50,6 +54,19 @@ class TestNpuCpuOffloadGb(CustomTestCase):
             kill_process_tree(cls.process.pid)
 
     def test_cpu_offload_gb_basic(self):
+        response = requests.post(
+            f"{DEFAULT_URL_FOR_TEST}/generate",
+            json={
+                "text": "The capital of France is",
+                "sampling_params": {
+                    "temperature": 0,
+                    "max_new_tokens": 32,
+                },
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,
