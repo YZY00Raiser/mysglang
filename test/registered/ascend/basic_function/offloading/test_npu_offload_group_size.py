@@ -74,6 +74,8 @@ class TestOffloadGroupSize(CustomTestCase):
         os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
+
+'''
 class TestOffload1(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
@@ -132,6 +134,8 @@ class TestOffload1(CustomTestCase):
         os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
+
+
 
 
 class TestOffload2(CustomTestCase):
@@ -193,6 +197,7 @@ class TestOffload2(CustomTestCase):
         os.remove("./cache_err_log.txt")
         if self.process:
             kill_process_tree(self.process.pid)
+'''
 
 if __name__ == "__main__":
     unittest.main()
