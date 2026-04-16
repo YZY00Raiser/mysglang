@@ -32,3 +32,4 @@ https://gh-proxy.org/https://github.com/huggingface/transformers.git
 
 docker pull swr.cn-southwest-2.myhuaweicloud.com/base_image/dockerhub/lmsysorg/sglang:cann8.5.0-a3-glm5
 
+详细解释每个文件的测试内容以及目的，并对比以test_npu开头的文件，分析test_npu开头的文件是否覆盖其测试内容
