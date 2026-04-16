@@ -162,7 +162,7 @@ class TestOffload1(CustomTestCase):
             "--tp-size",
             1,
             "--dp",
-            "1",
+            "2",
             "--offload-group-size",
             "4",
             "--offload-num-in-group",
