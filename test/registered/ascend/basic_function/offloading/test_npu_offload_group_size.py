@@ -26,7 +26,7 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/mnt/nfs_share/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
-'''
+
 class TestOffloadGroupSize(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
@@ -82,7 +82,7 @@ class TestOffloadGroupSize(CustomTestCase):
         kill_process_tree(self.process.pid)
 
 
-
+'''
 class TestOffload1(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
     and the ingerence accuracy using the GSM8K dataset is no less than 0.86.
