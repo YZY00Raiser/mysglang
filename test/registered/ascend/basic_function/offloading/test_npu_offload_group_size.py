@@ -132,7 +132,7 @@ class TestOffload1(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn("France", response.text)
+        self.assertNotIn("Paris", response.text)
         print("--------------response.text----------------------")
         print(response.text)
         err_log_file.seek(0)
@@ -198,7 +198,7 @@ class TestOffload1(CustomTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn("France", response.text)
+        self.assertIn("Paris", response.text)
         print("--------------response.text----------------------")
         print(response.text)
         err_log_file.seek(0)
