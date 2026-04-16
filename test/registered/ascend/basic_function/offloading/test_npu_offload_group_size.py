@@ -172,7 +172,7 @@ class TestOffload1(CustomTestCase):
             "--offload-mode",
             "sharded_gpu",
             "--base-gpu-id",
-            "14",
+            "1",
         ]
 
         out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
