@@ -1,0 +1,69 @@
+#pkill -9 python3
+#pkill -9 python
+#pkill -9 sglang
+# cpu高性能
+#echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+#sysctl -w vm.swappiness=0
+#sysctl -w kernel.numa_balancing=0
+#sysctl -w kernel.sched_migration_cost_ns=50000
+# 绑核
+#export SGLANG_SET_CPU_AFFINITY=1
+
+export PYTHONPATH=xxx:$PYTHONPATH
+
+unset https_proxy
+unset http_proxy
+unset HTTPS_PROXY
+unset HTTP_PROXY
+unset ASCEND_LAUNCH_BLOCKING
+
+source xxx/set_env.sh
+source xxx/set_env.sh
+# 内存碎片
+export PYTORCH_NPU_ALLOC_CONF=expandable_segments:True
+export STREAMS_PER_DEVICE=32
+# 网卡
+export HCCL_SOCKET_IFNAME=lo
+export GLOO_SOCKET_IFNAME=lo
+
+export HCCL_OP_EXPANSION_MODE=AIV
+export TASK_QUEUE_ENABLE=1
+#export HCCL_BUFFSIZE=1200
+#export ENABLE_PROFILING=1
+
+export SGLANG_DEEPEP_BF16_DISPATCH=1
+export ASCEND_RT_VISIBLE_DEVICES=4,5,6,7
+#unset ASCEND_RT_VISIBLE_DEVICES
+
+python -m sglang.launch_server \
+    --model-path /data/atb_testdata/weights/Qwen2.5-VL-7B-Instruct \
+    --host 0.0.0.0 \
+    --port 22001 \
+    --tp 2 \
+    --max-prefill-tokens 40960 \
+    --chunked-prefill-size 40960 \
+    --attention-backend ascend \
+    --mem-fraction-static 0.8 \
+    --mm-attention-backend ascend_attn \
+    --max-running-requests 200 \
+    --cuda-graph-bs 40 60 80 120 160 200 \
+    --disable-radix-cache \
+    --trust-remote-code \
+    --enable-multimodal \
+    --sampling-backend ascend
+
+#    --moe-a2a-backend deepep --deepep-mode auto
+
+
+#45056
+#--enable-multimodal \
+#--max-running-requests 80 \
+#--cuda-graph-bs 4 8 16 24 32 40 60 64 72 80 \
+#--enable-broadcast-mm-inputs-process \
+#--tokenizer-worker-num 8 \
+#--skip-server-warmup \
+#--cuda-graph-max-bs 256 \
+
+
+#    --enable-piecewise-cuda-graph \
+#    --piecewise-cuda-graph-tokens "[256, 512, 1024, 1536, 2048, 3072, 4096]"
