@@ -26,6 +26,8 @@ DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instr
 
 # DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/mnt/nfs_share/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
+'''
+
 
 class TestOffloadGroupSize(CustomTestCase):
     """Testcase: Tests core functionality with --cpu-offload-gb configuration, inference requests successful.
@@ -80,7 +82,7 @@ class TestOffloadGroupSize(CustomTestCase):
         os.remove("./cache_err_log.txt")
 
         kill_process_tree(self.process.pid)
-
+'''
 
 '''
 class TestOffload1(CustomTestCase):
@@ -145,7 +147,6 @@ class TestOffload1(CustomTestCase):
         kill_process_tree(self.process.pid)
 '''
 
-'''
 
 
 class TestOffload1(CustomTestCase):
@@ -210,7 +211,6 @@ class TestOffload1(CustomTestCase):
         os.remove("./cache_err_log.txt")
 
         kill_process_tree(self.process.pid)
-'''
 
 if __name__ == "__main__":
     unittest.main()
