@@ -156,7 +156,7 @@ class TestOffload1(CustomTestCase):
             "ascend",
             "--disable-cuda-graph",
             "--tp-size",
-            1,
+            2,
             "--offload-group-size",
             "4",
             "--offload-num-in-group",
