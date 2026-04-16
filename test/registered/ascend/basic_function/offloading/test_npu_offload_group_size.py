@@ -157,7 +157,7 @@ class TestOffload1(CustomTestCase):
             "--disable-cuda-graph",
             "--tp-size",
             1,
-            "dp",
+            "--dp",
             "1",
             "--offload-group-size",
             "4",
