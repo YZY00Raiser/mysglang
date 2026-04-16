@@ -20,7 +20,11 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 # DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-V2-Lite-W8A8"
 
-DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+# DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+
+# DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
+
+DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/mnt/nfs_share/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 '''
 class TestOffloadGroupSize(CustomTestCase):
