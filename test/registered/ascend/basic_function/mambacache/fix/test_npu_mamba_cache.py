@@ -17,7 +17,8 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=1100, suite="nightly-8-npu-a3", nightly=True)
 
-'''
+QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST="/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+
 class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
     The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
@@ -27,8 +28,8 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
     [Test Target] --mamba-scheduler-strategy, --mamba-full-memory-ratio, --mamba-track-interval
     """
 
-    model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.model_path
-    accuracy = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST.gsm8k_accuracy
+    model = QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST
+    accuracy = 0.92
     other_args = [
         "--trust-remote-code",
         "--mem-fraction-static",
@@ -76,9 +77,8 @@ class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
         "--max-mamba-cache-size",
         "1024",
     ]
-'''
 
-QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST="/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
+
 
 class TestMambaCacheRadix(CustomTestCase):
     """Testcase: Verify Radix Cache reuse with mamba cache.
@@ -117,7 +117,6 @@ class TestMambaCacheRadix(CustomTestCase):
     def tearDownClass(cls):
         if cls.process:
             kill_process_tree(cls.process.pid)
-    '''
 
 
     def test_mamba_cache_kv_cache(self):
@@ -159,7 +158,7 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-    '''
+
     def test_mamba_long_sequence(self):
         long_text = "Explain the concept of machine learning in detail." * 4000
         response = requests.post(
