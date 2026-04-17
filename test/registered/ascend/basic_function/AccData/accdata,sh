@@ -17,3 +17,11 @@ python benchmark/mmmu/bench_sglang.py \
     --split validation \
     --max-new-tokens 30 \
     --response-answer-regex "(.*)"
+
+
+# 自动从 HuggingFace 加载 MMMU/MMMU 数据集
+python -m sglang.test.run_eval \
+    --eval-name mmmu \
+    --num-examples 100 \
+    --num-threads 64 \
+    --max-tokens 30
