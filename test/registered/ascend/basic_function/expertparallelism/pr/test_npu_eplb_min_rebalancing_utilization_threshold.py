@@ -56,7 +56,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--ep-num-redundant-experts",
         16,
         "--eplb-rebalance-num-iterations",
-        5,
+        50,
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
@@ -108,6 +108,9 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
             cls.out_file.close()
         if hasattr(cls, "err_file") and cls.err_file:
             cls.err_file.close()
+        for log_file in [REBALANCE_OUT_LOG, REBALANCE_ERR_LOG]:
+            if os.path.exists(log_file):
+                os.remove(log_file)
 
     def test_gsm8k(self):
         args = SimpleNamespace(
