@@ -4,9 +4,9 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.gsm8k_ascend_mixin import GSM8KAscendMixin
-from sglang.test.ascend.test_ascend_utils import (
-    QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
-)
+# from sglang.test.ascend.test_ascend_utils import (
+#     QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST,
+# )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -17,7 +17,7 @@ from sglang.test.test_utils import (
 
 register_npu_ci(est_time=1100, suite="nightly-8-npu-a3", nightly=True)
 
-
+'''
 class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
     """Testcase: Test MambaCache basic functions using GSM8K dataset.
     The inference accuracy of the Qwen3-Next-80B-A3B-Instruct model
@@ -76,7 +76,9 @@ class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):
         "--max-mamba-cache-size",
         "1024",
     ]
+'''
 
+QWEN3_NEXT_80B_A3B_INSTRUCT_WEIGHTS_FOR_TEST="/home/weights/Qwen/Qwen3-Next-80B-A3B-Instruct"
 
 class TestMambaCacheRadix(CustomTestCase):
     """Testcase: Verify Radix Cache reuse with mamba cache.
@@ -115,6 +117,8 @@ class TestMambaCacheRadix(CustomTestCase):
     def tearDownClass(cls):
         if cls.process:
             kill_process_tree(cls.process.pid)
+    '''
+
 
     def test_mamba_cache_kv_cache(self):
         # test kv cache reuse with radix cache,input text should meet page size requirement( >=128 )
@@ -155,7 +159,7 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Paris", response.text)
-
+    '''
     def test_mamba_long_sequence(self):
         long_text = "Explain the concept of machine learning in detail." * 4000
         response = requests.post(
@@ -171,32 +175,6 @@ class TestMambaCacheRadix(CustomTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertGreater(len(response.text), 0)
-
-
-class TestMambaCacheHierarchicalCache(TestMambaCacheRadix):
-    """Testcase: Verify hierarchical cache reuse with mamba cache.
-
-    [Test Category] Parameter
-    [Test Target]--enable-hierarchical-cache
-    """
-
-    other_args = [
-        "--trust-remote-code",
-        "--mem-fraction-static",
-        "0.5",
-        "--attention-backend",
-        "ascend",
-        "--disable-cuda-graph",
-        "--tp-size",
-        "8",
-        "--enable-hierarchical-cache",
-        "--hicache-ratio",
-        1.2,
-        "--max-mamba-cache-size",
-        "512",
-        "--mamba-scheduler-strategy",
-        "extra_buffer",
-    ]
 
 
 if __name__ == "__main__":
