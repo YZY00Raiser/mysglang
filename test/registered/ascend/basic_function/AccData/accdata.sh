@@ -26,6 +26,17 @@ python -m sglang.test.run_eval \
     --num-threads 64 \
     --max-tokens 30
 
+
+python -m sglang.test.run_eval \
+    --eval-name mmmu \
+    --num-examples 100 \
+    --num-threads 64 \
+    --max-tokens 30 \
+    --port 30000 \
+    --host 127.0.0.1 \
+    --dataset-path /home/y30082119/dataset/MMMU \
+    --response-answer-regex "(.*)"
+
 数据集缓存位置 ：
 
 - 默认缓存路径： ~/.cache/huggingface/datasets/MMMU/
