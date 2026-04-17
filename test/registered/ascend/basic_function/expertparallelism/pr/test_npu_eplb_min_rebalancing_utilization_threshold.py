@@ -61,7 +61,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         50,
         "--enable-expert-distribution-metrics",
         "--eplb-rebalance-layers-per-chunk",
-        "1000",
+        "1",
     ]
     log_info = "Skipped ep rebalancing: current GPU utilization"
     out_file_path = SKIP_OUT_LOG
