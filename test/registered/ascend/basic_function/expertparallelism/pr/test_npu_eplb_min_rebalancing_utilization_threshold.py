@@ -140,6 +140,29 @@ class TestEplbMinRebalancingUtilizationThreshold095(
     err_file_path = REBALANCE_ERR_LOG
     test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.95]
 
+    @classmethod
+    def setUpClass(cls):
+        if hasattr(cls, "out_file_path"):
+            cls.out_file = open(cls.out_file_path, "w+", encoding="utf-8")
+        if hasattr(cls, "err_file_path"):
+            cls.err_file = open(cls.err_file_path, "w+", encoding="utf-8")
+
+        cls.base_url = DEFAULT_URL_FOR_TEST
+        cls.process = popen_launch_server(
+            cls.model,
+            cls.base_url,
+            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            other_args=cls.common_args + cls.test_args,
+            env={
+                "SGLANG_ENABLE_JIT_DEEPGEMM": "0",
+                "SGLANG_EXPERT_LOCATION_UPDATER_CANARY": "1",
+                "HCCL_BUFFSIZE": "1024",
+                "SGLANG_DEEPEP_BF16_DISPATCH": "1",
+                "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1"
+                **os.environ,
+            },
+            return_stdout_stderr=(cls.out_file, cls.err_file),
+        )
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
