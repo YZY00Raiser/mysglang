@@ -84,7 +84,6 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
                 "SGLANG_EXPERT_LOCATION_UPDATER_CANARY": "1",
                 "HCCL_BUFFSIZE": "1024",
                 "SGLANG_DEEPEP_BF16_DISPATCH": "1",
-                # "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 **os.environ,
             },
             return_stdout_stderr=(cls.out_file, cls.err_file),
@@ -126,9 +125,6 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         self.assertIn("[EPLBManager] rebalance start", content)
 
 
-'''
-
-
 class TestEplbMinRebalancingUtilizationThreshold095(
     TestEplbMinRebalancingUtilizationThresholdBase
 ):
@@ -163,7 +159,7 @@ class TestEplbMinRebalancingUtilizationThreshold095(
             },
             return_stdout_stderr=(cls.out_file, cls.err_file),
         )
-'''
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
