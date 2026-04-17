@@ -55,18 +55,16 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
         "--expert-distribution-recorder-buffer-size",
         50,
         "--enable-expert-distribution-metrics",
-        # "--eplb-rebalance-layers-per-chunk",
-        # "1",
+        "--eplb-rebalance-layers-per-chunk",
+        "1",
         "--base-gpu-id",
         "8",
     ]
 
     out_file_path = "./rebalance_out_log.txt"
     err_file_path = "./rebalance_err_log.txt"
-    # log_info = "Skipped ep rebalancing: current GPU utilization"
-    # test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.05]
-    log_info = "rebalance end"
-    test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.95]
+    log_info = "Skipped ep rebalancing: current GPU utilization"
+    test_args = ["--eplb-min-rebalancing-utilization-threshold", 0.05]
 
     @classmethod
     def setUpClass(cls):
@@ -86,7 +84,7 @@ class TestEplbMinRebalancingUtilizationThresholdBase(CustomTestCase):
                 "SGLANG_EXPERT_LOCATION_UPDATER_CANARY": "1",
                 "HCCL_BUFFSIZE": "1024",
                 "SGLANG_DEEPEP_BF16_DISPATCH": "1",
-                "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
+                # "SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT": "1",
                 **os.environ,
             },
             return_stdout_stderr=(cls.out_file, cls.err_file),
