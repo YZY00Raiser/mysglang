@@ -17,24 +17,25 @@ class TestRL(CustomTestCase):
 
     @classmethod
     def setUpClass(cls):
-        other_args = [
-            "--trust-remote-code",
-            "--mem-fraction-static",
-            0.8,
+        cls.other_args = [
             "--attention-backend",
             "ascend",
+            "--disable-cuda-graph",
             "--tp-size",
-            4,
+            2,
+            "--mem-fraction-static",
+            0.8,
             "--enable-hierarchical-cache",
             "--hicache-ratio",
             1.2,
+            "--base-gpu-id",
+            "12",
         ]
-
         cls.process = popen_launch_server(
-            DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH,
+            QWEN3_32B_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
-            other_args=other_args,
+            other_args=cls.other_args,
         )
 
     @classmethod
