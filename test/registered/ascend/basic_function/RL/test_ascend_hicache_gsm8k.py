@@ -43,7 +43,7 @@ class TestRL(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_l1_cache_reuse(self):
+    def test_l1_l2_cache_gsm8k(self):
         args = SimpleNamespace(
             max_new_tokens=512,
             base_url=DEFAULT_URL_FOR_TEST,

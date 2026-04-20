@@ -42,7 +42,7 @@ class TestRL(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
-    def test_l1_cache_reuse(self):
+    def test_l1_l2_cache_reuse(self):
         input_ids_first = [1] * 200
         def make_request(input_ids, expected_cached_tokens):
             response = requests.post(
