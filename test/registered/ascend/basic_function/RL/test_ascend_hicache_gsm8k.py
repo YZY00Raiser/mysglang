@@ -11,7 +11,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
+QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen3-32B"
 
 
 class TestRL(CustomTestCase):
