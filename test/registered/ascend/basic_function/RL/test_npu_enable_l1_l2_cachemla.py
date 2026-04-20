@@ -10,7 +10,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V2-Lite-W8A8"
+QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
 
 
 class TestRL(CustomTestCase):
@@ -44,8 +44,6 @@ class TestRL(CustomTestCase):
 
     def test_l1_cache_reuse(self):
         input_ids_first = [1] * 200
-        input_ids_second = input_ids_first + [2] * 70
-
         def make_request(input_ids, expected_cached_tokens):
             response = requests.post(
                 f"{DEFAULT_URL_FOR_TEST}/generate",

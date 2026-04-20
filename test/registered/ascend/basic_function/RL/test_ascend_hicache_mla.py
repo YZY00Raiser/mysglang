@@ -11,7 +11,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/root/.cache/modelscope/hub/models/vllm-ascend/DeepSeek-V2-Lite-W8A8"
+QWEN3_32B_WEIGHTS_PATH="/home/weights/Qwen/Qwen3-32B"
 
 
 class TestRL(CustomTestCase):
@@ -55,7 +55,7 @@ class TestRL(CustomTestCase):
             num_shots=5,
         )
         metrics = run_eval(args)
-        self.assertGreater(metrics["score"], 0.86)
+        self.assertGreater(metrics["score"], 0.88)
 
 
 if __name__ == "__main__":

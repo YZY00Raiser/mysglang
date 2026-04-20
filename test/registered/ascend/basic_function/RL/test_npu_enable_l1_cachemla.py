@@ -41,7 +41,6 @@ class TestRL(CustomTestCase):
 
     def test_l1_cache_reuse(self):
         input_ids_first = [1] * 200
-        input_ids_second = input_ids_first + [2] * 70
 
         def make_request(input_ids, expected_cached_tokens):
             response = requests.post(
