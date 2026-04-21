@@ -18,6 +18,7 @@ register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
+
 class OffloadTestBase(CustomTestCase):
     """Base class for offload tests """
 
@@ -124,7 +125,7 @@ class TestOffloadShardedGpu(OffloadTestBase):
         "--offload-num-in-group", "2",
         "--offload-prefetch-step", "2",
         "--offload-mode", "sharded_gpu",
-        "--base-gpu-id","12",
+        "--base-gpu-id", "12",
     ]
     EXPECT_IN_RESPONSE = True
 
