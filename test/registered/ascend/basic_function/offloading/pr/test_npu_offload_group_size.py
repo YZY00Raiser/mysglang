@@ -4,7 +4,7 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
 
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -39,7 +39,7 @@ class TestOffloadGroupSize(CustomTestCase):
         cls.out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         cls.err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
         cls.process = popen_launch_server(
-            DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH,
+            DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=cls.OTHER_ARGS,
