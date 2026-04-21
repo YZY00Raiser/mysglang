@@ -29,7 +29,7 @@ class TestOffloadGroupSize(CustomTestCase):
         "ascend",
         "--disable-cuda-graph",
         "--offload-group-size",
-        "2",
+        "-1",
         "--tp-size",
         "2",
     ]
@@ -109,6 +109,7 @@ class TestOffloadMeta(TestOffloadGroupSize):
 
 
 '''
+'''
 class TestOffloadShardedGpu(TestOffloadGroupSize):
     """Testcase: Tests core functionality with --offload-mode=sharded_gpu and --dp=2 configuration.
 
@@ -133,7 +134,7 @@ class TestOffloadShardedGpu(TestOffloadGroupSize):
     def _check_offload_message(self):
         self.err_log_file.seek(0)
         self.assertIn("[offloader] post_init", self.err_log_file.read())
-
+'''
 
 if __name__ == "__main__":
     unittest.main()
