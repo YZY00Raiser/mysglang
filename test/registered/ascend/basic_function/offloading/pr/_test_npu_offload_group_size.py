@@ -18,11 +18,24 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
-class OffloadTestBase(CustomTestCase):
-    """Base class for offload tests """
+class TestOffloadGroupSize(CustomTestCase):
+    """Testcase: Tests core functionality with --offload-group-size configuration.
 
-    OTHER_ARGS = []
-    EXPECT_IN_RESPONSE = None
+    [Test Category] Parameter
+    [Test Target] --offload-group-size
+    """
+
+    OTHER_ARGS = [
+        "--attention-backend",
+        "ascend",
+        "--disable-cuda-graph",
+        "--offload-group-size",
+        "2",
+        "--tp-size",
+        "2",
+        "--base-gpu-id",
+        "2",
+    ]
 
     @classmethod
     def setUpClass(cls):
@@ -63,37 +76,12 @@ class OffloadTestBase(CustomTestCase):
     def test_inference(self):
         response = self._send_request()
         self.assertEqual(response.status_code, 200)
-
-        if self.EXPECT_IN_RESPONSE is True:
-            self.assertIn("Paris", response.text)
-        elif self.EXPECT_IN_RESPONSE is False:
-            self.assertNotIn("Paris", response.text)
+        self.assertIn("Paris", response.text)
 
         self._check_offload_message()
 
 
-class TestOffloadGroupSize(OffloadTestBase):
-    """Testcase: Tests core functionality with --offload-group-size configuration.
-
-    [Test Category] Parameter
-    [Test Target] --offload-group-size
-    """
-
-    OTHER_ARGS = [
-        "--attention-backend",
-        "ascend",
-        "--disable-cuda-graph",
-        "--offload-group-size",
-        "2",
-        "--tp-size",
-        "2",
-        "--base-gpu-id",
-        "2",
-    ]
-    EXPECT_IN_RESPONSE = True
-
-
-class TestOffloadMeta(OffloadTestBase):
+class TestOffloadMeta(TestOffloadGroupSize):
     """Testcase: Tests core functionality with --offload-mode=meta configuration.
 
     [Test Category] Parameter
@@ -115,12 +103,17 @@ class TestOffloadMeta(OffloadTestBase):
         "--base-gpu-id",
         "2",
     ]
+
     # When --offload-mode=meta, it is in debugging mode, creating empty tensors
     # and resulting in incorrect inference results
-    EXPECT_IN_RESPONSE = False
+    def test_inference(self):
+        response = self._send_request()
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+        self._check_offload_message()
 
 
-class TestOffloadShardedGpu(OffloadTestBase):
+class TestOffloadShardedGpu(TestOffloadGroupSize):
     """Testcase: Tests core functionality with --offload-mode=sharded_gpu and --dp=2 configuration.
 
     [Test Category] Parameter
@@ -142,7 +135,6 @@ class TestOffloadShardedGpu(OffloadTestBase):
         "--base-gpu-id",
         "2",
     ]
-    EXPECT_IN_RESPONSE = True
 
     def _check_offload_message(self):
         self.err_log_file.seek(0)
