@@ -88,7 +88,7 @@ class TestOffloadGroupSize(OffloadTestBase):
         "--tp-size",
         "2",
         "--base-gpu-id",
-        "12",
+        "2",
     ]
     EXPECT_IN_RESPONSE = True
 
@@ -113,7 +113,7 @@ class TestOffloadMeta(OffloadTestBase):
         "--offload-mode",
         "meta",
         "--base-gpu-id",
-        "12",
+        "2",
     ]
     # When --offload-mode=meta, it is in debugging mode, creating empty tensors
     # and resulting in incorrect inference results
@@ -140,7 +140,7 @@ class TestOffloadShardedGpu(OffloadTestBase):
         "--offload-mode",
         "sharded_gpu",
         "--base-gpu-id",
-        "12",
+        "2",
     ]
     EXPECT_IN_RESPONSE = True
 
