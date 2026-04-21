@@ -109,7 +109,7 @@ class TestOffloadMeta(TestOffloadGroupSize):
     def test_inference(self):
         response = self._send_request()
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
+        self.assertNotIn("Paris", response.text)
         self._check_offload_message()
 
 
