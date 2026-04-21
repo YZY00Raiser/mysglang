@@ -18,7 +18,7 @@ register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
 
 
 class OffloadTestBase(CustomTestCase):
-    """Base class for offload tests with common setup/teardown logic."""
+    """Base class for offload tests """
 
     OTHER_ARGS = []
     EXPECT_IN_RESPONSE = None
@@ -85,6 +85,11 @@ class TestOffloadGroupSize(OffloadTestBase):
     ]
     EXPECT_IN_RESPONSE = True
 
+    def test_inference(self):
+        response = self._send_request()
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Paris", response.text)
+
 
 class TestOffloadMeta(OffloadTestBase):
     """Testcase: Tests core functionality with --offload-mode=meta configuration.
@@ -123,11 +128,10 @@ class TestOffloadShardedGpu(OffloadTestBase):
         "--offload-mode", "sharded_gpu",
     ]
     EXPECT_IN_RESPONSE = True
-    OFFLOAD_MESSAGE = "[offloader] post_init"
 
     def _check_offload_message(self):
         self.err_log_file.seek(0)
-        self.assertIn(self.OFFLOAD_MESSAGE, self.err_log_file.read())
+        self.assertIn("[offloader] post_init", self.err_log_file.read())
 
 
 if __name__ == "__main__":
