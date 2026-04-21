@@ -85,11 +85,6 @@ class TestOffloadGroupSize(OffloadTestBase):
     ]
     EXPECT_IN_RESPONSE = True
 
-    def test_inference(self):
-        response = self._send_request()
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Paris", response.text)
-
 
 class TestOffloadMeta(OffloadTestBase):
     """Testcase: Tests core functionality with --offload-mode=meta configuration.
