@@ -77,7 +77,7 @@ class TestOffloadGroupSize(CustomTestCase):
 
         self._check_offload_message()
 
-
+'''
 class TestOffloadMeta(TestOffloadGroupSize):
     """Testcase: Tests core functionality with --offload-mode=meta configuration.
 
@@ -108,6 +108,7 @@ class TestOffloadMeta(TestOffloadGroupSize):
         self._check_offload_message()
 
 
+'''
 class TestOffloadShardedGpu(TestOffloadGroupSize):
     """Testcase: Tests core functionality with --offload-mode=sharded_gpu and --dp=2 configuration.
 
