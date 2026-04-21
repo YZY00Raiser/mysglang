@@ -30,7 +30,7 @@ class TestOffloadGroupSize(CustomTestCase):
         "ascend",
         "--disable-cuda-graph",
         "--offload-group-size",
-        "-1",
+        "0",
         "--tp-size",
         "2",
         "--base-gpu-id",
