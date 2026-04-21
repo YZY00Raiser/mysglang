@@ -123,6 +123,11 @@ class TestOffloadShardedGpu(OffloadTestBase):
         "--offload-mode", "sharded_gpu",
     ]
     EXPECT_IN_RESPONSE = True
+    OFFLOAD_MESSAGE = "[offloader] post_init"
+
+    def _check_offload_message(self):
+        self.err_log_file.seek(0)
+        self.assertIn(self.OFFLOAD_MESSAGE, self.err_log_file.read())
 
 
 if __name__ == "__main__":
