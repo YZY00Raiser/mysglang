@@ -5,7 +5,6 @@ import requests
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
-
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -18,7 +17,8 @@ register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 
 class TestOffloadGroupSize(CustomTestCase):
-    """Testcase: Tests core functionality with --offload-group-size configuration.
+    """Testcase: Test the --offload-group-size parameter the parameter
+    takes effect and the inference request succeeds.
 
     [Test Category] Parameter
     [Test Target] --offload-group-size
@@ -29,7 +29,7 @@ class TestOffloadGroupSize(CustomTestCase):
         "ascend",
         "--disable-cuda-graph",
         "--offload-group-size",
-        "-1",
+        "2",
         "--tp-size",
         "2",
     ]
@@ -77,12 +77,13 @@ class TestOffloadGroupSize(CustomTestCase):
 
         self._check_offload_message()
 
-'''
+
 class TestOffloadMeta(TestOffloadGroupSize):
-    """Testcase: Tests core functionality with --offload-mode=meta configuration.
+    """Testcase: Test the --offload-mode = meta parameter, the parameter
+    takes effect and the inference request succeeds.
 
     [Test Category] Parameter
-    [Test Target] --offload-mode
+    [Test Target] --offload-mode, --offload-num-in-group, --offload-prefetch-step
     """
 
     OTHER_ARGS = [
@@ -108,19 +109,20 @@ class TestOffloadMeta(TestOffloadGroupSize):
         self._check_offload_message()
 
 
-'''
-'''
 class TestOffloadShardedGpu(TestOffloadGroupSize):
-    """Testcase: Tests core functionality with --offload-mode=sharded_gpu and --dp=2 configuration.
+    """Testcase: Test the --offload-mode=sharded_gpu parameter, the parameter
+    takes effect and the inference request succeeds.
 
     [Test Category] Parameter
     [Test Target] --offload-mode
     """
 
     OTHER_ARGS = [
-        "--attention-backend", "ascend",
+        "--attention-backend",
+        "ascend",
         "--disable-cuda-graph",
-        "--dp", "2",
+        "--dp",  # When --offload-mode = sharded_gpu, must set --dp > 1 and --tp = 1.
+        "2",
         "--offload-group-size",
         "4",
         "--offload-num-in-group",
@@ -134,7 +136,7 @@ class TestOffloadShardedGpu(TestOffloadGroupSize):
     def _check_offload_message(self):
         self.err_log_file.seek(0)
         self.assertIn("[offloader] post_init", self.err_log_file.read())
-'''
+
 
 if __name__ == "__main__":
     unittest.main()
