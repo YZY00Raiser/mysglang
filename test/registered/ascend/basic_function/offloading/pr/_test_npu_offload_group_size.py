@@ -14,8 +14,7 @@ from sglang.test.test_utils import (
     popen_launch_server,
 )
 
-register_npu_ci(est_time=400, suite="nightly-1-npu-a3", nightly=True)
-
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 DEEPSEEK_V2_LITE_W8A8_WEIGHTS_PATH = "/home/weights/DeepSeek-Coder-V2-Lite-Instruct"
 
 
@@ -81,10 +80,13 @@ class TestOffloadGroupSize(OffloadTestBase):
     """
 
     OTHER_ARGS = [
-        "--attention-backend", "ascend",
+        "--attention-backend",
+        "ascend",
         "--disable-cuda-graph",
-        "--offload-group-size", "2",
-        "--base-gpu-id", "12",
+        "--offload-group-size",
+        "2",
+        "--tp-size",
+        "2",
     ]
     EXPECT_IN_RESPONSE = True
 
@@ -97,13 +99,17 @@ class TestOffloadMeta(OffloadTestBase):
     """
 
     OTHER_ARGS = [
-        "--attention-backend", "ascend",
+        "--attention-backend",
+        "ascend",
         "--disable-cuda-graph",
-        "--offload-group-size", "4",
-        "--offload-num-in-group", "2",
-        "--offload-prefetch-step", "2",
-        "--offload-mode", "meta",
-        "--base-gpu-id", "12",
+        "--offload-group-size",
+        "4",
+        "--offload-num-in-group",
+        "2",
+        "--offload-prefetch-step",
+        "2",
+        "--offload-mode",
+        "meta",
     ]
     # When --offload-mode=meta, it is in debugging mode, creating empty tensors
     # and resulting in incorrect inference results
@@ -121,11 +127,14 @@ class TestOffloadShardedGpu(OffloadTestBase):
         "--attention-backend", "ascend",
         "--disable-cuda-graph",
         "--dp", "2",
-        "--offload-group-size", "4",
-        "--offload-num-in-group", "2",
-        "--offload-prefetch-step", "2",
-        "--offload-mode", "sharded_gpu",
-        "--base-gpu-id", "12",
+        "--offload-group-size",
+        "4",
+        "--offload-num-in-group",
+        "2",
+        "--offload-prefetch-step",
+        "2",
+        "--offload-mode",
+        "sharded_gpu",
     ]
     EXPECT_IN_RESPONSE = True
 
