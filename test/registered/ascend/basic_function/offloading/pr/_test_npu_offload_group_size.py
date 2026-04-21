@@ -125,7 +125,7 @@ class TestOffloadShardedGpu(TestOffloadGroupSize):
     OTHER_ARGS = [
         "--attention-backend", "ascend",
         "--disable-cuda-graph",
-        "--dp", "1",
+        "--dp", "0",
         "--offload-group-size",
         "4",
         "--offload-num-in-group",
