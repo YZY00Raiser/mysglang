@@ -1,6 +1,3 @@
-.github/workflows/single-test-npu.yml
-  s_69b6395a2d84ec::t_087c966e61df50 108-112
-  s_69b6395a2d84ec::t_a3cab8ecf69c6e 88,92-95
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -10,29 +7,6 @@
   "humans": {
     "h_65a461852483cc": {
       "author": "YZY00Raiser <2452658175@qq.com>"
-    }
-  },
-  "sessions": {
-    "s_69b6395a2d84ec": {
-      "agent_id": {
-        "tool": "trae",
-        "id": "6a99079a82e6e1facd048248",
-        "model": "DeepSeek-V4-Pro-Official__max"
-      },
-      "human_author": "YZY00Raiser <2452658175@qq.com>",
-      "custom_attributes": {
-        "source_scene": "unknown",
-        "tool_id": "Edit",
-        "operation_id": "6a9907ec82e6e1facd048262",
-        "dedupe_key": "6a99079a82e6e1facd048248:6a9907ec82e6e1facd048262:afterEdit:1d442f80",
-        "client_type": "ide",
-        "session_id": "6a99079a82e6e1facd048248",
-        "runtime_client": "trae-tob-git-ai",
-        "tool_use_id": "6a9907ec82e6e1facd048262",
-        "tool_type": "agent",
-        "edit_kind": "file_edit",
-        "external_session_id": "6a99079a82e6e1facd048248"
-      }
     }
   }
 }
