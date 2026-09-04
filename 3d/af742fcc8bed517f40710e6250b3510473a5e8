@@ -1,38 +1,7 @@
-.github/workflows/single-test-npu.yml
-  s_5cc2a6827506fd::t_d046fd71e92158 89-90
-  s_5cc2a6827506fd::t_698a7e97d8f6cc 50-52
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.2",
   "base_commit_sha": "3daf742fcc8bed517f40710e6250b3510473a5e8",
-  "prompts": {},
-  "humans": {
-    "h_65a461852483cc": {
-      "author": "YZY00Raiser <2452658175@qq.com>"
-    }
-  },
-  "sessions": {
-    "s_5cc2a6827506fd": {
-      "agent_id": {
-        "tool": "trae",
-        "id": "6a86a6b9b1cd83408030f68a",
-        "model": "DeepSeek-V4-Pro-Official"
-      },
-      "human_author": "YZY00Raiser <2452658175@qq.com>",
-      "custom_attributes": {
-        "runtime_client": "trae-tob-git-ai",
-        "tool_type": "builtin",
-        "tool_id": "icube:applyChatSnapshotPatch",
-        "external_session_id": "6a86a6b9b1cd83408030f68a",
-        "edit_kind": "file_edit",
-        "operation_id": "6a86a779b1cd83408030f6b6",
-        "session_id": "6a86a6b9b1cd83408030f68a",
-        "dedupe_key": "6a86a6b9b1cd83408030f68a:6a86a779b1cd83408030f6b6:afterEdit:1d442f80",
-        "tool_use_id": "6a86a779b1cd83408030f6b6",
-        "source_scene": "agent",
-        "client_type": "ide"
-      }
-    }
-  }
+  "prompts": {}
 }
