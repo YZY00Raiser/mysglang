@@ -1,35 +1,12 @@
-test/registered/npu/basic_function/parallel_strategy/expert_parallelism/test_npu_expert_distribution_recorder_mode.py
-  s_4f0f158a79ece5::t_08365979496638 24,129,153
-test/registered/npu/basic_function/parameter/test_npu_enable_session_radix_cache.py
-  s_4f0f158a79ece5::t_08365979496638 25,71,73-75,92,132-134
-test/registered/npu/llm_models/test_npu_qwen3_30b_attn_cp.py
-  s_4f0f158a79ece5::t_08365979496638 11-16,67,92
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.2",
   "base_commit_sha": "8a70a9449ecbe26b0c022c92f27e2baa5dd58220",
   "prompts": {},
-  "sessions": {
-    "s_4f0f158a79ece5": {
-      "agent_id": {
-        "tool": "trae",
-        "id": "6a98e63682e6e1facd0481fa",
-        "model": "DeepSeek-V4-Pro-Official__max"
-      },
-      "human_author": "YZY00Raiser <2452658175@qq.com>",
-      "custom_attributes": {
-        "runtime_client": "trae-tob-git-ai",
-        "session_id": "6a98e63682e6e1facd0481fa",
-        "source_scene": "agent",
-        "tool_name": "RunCommand",
-        "client_type": "ide",
-        "external_session_id": "6a98e63682e6e1facd0481fa",
-        "tool_use_id": "6a98e90a82e6e1facd048220",
-        "operation_id": "6a98e90a82e6e1facd048220",
-        "edit_kind": "bash",
-        "display_model_name": "DeepSeek-V4-Pro 正式版"
-      }
+  "humans": {
+    "h_65a461852483cc": {
+      "author": "YZY00Raiser <2452658175@qq.com>"
     }
   }
 }
