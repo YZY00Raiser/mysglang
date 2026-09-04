@@ -1,32 +1,12 @@
-test/registered/npu/basic_function/runtime_options/test_npu_disaggregation_pp.py
-  s_34e4f95aa6b6de::t_e92ded219d78d8 49
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.2",
   "base_commit_sha": "2df50db6dc81a63122d99324f050c32abd30e4ad",
   "prompts": {},
-  "sessions": {
-    "s_34e4f95aa6b6de": {
-      "agent_id": {
-        "tool": "trae",
-        "id": "6a98e58182e6e1facd0481d6",
-        "model": "DeepSeek-V4-Pro-Official__max"
-      },
-      "human_author": "YZY00Raiser <2452658175@qq.com>",
-      "custom_attributes": {
-        "source_scene": "unknown",
-        "client_type": "ide",
-        "tool_type": "agent",
-        "tool_use_id": "6a98e5c882e6e1facd0481f6",
-        "operation_id": "6a98e5c882e6e1facd0481f6",
-        "tool_id": "Edit",
-        "external_session_id": "6a98e58182e6e1facd0481d6",
-        "dedupe_key": "6a98e58182e6e1facd0481d6:6a98e5c882e6e1facd0481f6:afterEdit:d3a41256",
-        "runtime_client": "trae-tob-git-ai",
-        "edit_kind": "file_edit",
-        "session_id": "6a98e58182e6e1facd0481d6"
-      }
+  "humans": {
+    "h_65a461852483cc": {
+      "author": "YZY00Raiser <2452658175@qq.com>"
     }
   }
 }
