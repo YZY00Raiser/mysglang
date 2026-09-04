@@ -1,19 +1,12 @@
-.github/workflows/single-test-npu.yml
-  s_fb6b661c90b647::t_f1d86aa4ab83ef 100
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.2",
   "base_commit_sha": "f04c41446218e80b8d099f9bedf1f1df0edb4d8f",
   "prompts": {},
-  "sessions": {
-    "s_fb6b661c90b647": {
-      "agent_id": {
-        "tool": "trae",
-        "id": "6a99103682e6e1facd048266",
-        "model": "DeepSeek-V4-Pro-Official__max"
-      },
-      "human_author": "YZY00Raiser <2452658175@qq.com>"
+  "humans": {
+    "h_65a461852483cc": {
+      "author": "YZY00Raiser <2452658175@qq.com>"
     }
   }
 }
