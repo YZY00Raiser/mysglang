@@ -1,8 +1,3 @@
-.github/workflows/full-test-npu.yml
-  s_069850d1b143e6::t_e9a6e1682f3fc9 521,620-623,625,627,782,786,817-823
-  s_069850d1b143e6::t_fde3ca72472b4e 624,626,628-631
-  s_069850d1b143e6::t_a3be74747ffd22 520
-  s_069850d1b143e6::t_0ef3da9d412123 522
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -12,25 +7,6 @@
   "humans": {
     "h_65a461852483cc": {
       "author": "YZY00Raiser <2452658175@qq.com>"
-    }
-  },
-  "sessions": {
-    "s_069850d1b143e6": {
-      "agent_id": {
-        "tool": "trae",
-        "id": "6a8916ac6fd9bdd509d07726",
-        "model": "DeepSeek-V4-Pro-Official__max"
-      },
-      "human_author": "YZY00Raiser <2452658175@qq.com>",
-      "custom_attributes": {
-        "edit_kind": "bash",
-        "tool_use_id": "6a891b156fd9bdd509d077ab",
-        "session_id": "6a8916ac6fd9bdd509d07726",
-        "tool_name": "RunCommand",
-        "external_session_id": "6a8916ac6fd9bdd509d07726",
-        "display_model_name": "DeepSeek-V4-Pro 正式版",
-        "operation_id": "6a891b156fd9bdd509d077ab"
-      }
     }
   }
 }
