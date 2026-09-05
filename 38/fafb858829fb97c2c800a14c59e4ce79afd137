@@ -3,10 +3,5 @@
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.2",
   "base_commit_sha": "38fafb858829fb97c2c800a14c59e4ce79afd137",
-  "prompts": {},
-  "humans": {
-    "h_65a461852483cc": {
-      "author": "YZY00Raiser <2452658175@qq.com>"
-    }
-  }
+  "prompts": {}
 }
