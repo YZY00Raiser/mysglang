@@ -26,7 +26,8 @@ LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH="/home/weights/Llama-3.1-8B-Instruct"
 
 
 # Disable the fast input-logprobs path; use the reference log-softmax path.
-os.environ["SGLANG_ENABLE_FAST_INPUT_LOGPROBS"] = "false"
+# os.environ["SGLANG_ENABLE_FAST_INPUT_LOGPROBS"] = "false"
+os.environ["SGLANG_ENABLE_FAST_INPUT_LOGPROBS"] = "true"
 register_npu_ci(est_time=10800, suite="full-16-npu-a3", nightly=True)
 
 
