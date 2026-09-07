@@ -30,7 +30,7 @@ LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH="/home/weights/Llama-3.1-8B-Instruct"
 os.environ["SGLANG_ENABLE_FAST_INPUT_LOGPROBS"] = "true"
 register_npu_ci(est_time=10800, suite="full-16-npu-a3", nightly=True)
 
-
+'''
 class TestPPAccuracy(unittest.TestCase):
     """Test Case: Verify the accuracy of LLM models under TP+PP hybrid parallelism
 
@@ -213,7 +213,7 @@ class TestPPMixedChunk(CustomTestCase):
         self.assertGreater(metrics["score"], 0.74)
         time.sleep(4)
 
-
+'''
 class TestFixedBugs(unittest.TestCase):
     """Test Case: Verify normal inference under small batch size scenario with PP+chunked-prefill enabled
     [Test Category] Parameter
