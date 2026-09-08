@@ -87,7 +87,7 @@ class TestQwen330BAttnCP(GSM8KAscendMixin, CustomTestCase):
     def test_moe_dp(self):
         self.err_file.seek(0)
         content = self.err_file.read()
-        self.assertIn("MOE_DP", content)
+        self.assertIn("MOE_DP0", content)
 
 
 if __name__ == "__main__":

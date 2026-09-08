@@ -28,7 +28,7 @@ class TestExpertDistributionRecorderModeStatic(CustomTestCase):
     the expert load‑balancing degree metric reported.
 
     [Test Category] Parameter
-    [Test Target] --expert-distribution-recorder-mode, --expert-balancedness-report-mode
+    [Test Target] --expert-distribution-recorder-mode; --expert-balancedness-report-mode
     """
 
     expert_distribution_recorder_mode = "stat"
